@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <style>
+    .bg { fill: transparent; }
+    .fg { fill: #1E1E1E; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .fg { fill: #ffffff; }
+    }
+  </style>
+  <rect class="bg" width="400" height="400" rx="88" ry="88"/>
+  <path class="fg" fill-rule="evenodd" d="
+    M 150,50 L 250,50 L 250,100 L 300,100 L 300,150 L 350,150 L 350,250 L 300,250 L 300,300 L 250,300 L 250,350 L 150,350 L 150,300 L 100,300 L 100,250 L 50,250 L 50,150 L 100,150 L 100,100 L 150,100 Z
+    M 200,130 A 70,70 0 1 0 200.01,130 Z
+  "/>
+</svg>
