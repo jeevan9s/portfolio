@@ -10,6 +10,7 @@ import {
 
 import { motion } from "framer-motion";
 
+
 export default function Home() {
   return (
     <div className="flex flex-col md:flex-row flex-1 bg-[#1D1D1D] md:justify-between md:items-start items-center gap-y-10 justify-center min-h-screen p-8 md:p-12">
