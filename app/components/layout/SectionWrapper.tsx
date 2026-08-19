@@ -1,19 +1,23 @@
-'use client'
+"use client";
 
-import { useEffect, useRef } from 'react'
-import { useScrollStore } from '@/lib/scrollStore'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useEffect, useRef } from "react";
+import { useScrollStore } from "@/lib/scrollStore";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { sections } from "@/lib/sections";
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
 export default function SectionWrapper({ id, children }: { id: string; children: React.ReactNode }) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const setSection = useScrollStore((s) => s.setSection)
+  const containerRef = useRef<HTMLDivElement>(null);
+  const setSection = useScrollStore((s) => s.setSection);
+
+  const sectionMeta = sections.find((s) => s.id === id);
+  const bgColor = sectionMeta?.bgColor ? `#${sectionMeta.bgColor}` : "#000000";
 
   useEffect(() => {
-    const el = containerRef.current
-    if (!el) return
+    const el = containerRef.current;
+    if (!el) return;
 
     const st = ScrollTrigger.create({
       trigger: el,
@@ -21,14 +25,19 @@ export default function SectionWrapper({ id, children }: { id: string; children:
       end: 'bottom center',
       onEnter: () => setSection(id),
       onEnterBack: () => setSection(id),
-    })
+    });
 
-    return () => st.kill()
-  }, [id, setSection])
+    return () => st.kill();
+  }, [id, setSection]);
 
   return (
-    <section id={id} ref={containerRef} className="min-h-screen relative">
+    <section 
+      id={id} 
+      ref={containerRef} 
+      data-bgcolor={bgColor}
+      className="min-h-screen relative"
+    >
       {children}
     </section>
-  )
+  );
 }

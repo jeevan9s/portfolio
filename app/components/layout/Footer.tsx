@@ -30,7 +30,7 @@ export default function Footer() {
   const rawTheme = sections.find((s) => s.id === activeSection)?.bgColor;
 
   const currentTheme = rawTheme
-    ? rawTheme === "F5F5F5"
+    ? rawTheme === "EFEFEF"
       ? "light"
       : "dark"
     : pathname === "/"

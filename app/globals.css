@@ -156,7 +156,7 @@ body {
 }
 
 [data-theme="light"] {
-  --nav-bg: #F5F5F5;
+  --nav-bg: #EFEFEF;
   --text-primary: #232323;
   --text-muted: #727272;
 }

@@ -38,7 +38,7 @@ export default function Navbar({ currPage }: navbarProps) {
         const elementBottom = bottom + window.scrollY;
 
         if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
-          activeTheme = section.bgColor === "F5F5F5"
+          activeTheme = section.bgColor === "EFEFEF"
             ? "light"
             : "dark";
         }
