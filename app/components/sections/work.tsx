@@ -18,13 +18,14 @@ export default function Work() {
           style={{
             willChange: "transform, opacity, filter",
           }}
+          className="md:mt-25"
         >
-          <h1 className="text-[2rem] text-[#1E1E1E] md:text-[5.25rem] montserrat">
+          <h1 className="text-[3rem] text-[#1E1E1E] md:text-[5.25rem] montserrat">
             selected works
           </h1>
 
-          <h3 className="text-[1rem] text-[#878787] md:text-[4.25rem] montserrat">
-            a look at what I've built
+          <h3 className="text-[2rem] text-[#878787] md:text-[2.5rem] inter font-light">
+            an index of builds
           </h3>
         </motion.div>
       </div>

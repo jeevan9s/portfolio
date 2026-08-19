@@ -8,12 +8,11 @@ import {
   TooltipTrigger,
 } from "@/app/components/ui/tooltip";
 import { motion } from "framer-motion";
-import { useSectionInView } from "@/app/hooks/useSectionInView";
 
 
 export default function Hero() {
   return (
-    <div className="flex flex-col md:flex-row flex-1 bg-[#1D1D1D] md:justify-between md:items-start items-center gap-y-10 justify-center min-h-screen p-8 md:p-12">
+    <div  className="flex flex-col md:flex-row flex-1 bg-[#1D1D1D] md:justify-between md:items-start items-center gap-y-10 justify-center min-h-screen p-8 md:p-12">
       <div className="flex flex-col gap-y-5 max-w-[100rem] md:max-w-350">
         <motion.div
           initial={{ opacity: 0, y: 50, filter: "blur(12px)" }}

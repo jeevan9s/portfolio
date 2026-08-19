@@ -1,9 +1,13 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useScrollStore } from '@/lib/scrollStore'
 
-export function useSectionInView(id: 'hero' | 'work' | 'about' | 'connect' | 'end') {
+gsap.registerPlugin(ScrollTrigger)
+
+export function useSectionInView(id: string) {
   const ref = useRef<HTMLDivElement>(null)
   const setSection = useScrollStore((s) => s.setSection)
 
@@ -11,17 +15,17 @@ export function useSectionInView(id: 'hero' | 'work' | 'about' | 'connect' | 'en
     const el = ref.current
     if (!el) return
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setSection(id) 
-        }
-      },
-      { threshold: 0.4 } 
-    )
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top center',
+        end: 'bottom center',
+        onEnter: () => setSection(id),
+        onEnterBack: () => setSection(id),
+      })
+    })
 
-    observer.observe(el)
-    return () => observer.disconnect()
+    return () => ctx.revert()
   }, [id, setSection])
 
   return ref

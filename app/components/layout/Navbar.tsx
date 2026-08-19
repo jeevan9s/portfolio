@@ -1,10 +1,11 @@
 "use client";
 
-// floating navbar component
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useScrollStore } from "@/lib/scrollStore";
+import { sections } from "@/lib/sections";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 
 interface navbarProps {
   currPage: string;
@@ -15,9 +16,37 @@ const hidden = ["/project"];
 export default function Navbar({ currPage }: navbarProps) {
   const pathname = usePathname();
   const [time, setTime] = useState<string | null>(null);
+  const [currentTheme, setCurrentTheme] = useState<"light" | "dark">("dark");
   const activeSection = useScrollStore((s) => s.section);
 
-  if (hidden.includes(pathname)) return null; 
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    if (pathname !== "/") {
+      setCurrentTheme("light");
+      return;
+    }
+
+    let activeTheme: "light" | "dark" = "dark";
+    const scrollPosition = latest + window.innerHeight / 2;
+
+    sections.forEach((section) => {
+      const el = document.getElementById(section.id);
+      if (el) {
+        const { top, bottom } = el.getBoundingClientRect();
+        const elementTop = top + window.scrollY;
+        const elementBottom = bottom + window.scrollY;
+
+        if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
+          activeTheme = section.bgColor === "F5F5F5"
+            ? "light"
+            : "dark";
+        }
+      }
+    });
+
+    setCurrentTheme(activeTheme);
+  });
 
   useEffect(() => {
     setTime(new Date().toLocaleTimeString("en-US", { hour12: false }));
@@ -29,38 +58,58 @@ export default function Navbar({ currPage }: navbarProps) {
     return () => clearInterval(timer);
   }, []);
 
-  const getLink = (path: string) => {
-    const isActive = currPage === path || activeSection === path;
-    return `inter text-md transition-all duration-300 inline-block transform hover:scale-105 ${
-      isActive ? "nav-theme-active scale-105 font-medium" : "nav-theme-muted hover:nav-theme-active"
+  if (hidden.includes(pathname) || activeSection === "hero") return null;
+
+  const getLink = (id: string) => {
+    const isActive = activeSection === id;
+    return `inter text-base inline-block ${
+      isActive ? "nav-theme-active font-medium" : "nav-theme-muted hover:nav-theme-active"
     }`;
   };
 
+  const navSections = sections.filter((sec) => sec.id !== "hero");
+
   return (
-    <div className="flex flex-row nav-theme-bg fixed top-0 left-0 right-0 w-full z-50 items-center justify-between px-6 py-4 transition-colors duration-300">
-      <div className="hidden md:flex flex-row items-center gap-x-3 flex-1">
-        <p className="inter text-md nav-theme-active font-medium whitespace-nowrap">Jeevan Sanchez</p>
-        <p className="inter text-md nav-theme-muted whitespace-nowrap">Embedded Systems Engineer</p>
+    <motion.div
+      data-theme={currentTheme}
+      className="flex flex-row w-full items-center justify-between px-6 py-4 bg-transparent"
+      animate={{ y: activeSection === "hero" ? "-100%" : 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      style={{ willChange: "transform" }}
+    >
+      <div className="hidden md:flex flex-row items-baseline gap-x-6 flex-1">
+        <div className="flex flex-col">
+          <p className="inter text-base nav-theme-active font-medium whitespace-nowrap transition-colors duration-300">
+            Jeevan Sanchez
+          </p>
+          <p className="inter text-xs nav-theme-muted whitespace-nowrap transition-colors duration-300">
+            {time} ET
+          </p>
+        </div>
+        <p className="inter text-base nav-theme-muted whitespace-nowrap transition-colors duration-300">
+          Embedded Systems Engineer
+        </p>
       </div>
 
-      <div className="hidden md:flex flex-1 justify-center">
-        <p className="inter text-md nav-theme-muted text-center whitespace-nowrap">{time} ET</p>
-      </div>
+      <div className="hidden md:flex flex-1 justify-center"></div>
 
       <div className="flex flex-row items-center justify-end flex-1">
         <div className="hidden md:flex flex-row items-center gap-x-12 pt-0.5">
-          <Link href="/work" className={getLink("work")}>Work</Link>
-          <Link href="/about" className={getLink("about")}>About</Link>
-          <Link href="/connect" className={getLink("connect")}>Connect</Link>
-          <Link href="/gallery" className={getLink("gallery")}>Gallery</Link>
+          {navSections.map((sec) => (
+            <motion.div key={sec.id} whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 400, damping: 25 }}>
+              <Link href={`#${sec.id}`} className={getLink(sec.id)}>
+                {sec.id.charAt(0).toUpperCase() + sec.id.slice(1)}
+              </Link>
+            </motion.div>
+          ))}
         </div>
 
         <div className="md:hidden">
-          <button onClick={() => {}} className="text-sm bg-transparent border-none nav-theme-muted inter cursor-pointer hover:nav-theme-active">
+          <motion.button whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 400, damping: 25 }} onClick={() => {}} className="text-sm bg-transparent border-none nav-theme-muted inter cursor-pointer hover:nav-theme-active transition-colors duration-300">
             menu
-          </button>
+          </motion.button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
