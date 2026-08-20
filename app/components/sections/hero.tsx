@@ -27,7 +27,7 @@ export default function Hero() {
             willChange: "transform, opacity, filter",
           }}
         >
-          <h1 className="text-[2rem] nav-theme-active md:text-[5.25rem] montserrat">
+          <h1 className="text-[2rem] nav-theme-active md:text-[5.25rem] md:leading-[8rem] montserrat">
             Developing hardware and firmware for embedded platforms.
           </h1>
         </motion.div>

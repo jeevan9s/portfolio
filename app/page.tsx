@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useLayoutEffect, useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
 import { useScrollStore } from "@/lib/scrollStore";
 import { sections } from "@/lib/sections";
 import Navbar from "@/app/components/layout/Navbar";
@@ -15,79 +16,131 @@ gsap.registerPlugin(ScrollTrigger);
 export default function Page() {
   const [isMounted, setIsMounted] = useState(false);
   const [isPastHero, setIsPastHero] = useState(false);
-  const [isLightTheme, setIsLightTheme] = useState(false);
   const setSection = useScrollStore((s) => s.setSection);
-  const bgRef = useRef<HTMLDivElement>(null);
+  const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const lenisRef = useRef<Lenis | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if ("scrollRestoration" in window) {
       window.history.scrollRestoration = "manual";
     }
 
-    window.scrollTo(0, 0);
-    setSection("hero");
+    if (window.location.hash) {
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${window.location.search}`,
+      );
+    }
+
+    const lenis = new Lenis({
+      duration: 1.1,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 1.2,
+    });
+    lenisRef.current = lenis;
 
     const updateHeroBoundary = () => {
       const scrollPosition = window.scrollY;
       setIsPastHero(scrollPosition >= window.innerHeight);
-      setIsLightTheme(scrollPosition >= window.innerHeight / 2);
     };
+
+    const forceHeroTop = () => {
+      lenis.scrollTo(0, { immediate: true });
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      setSection("hero");
+      updateHeroBoundary();
+    };
+
+    forceHeroTop();
+
+    lenis.on("scroll", ScrollTrigger.update);
+
+    const updateLenis = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+    gsap.ticker.add(updateLenis);
+    gsap.ticker.lagSmoothing(0);
 
     window.addEventListener("scroll", updateHeroBoundary, { passive: true });
     window.addEventListener("resize", updateHeroBoundary);
 
     const rafId = requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-      updateHeroBoundary();
+      forceHeroTop();
       setIsMounted(true);
     });
 
+    const timeoutId = window.setTimeout(forceHeroTop, 50);
+
     return () => {
       cancelAnimationFrame(rafId);
+      window.clearTimeout(timeoutId);
       window.removeEventListener("scroll", updateHeroBoundary);
       window.removeEventListener("resize", updateHeroBoundary);
+      gsap.ticker.remove(updateLenis);
+      lenis.destroy();
+      lenisRef.current = null;
     };
   }, [setSection]);
 
- useEffect(() => {
-  if (!isMounted) return;
+  useEffect(() => {
+    if (!isMounted) return;
 
-  const ctx = gsap.context(() => {
-    if (bgRef.current && sections.length > 0) {
-      gsap.set(bgRef.current, { backgroundColor: `#${sections[0].bgColor}` });
-    }
-
-    sections.slice(1).forEach((sec) => {
-      const targetBg = `#${sec.bgColor}`;
-      const el = document.getElementById(`section-${sec.id}`);
-      if (!el) return;
-
-      gsap.to(bgRef.current, {
-        backgroundColor: targetBg,
-        ease: "none",
-        scrollTrigger: {
-          trigger: el,
-          start: "top bottom",
-          end: "top center",
-          scrub: 0.5,
-        },
+    const ctx = gsap.context(() => {
+      panelRefs.current.forEach((panel, i) => {
+        if (!panel) return;
+        gsap.set(panel, { yPercent: i === 0 ? 0 : 100, force3D: true });
       });
-    });
-  });
 
-  return () => ctx.revert();
-}, [isMounted]);
+      sections.forEach((sec, i) => {
+        if (i === 0) return;
+
+        const el = document.getElementById(`section-${sec.id}`);
+        const panel = panelRefs.current[i];
+        if (!el || !panel) return;
+
+        gsap.to(panel, {
+          yPercent: 0,
+          ease: "none",
+          force3D: true,
+          scrollTrigger: {
+            trigger: el,
+            start: "top bottom",
+            end: "top top",
+            scrub: 1,
+          },
+        });
+      });
+
+      ScrollTrigger.refresh();
+    });
+
+    return () => ctx.revert();
+  }, [isMounted]);
 
   const currentId = useScrollStore((s) => s.section);
   const current = sections.find((s) => s.id === currentId);
   const showChrome = isMounted && current?.showChrome === true && isPastHero;
+  const currentTheme = current?.bgColor === "EFEFEF" ? "light" : "dark";
 
   return (
     <>
-      <div 
-        ref={bgRef} 
-        className="fixed inset-0 z-0 pointer-events-none" 
-      />
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        {sections.map((sec, i) => (
+          <div
+            key={sec.id}
+            ref={(el) => { panelRefs.current[i] = el; }}
+            className="absolute inset-0"
+            style={{
+              backgroundColor: `#${sec.bgColor}`,
+              willChange: "transform",
+              backfaceVisibility: "hidden",
+            }}
+          />
+        ))}
+      </div>
 
       <AnimatePresence>
         {showChrome && (
@@ -97,7 +150,7 @@ export default function Page() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -60, opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed top-0 inset-x-0 z-50"
+            className="sticky top-0 inset-x-0 z-50"
           >
             <Navbar currPage={currentId} />
           </motion.div>
@@ -105,7 +158,7 @@ export default function Page() {
       </AnimatePresence>
 
       <main
-        data-theme={isLightTheme ? "light" : "dark"}
+        data-theme={currentTheme}
         className="relative z-10"
       >
         {sections.map(({ id, Component }) => (
