@@ -2,9 +2,6 @@
 
 // floating footer component
 import { useState } from "react";
-import { usePathname } from "next/navigation";
-import { useScrollStore } from "@/lib/scrollStore";
-import { sections } from "@/lib/sections";
 import {
   Tooltip,
   TooltipContent,
@@ -13,9 +10,11 @@ import {
 
 import { motion, useAnimationControls } from "framer-motion";
 
-export default function Footer() {
-  const pathname = usePathname();
-  const activeSection = useScrollStore((s) => s.section);
+interface footerProps {
+  theme: "light" | "dark";
+}
+
+export default function Footer({ theme }: footerProps) {
   const [selectedResume, setSelectedResume] = useState<"hw" | "sw">("hw");
   const copyAnimation = useAnimationControls();
 
@@ -27,21 +26,9 @@ export default function Footer() {
     });
   };
 
-  const rawTheme = sections.find((s) => s.id === activeSection)?.bgColor;
-
-  const currentTheme = rawTheme
-    ? rawTheme === "EFEFEF"
-      ? "light"
-      : "dark"
-    : pathname === "/"
-      ? "dark"
-      : "light";
-
-  if (activeSection === "hero") return null;
-
   return (
     <div
-      data-theme={currentTheme}
+      data-theme={theme}
       className="flex flex-row bg-transparent w-full items-center justify-between px-6 py-4 transition-colors duration-300"
     >
       <div className="hidden md:flex flex-row items-center gap-x-2 flex-1">

@@ -8,9 +8,10 @@ export default function Work() {
       <div className="flex flex-col gap-y-5 max-w-[100rem] md:max-w-350">
         <motion.div
           initial={{ opacity: 0, y: 50, filter: "blur(12px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          viewport={{ once: false, amount: 0.4 }}
           transition={{
-            duration: 1.8,
+            duration: 1,
             ease: [0.16, 1, 0.3, 1],
             opacity: { duration: 0.6, ease: "linear", delay: 0.4 },
             delay: 1,

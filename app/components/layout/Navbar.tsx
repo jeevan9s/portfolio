@@ -5,48 +5,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useScrollStore } from "@/lib/scrollStore";
 import { sections } from "@/lib/sections";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface navbarProps {
   currPage: string;
+  theme: "light" | "dark";
 }
 
 const hidden = ["/project"];
 
-export default function Navbar({ currPage }: navbarProps) {
+export default function Navbar({ theme }: navbarProps) {
   const pathname = usePathname();
   const [time, setTime] = useState<string | null>(null);
-  const [currentTheme, setCurrentTheme] = useState<"light" | "dark">("dark");
   const activeSection = useScrollStore((s) => s.section);
-
-  const { scrollY } = useScroll();
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    if (pathname !== "/") {
-      setCurrentTheme("light");
-      return;
-    }
-
-    let activeTheme: "light" | "dark" = "dark";
-    const scrollPosition = latest + window.innerHeight / 2;
-
-    sections.forEach((section) => {
-      const el = document.getElementById(section.id);
-      if (el) {
-        const { top, bottom } = el.getBoundingClientRect();
-        const elementTop = top + window.scrollY;
-        const elementBottom = bottom + window.scrollY;
-
-        if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
-          activeTheme = section.bgColor === "EFEFEF"
-            ? "light"
-            : "dark";
-        }
-      }
-    });
-
-    setCurrentTheme(activeTheme);
-  });
 
   useEffect(() => {
     setTime(new Date().toLocaleTimeString("en-US", { hour12: false }));
@@ -58,7 +29,7 @@ export default function Navbar({ currPage }: navbarProps) {
     return () => clearInterval(timer);
   }, []);
 
-  if (hidden.includes(pathname) || activeSection === "hero") return null;
+  if (hidden.includes(pathname)) return null;
 
   const getLink = (id: string) => {
     const isActive = activeSection === id;
@@ -71,10 +42,8 @@ export default function Navbar({ currPage }: navbarProps) {
 
   return (
     <motion.div
-      data-theme={currentTheme}
+      data-theme={theme}
       className="flex flex-row w-full items-center justify-between px-6 py-4 bg-transparent"
-      animate={{ y: activeSection === "hero" ? "-100%" : 0 }}
-      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       style={{ willChange: "transform" }}
     >
       <div className="hidden md:flex flex-row items-baseline gap-x-6 flex-1">

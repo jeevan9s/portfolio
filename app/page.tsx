@@ -15,7 +15,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Page() {
   const [isMounted, setIsMounted] = useState(false);
-  const [isPastHero, setIsPastHero] = useState(false);
+  const [navbarVisible, setNavbarVisible] = useState(false);
+  const [navbarTheme, setNavbarTheme] = useState<"light" | "dark">("dark");
+  const [footerVisible, setFooterVisible] = useState(false);
+  const [footerTheme, setFooterTheme] = useState<"light" | "dark">("dark");
   const setSection = useScrollStore((s) => s.setSection);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const lenisRef = useRef<Lenis | null>(null);
@@ -42,16 +45,35 @@ export default function Page() {
     });
     lenisRef.current = lenis;
 
-    const updateHeroBoundary = () => {
-      const scrollPosition = window.scrollY;
-      setIsPastHero(scrollPosition >= window.innerHeight);
+    // Finds whichever section currently occupies a given viewport y-coordinate.
+    const findSectionAtViewportY = (y: number) => {
+      for (const sec of sections) {
+        const el = document.getElementById(`section-${sec.id}`);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= y && rect.bottom > y) return sec;
+      }
+      return null;
+    };
+
+    // Navbar and footer track separate viewport edges, so each can show/hide
+    // and theme independently even when two different sections are on screen.
+    const updateChromeZones = () => {
+      const navSection = findSectionAtViewportY(1);
+      const footSection = findSectionAtViewportY(window.innerHeight - 1);
+
+      setNavbarVisible(navSection?.showChrome === true);
+      setNavbarTheme(navSection?.bgColor === "EFEFEF" ? "light" : "dark");
+
+      setFooterVisible(footSection?.showChrome === true);
+      setFooterTheme(footSection?.bgColor === "EFEFEF" ? "light" : "dark");
     };
 
     const forceHeroTop = () => {
       lenis.scrollTo(0, { immediate: true });
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       setSection("hero");
-      updateHeroBoundary();
+      updateChromeZones();
     };
 
     forceHeroTop();
@@ -64,8 +86,8 @@ export default function Page() {
     gsap.ticker.add(updateLenis);
     gsap.ticker.lagSmoothing(0);
 
-    window.addEventListener("scroll", updateHeroBoundary, { passive: true });
-    window.addEventListener("resize", updateHeroBoundary);
+    window.addEventListener("scroll", updateChromeZones, { passive: true });
+    window.addEventListener("resize", updateChromeZones);
 
     const rafId = requestAnimationFrame(() => {
       forceHeroTop();
@@ -77,8 +99,8 @@ export default function Page() {
     return () => {
       cancelAnimationFrame(rafId);
       window.clearTimeout(timeoutId);
-      window.removeEventListener("scroll", updateHeroBoundary);
-      window.removeEventListener("resize", updateHeroBoundary);
+      window.removeEventListener("scroll", updateChromeZones);
+      window.removeEventListener("resize", updateChromeZones);
       gsap.ticker.remove(updateLenis);
       lenis.destroy();
       lenisRef.current = null;
@@ -122,8 +144,9 @@ export default function Page() {
 
   const currentId = useScrollStore((s) => s.section);
   const current = sections.find((s) => s.id === currentId);
-  const showChrome = isMounted && current?.showChrome === true && isPastHero;
   const currentTheme = current?.bgColor === "EFEFEF" ? "light" : "dark";
+  const showNavbar = isMounted && navbarVisible;
+  const showFooter = isMounted && footerVisible;
 
   return (
     <>
@@ -143,7 +166,7 @@ export default function Page() {
       </div>
 
       <AnimatePresence>
-        {showChrome && (
+        {showNavbar && (
           <motion.div
             key="navbar"
             initial={{ y: -60, opacity: 0 }}
@@ -152,7 +175,7 @@ export default function Page() {
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="sticky top-0 inset-x-0 z-50"
           >
-            <Navbar currPage={currentId} />
+            <Navbar currPage={currentId} theme={navbarTheme} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -171,7 +194,7 @@ export default function Page() {
       </main>
 
       <AnimatePresence>
-        {showChrome && (
+        {showFooter && (
           <motion.div
             key="footer"
             initial={{ y: 60, opacity: 0 }}
@@ -180,7 +203,7 @@ export default function Page() {
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="fixed bottom-0 inset-x-0 w-full z-50"
           >
-            <Footer />
+            <Footer theme={footerTheme} />
           </motion.div>
         )}
       </AnimatePresence>
