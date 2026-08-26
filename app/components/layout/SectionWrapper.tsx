@@ -19,11 +19,13 @@ export default function SectionWrapper({ id, children }: { id: string; children:
   const sectionHeightClass = isCompactSection
     ? "min-h-[55vh] md:min-h-[60vh]"
     : "min-h-screen";
-  const clearanceClass = needsChromeClearance
-    ? isCompactSection
-      ? "pt-16 pb-20 md:pt-20 md:pb-24"
-      : "pt-16 pb-16 md:pt-20 md:pb-20"
-    : "";
+  
+  const clearanceStyle = needsChromeClearance
+    ? {
+        paddingTop: "var(--navbar-h, 4.5rem)",
+        paddingBottom: "var(--footer-h, 4.5rem)",
+      }
+    : undefined;
 
   useEffect(() => {
     const el = containerRef.current;
@@ -45,7 +47,8 @@ export default function SectionWrapper({ id, children }: { id: string; children:
       id={id} 
       ref={containerRef} 
       data-bgcolor={bgColor}
-      className={`${sectionHeightClass} relative ${clearanceClass}`}
+      className={`${sectionHeightClass} relative`}
+      style={clearanceStyle}
     >
       {children}
     </section>

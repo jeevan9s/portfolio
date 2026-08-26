@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useScrollStore } from "@/lib/scrollStore";
 import { sections } from "@/lib/sections";
-import { motion } from "framer-motion";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 
 interface navbarProps {
   currPage: string;
@@ -13,11 +13,43 @@ interface navbarProps {
 }
 
 const hidden = ["/project"];
+const HIDE_THRESHOLD = 60; 
 
 export default function Navbar({ theme }: navbarProps) {
   const pathname = usePathname();
   const [time, setTime] = useState<string | null>(null);
   const activeSection = useScrollStore((s) => s.section);
+
+  const [isHidden, setIsHidden] = useState(false);
+  const { scrollY } = useScroll();
+  const sectionEntryY = useRef(0);
+
+  useEffect(() => {
+    setIsHidden(false);
+    sectionEntryY.current = scrollY.get();
+  }, [activeSection, scrollY]);
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    const delta = latest - previous;
+    const distanceIntoSection = latest - sectionEntryY.current;
+
+    if (latest < 80) {
+      setIsHidden(false);
+      return;
+    }
+
+
+    if (Math.abs(delta) > 200) {
+      return;
+    }
+
+    if (delta > 0 && distanceIntoSection > HIDE_THRESHOLD) {
+      setIsHidden(true);
+    } else if (delta < 0) {
+      setIsHidden(false);
+    }
+  });
 
   useEffect(() => {
     setTime(new Date().toLocaleTimeString("en-US", { hour12: false }));
@@ -43,8 +75,14 @@ export default function Navbar({ theme }: navbarProps) {
   return (
     <motion.div
       data-theme={theme}
-      className="flex flex-row w-full items-center justify-between px-6 py-4 bg-transparent"
-      style={{ willChange: "transform" }}
+      initial={{ y: 0, opacity: 1 }}
+      animate={{
+        y: isHidden ? "-100%" : "0%",
+        opacity: isHidden ? 0 : 1,
+      }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed top-0 left-0 right-0 z-50 flex flex-row w-full items-center justify-between px-6 py-4 bg-transparent"
+      style={{ willChange: "transform, opacity" }}
     >
       <div className="hidden md:flex flex-row items-baseline gap-x-6 flex-1">
         <div className="flex flex-col">

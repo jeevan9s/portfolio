@@ -74,7 +74,12 @@ export default function Footer({ theme }: footerProps) {
               whileHover={{ scale: 1.25 }}
               animate={copyAnimation}
               transition={{
-                scale: { type: "spring", stiffness: 400, damping: 25, duration:0.5 },
+                scale: {
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 25,
+                  duration: 0.5,
+                },
               }}
               className="relative z-10 w-4 h-4"
             >
@@ -84,6 +89,7 @@ export default function Footer({ theme }: footerProps) {
               />
             </motion.div>
             <TooltipContent
+              data-theme={theme}
               side="top"
               className="inter text-xs bg-transparent border-none shadow-none nav-theme-active"
             >
@@ -108,10 +114,11 @@ export default function Footer({ theme }: footerProps) {
               />
             </motion.div>
             <TooltipContent
+              data-theme={theme}
               side="top"
               className="inter text-xs bg-transparent border-none shadow-none nav-theme-active"
             >
-              li
+              linkedin
             </TooltipContent>
           </Tooltip>
 
@@ -129,10 +136,11 @@ export default function Footer({ theme }: footerProps) {
               />
             </motion.div>
             <TooltipContent
+              data-theme={theme}
               side="top"
               className="inter text-xs bg-transparent border-none shadow-none nav-theme-active"
             >
-              git
+              github
             </TooltipContent>
           </Tooltip>
         </div>

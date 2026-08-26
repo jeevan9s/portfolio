@@ -22,6 +22,7 @@ export default function Background() {
           className="md:mt-25"
         >
         </motion.div>
+        background
       </div>
     </div>
   );

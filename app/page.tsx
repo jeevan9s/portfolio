@@ -22,6 +22,9 @@ export default function Page() {
   const setSection = useScrollStore((s) => s.setSection);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const lenisRef = useRef<Lenis | null>(null);
+  const navbarWrapperRef = useRef<HTMLDivElement | null>(null);
+  const footerWrapperRef = useRef<HTMLDivElement | null>(null);
+  const chromeHeightsRef = useRef({ navbar: 64, footer: 64 });
 
   useLayoutEffect(() => {
     if ("scrollRestoration" in window) {
@@ -58,9 +61,14 @@ export default function Page() {
 
     // Navbar and footer track separate viewport edges, so each can show/hide
     // and theme independently even when two different sections are on screen.
+    // Sampling at the center of each chrome band (rather than the outer edge)
+    // keeps the reported theme matched to whatever content actually sits behind it.
     const updateChromeZones = () => {
-      const navSection = findSectionAtViewportY(1);
-      const footSection = findSectionAtViewportY(window.innerHeight - 1);
+      const { navbar: navH, footer: footH } = chromeHeightsRef.current;
+      const navSection = findSectionAtViewportY(Math.max(1, navH / 2));
+      const footSection = findSectionAtViewportY(
+        Math.min(window.innerHeight - 1, window.innerHeight - footH / 2),
+      );
 
       setNavbarVisible(navSection?.showChrome === true);
       setNavbarTheme(navSection?.bgColor === "EFEFEF" ? "light" : "dark");
@@ -142,6 +150,31 @@ export default function Page() {
     return () => ctx.revert();
   }, [isMounted]);
 
+  // Measures the real rendered height of the floating navbar/footer and exposes
+  // it as CSS vars so section padding always matches, preventing overlap with content.
+  useEffect(() => {
+    const root = document.documentElement;
+
+    const applyHeight = (key: "navbar" | "footer", value: number) => {
+      if (value <= 0) return;
+      chromeHeightsRef.current[key] = value;
+      root.style.setProperty(`--${key}-h`, `${value}px`);
+    };
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const height = entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height;
+        if (entry.target === navbarWrapperRef.current) applyHeight("navbar", height);
+        if (entry.target === footerWrapperRef.current) applyHeight("footer", height);
+      }
+    });
+
+    if (navbarWrapperRef.current) observer.observe(navbarWrapperRef.current);
+    if (footerWrapperRef.current) observer.observe(footerWrapperRef.current);
+
+    return () => observer.disconnect();
+  }, [navbarVisible, footerVisible]);
+
   const currentId = useScrollStore((s) => s.section);
   const current = sections.find((s) => s.id === currentId);
   const currentTheme = current?.bgColor === "EFEFEF" ? "light" : "dark";
@@ -168,12 +201,13 @@ export default function Page() {
       <AnimatePresence>
         {showNavbar && (
           <motion.div
+            ref={navbarWrapperRef}
             key="navbar"
             initial={{ y: -60, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -60, opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="sticky top-0 inset-x-0 z-50"
+            className="fixed top-0 inset-x-0 z-50"
           >
             <Navbar currPage={currentId} theme={navbarTheme} />
           </motion.div>
@@ -196,6 +230,7 @@ export default function Page() {
       <AnimatePresence>
         {showFooter && (
           <motion.div
+            ref={footerWrapperRef}
             key="footer"
             initial={{ y: 60, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
