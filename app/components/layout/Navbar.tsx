@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useScrollStore } from "@/lib/scrollStore";
+import { scrollToSection } from "@/lib/lenisController";
 import { sections } from "@/lib/sections";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 
@@ -81,7 +81,7 @@ export default function Navbar({ theme }: navbarProps) {
         opacity: isHidden ? 0 : 1,
       }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed top-0 left-0 right-0 z-50 flex flex-row w-full items-center justify-between px-6 py-4 bg-transparent"
+      className="flex flex-row w-full items-center justify-between px-6 py-4 bg-transparent"
       style={{ willChange: "transform, opacity" }}
     >
       <div className="hidden md:flex flex-row items-baseline gap-x-6 flex-1">
@@ -104,9 +104,17 @@ export default function Navbar({ theme }: navbarProps) {
         <div className="hidden md:flex flex-row items-center gap-x-12 pt-0.5">
           {navSections.map((sec) => (
             <motion.div key={sec.id} whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 400, damping: 25 }}>
-              <Link href={`#${sec.id}`} className={getLink(sec.id)}>
+              <a
+                href={`#${sec.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection(sec.id);
+                  window.history.replaceState(null, "", `#${sec.id}`);
+                }}
+                className={getLink(sec.id)}
+              >
                 {sec.id.charAt(0).toUpperCase() + sec.id.slice(1)}
-              </Link>
+              </a>
             </motion.div>
           ))}
         </div>

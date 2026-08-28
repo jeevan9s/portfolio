@@ -47,26 +47,6 @@ export default function Hero() {
             willChange: "opacity, filter",
           }}
         >
-          <Tooltip>
-            <div className="md:flex hidden">
-              <TooltipTrigger>
-                <Image
-                  className="transition-all duration-300 hover:scale-105"
-                  data-cursor="grow"
-                  alt="chakana"
-                  src="/chakana.svg"
-                  width={60}
-                  height={60}
-                />
-              </TooltipTrigger>
-              <TooltipContent
-                side="right"
-                className="inter max-w-45 bg-[#1D1D1D]"
-              >
-                la Chakana, a symbol of my Peruvian background.
-              </TooltipContent>
-            </div>
-          </Tooltip>
         </motion.div>
       </div>
 
@@ -85,8 +65,8 @@ export default function Hero() {
           }}
         >
           <p className="nav-theme-active inter md:text-[1.2rem]">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ut
-            dictum orci. In consecm tellus, a tempor mi. 
+          Hey, I’m Jeevan. Particular, observant, and into the details. 
+          I tend to pull at things until they make sense.
           </p>
         </motion.div>
 
@@ -98,7 +78,7 @@ export default function Hero() {
             duration: 2,
             ease: [0.16, 1, 0.3, 1],
             opacity: { duration: 0.6, ease: "linear" },
-            delay: 1,
+            delay: 0.75,
           }}
           style={{
             willChange: "opacity, filter",

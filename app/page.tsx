@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { useScrollStore } from "@/lib/scrollStore";
+import { lenisController } from "@/lib/lenisController";
 import { sections } from "@/lib/sections";
 import Navbar from "@/app/components/layout/Navbar";
 import Footer from "@/app/components/layout/Footer";
@@ -19,6 +20,7 @@ export default function Page() {
   const [navbarTheme, setNavbarTheme] = useState<"light" | "dark">("dark");
   const [footerVisible, setFooterVisible] = useState(false);
   const [footerTheme, setFooterTheme] = useState<"light" | "dark">("dark");
+  
   const setSection = useScrollStore((s) => s.setSection);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const lenisRef = useRef<Lenis | null>(null);
@@ -40,15 +42,15 @@ export default function Page() {
     }
 
     const lenis = new Lenis({
-      duration: 1.1,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.2,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.5,
     });
     lenisRef.current = lenis;
+    lenisController.instance = lenis;
 
-    // Finds whichever section currently occupies a given viewport y-coordinate.
     const findSectionAtViewportY = (y: number) => {
       for (const sec of sections) {
         const el = document.getElementById(`section-${sec.id}`);
@@ -59,10 +61,6 @@ export default function Page() {
       return null;
     };
 
-    // Navbar and footer track separate viewport edges, so each can show/hide
-    // and theme independently even when two different sections are on screen.
-    // Sampling at the center of each chrome band (rather than the outer edge)
-    // keeps the reported theme matched to whatever content actually sits behind it.
     const updateChromeZones = () => {
       const { navbar: navH, footer: footH } = chromeHeightsRef.current;
       const navSection = findSectionAtViewportY(Math.max(1, navH / 2));
@@ -88,30 +86,79 @@ export default function Page() {
 
     lenis.on("scroll", ScrollTrigger.update);
 
+    // Clean post-scroll snap implementation (avoids choppiness)
+    let snapTimeout: NodeJS.Timeout;
+    const handleScrollSnap = () => {
+      clearTimeout(snapTimeout);
+      
+      const y = window.scrollY;
+      const isPinned = ScrollTrigger.getAll().some(
+        (st) => st.vars.pin && y >= st.start && y <= st.end,
+      );
+      if (isPinned) return; // Do not snap while inside pinned/horizontal sections
+
+      snapTimeout = setTimeout(() => {
+        let nearestTop = y;
+        let minDistance = Infinity;
+
+        sections.forEach((sec) => {
+          const el = document.getElementById(`section-${sec.id}`);
+          if (!el) return;
+          const rect = el.getBoundingClientRect();
+          const absoluteTop = rect.top + window.scrollY;
+          const distance = Math.abs(absoluteTop - y);
+
+          if (distance < minDistance) {
+            minDistance = distance;
+            nearestTop = absoluteTop;
+          }
+        });
+
+        // Only snap if offset is slight (prevents jarring long jumps)
+        if (minDistance > 5 && minDistance < window.innerHeight * 0.45) {
+          lenis.scrollTo(nearestTop, {
+            duration: 0.6,
+            easing: (t) => 1 - Math.pow(1 - t, 3),
+          });
+        }
+      }, 180); // Triggers 180ms after the user finishes scrolling
+    };
+
+    lenis.on("scroll", handleScrollSnap);
+
     const updateLenis = (time: number) => {
       lenis.raf(time * 1000);
     };
     gsap.ticker.add(updateLenis);
     gsap.ticker.lagSmoothing(0);
 
-    window.addEventListener("scroll", updateChromeZones, { passive: true });
-    window.addEventListener("resize", updateChromeZones);
+    let chromeFrameId = 0;
+    const scheduleChromeUpdate = () => {
+      if (chromeFrameId) return;
+      chromeFrameId = requestAnimationFrame(() => {
+        chromeFrameId = 0;
+        updateChromeZones();
+      });
+    };
+
+    window.addEventListener("scroll", scheduleChromeUpdate, { passive: true });
+    window.addEventListener("resize", scheduleChromeUpdate);
 
     const rafId = requestAnimationFrame(() => {
       forceHeroTop();
       setIsMounted(true);
     });
 
-    const timeoutId = window.setTimeout(forceHeroTop, 50);
-
     return () => {
       cancelAnimationFrame(rafId);
-      window.clearTimeout(timeoutId);
-      window.removeEventListener("scroll", updateChromeZones);
-      window.removeEventListener("resize", updateChromeZones);
+      clearTimeout(snapTimeout);
+      if (chromeFrameId) cancelAnimationFrame(chromeFrameId);
+      window.removeEventListener("scroll", scheduleChromeUpdate);
+      window.removeEventListener("resize", scheduleChromeUpdate);
       gsap.ticker.remove(updateLenis);
       lenis.destroy();
       lenisRef.current = null;
+      lenisController.instance = null;
     };
   }, [setSection]);
 
@@ -139,7 +186,7 @@ export default function Page() {
             trigger: el,
             start: "top bottom",
             end: "top top",
-            scrub: 1,
+            scrub: true,
           },
         });
       });
@@ -150,8 +197,6 @@ export default function Page() {
     return () => ctx.revert();
   }, [isMounted]);
 
-  // Measures the real rendered height of the floating navbar/footer and exposes
-  // it as CSS vars so section padding always matches, preventing overlap with content.
   useEffect(() => {
     const root = document.documentElement;
 
@@ -159,6 +204,7 @@ export default function Page() {
       if (value <= 0) return;
       chromeHeightsRef.current[key] = value;
       root.style.setProperty(`--${key}-h`, `${value}px`);
+      if (key === "navbar") lenisController.navbarHeight = value;
     };
 
     const observer = new ResizeObserver((entries) => {
@@ -167,6 +213,7 @@ export default function Page() {
         if (entry.target === navbarWrapperRef.current) applyHeight("navbar", height);
         if (entry.target === footerWrapperRef.current) applyHeight("footer", height);
       }
+      ScrollTrigger.refresh();
     });
 
     if (navbarWrapperRef.current) observer.observe(navbarWrapperRef.current);
@@ -203,11 +250,11 @@ export default function Page() {
           <motion.div
             ref={navbarWrapperRef}
             key="navbar"
-            initial={{ y: -60, opacity: 0 }}
+            initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -60, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed top-0 inset-x-0 z-50"
+            exit={{ y: -20, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="fixed top-0 inset-x-0 z-50 pointer-events-auto"
           >
             <Navbar currPage={currentId} theme={navbarTheme} />
           </motion.div>
@@ -232,11 +279,11 @@ export default function Page() {
           <motion.div
             ref={footerWrapperRef}
             key="footer"
-            initial={{ y: 60, opacity: 0 }}
+            initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 60, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed bottom-0 inset-x-0 w-full z-50"
+            exit={{ y: 20, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="fixed bottom-0 inset-x-0 w-full z-50 pointer-events-auto"
           >
             <Footer theme={footerTheme} />
           </motion.div>

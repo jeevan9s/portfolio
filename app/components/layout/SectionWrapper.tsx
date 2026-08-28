@@ -19,13 +19,11 @@ export default function SectionWrapper({ id, children }: { id: string; children:
   const sectionHeightClass = isCompactSection
     ? "min-h-[55vh] md:min-h-[60vh]"
     : "min-h-screen";
-  
-  const clearanceStyle = needsChromeClearance
-    ? {
-        paddingTop: "var(--navbar-h, 4.5rem)",
-        paddingBottom: "var(--footer-h, 4.5rem)",
-      }
-    : undefined;
+
+  // Static, generous clearance (rather than measuring the navbar/footer's
+  // rendered height async) so content can never overlap the fixed chrome,
+  // regardless of measurement timing races.
+  const clearanceClass = needsChromeClearance ? "pt-28 pb-24 md:pt-32 md:pb-28" : "";
 
   useEffect(() => {
     const el = containerRef.current;
@@ -47,8 +45,7 @@ export default function SectionWrapper({ id, children }: { id: string; children:
       id={id} 
       ref={containerRef} 
       data-bgcolor={bgColor}
-      className={`${sectionHeightClass} relative`}
-      style={clearanceStyle}
+      className={`${sectionHeightClass} relative ${clearanceClass}`}
     >
       {children}
     </section>
