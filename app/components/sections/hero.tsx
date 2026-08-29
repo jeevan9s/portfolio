@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <div  className="flex flex-col md:flex-row flex-1 bg-transparent md:justify-between md:items-start items-center gap-y-10 justify-center min-h-screen p-8 md:p-12">
+    <div  className="flex flex-col md:flex-row flex-1 bg-transparent md:justify-between md:items-start items-start gap-y-10 justify-center min-h-screen p-8 md:p-12">
       <div className="flex flex-col gap-y-5 max-w-[100rem] md:max-w-350 md:mt-5">
         <motion.div
           initial={{ opacity: 0, y: 50, filter: "blur(12px)" }}
@@ -50,7 +50,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      <div className="flex flex-col md:gap-y-3 gap-y-5 md:max-w-100 md:bottom-30 md:right-40 md:absolute">
+      <div className="flex flex-col md:gap-y-3 gap-y-5 md:max-w-85 max-w-65 md:bottom-30 md:right-40 md:absolute">
         <motion.div
           initial={{ opacity: 0, y: 70, filter: "blur(12px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -64,9 +64,9 @@ export default function Hero() {
             willChange: "transform, opacity, filter",
           }}
         >
-          <p className="nav-theme-active inter md:text-[1.2rem]">
-          Hey, I’m Jeevan. Particular, observant, and into the details. 
-          I tend to pull at things until they make sense.
+          <p className="nav-theme-active inter md:text-[1.2rem] spaced-paragraph">
+            hey I&apos;m Jeevan.
+            I build hardware and write code as an outlet for creativity, curiosity, and utility.
           </p>
         </motion.div>
 
@@ -85,7 +85,7 @@ export default function Hero() {
           }}
           className="opacity-0"
         >
-          <p className="nav-theme-muted inter md:text-[1.2rem]">
+          <p className="text-[#9C9A9A] inter md:text-[1.2rem]">
             based in Toronto, CA.
           </p>{" "}
         </motion.div>

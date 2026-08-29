@@ -152,7 +152,7 @@ body {
 [data-theme="dark"] {
   --nav-bg: #1D1D1D;
   --text-primary: #ffffff;
-  --text-muted: #727272;
+  --text-muted: #9C9A9A;
 }
 
 [data-theme="light"] {

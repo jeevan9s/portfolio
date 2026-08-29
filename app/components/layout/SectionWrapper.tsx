@@ -20,9 +20,6 @@ export default function SectionWrapper({ id, children }: { id: string; children:
     ? "min-h-[55vh] md:min-h-[60vh]"
     : "min-h-screen";
 
-  // Static, generous clearance (rather than measuring the navbar/footer's
-  // rendered height async) so content can never overlap the fixed chrome,
-  // regardless of measurement timing races.
   const clearanceClass = needsChromeClearance ? "pt-28 pb-24 md:pt-32 md:pb-28" : "";
 
   useEffect(() => {

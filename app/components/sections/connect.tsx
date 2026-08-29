@@ -1,12 +1,11 @@
 import { motion, type Variants } from "framer-motion";
 
-// contact section
 const revealTransition = { duration: 0.7, ease: [0.16, 1, 0.3, 1] } as const;
-const viewport = { once: false, amount: 0.3, margin: "0px 0px -10% 0px" } as const;
+const viewport = { once: false, amount: 0.2, margin: "0px 0px -5% 0px" } as const;
 
 const listVariants: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.1, delayChildren: 0.15 } },
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 };
 
 const itemVariants: Variants = {
@@ -21,8 +20,8 @@ const itemVariants: Variants = {
 
 export default function Connect() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] flex-1 bg-transparent gap-y-10 md:gap-x-12 items-center md:items-start justify-center md:justify-between h-auto p-8 md:p-12">
-      <div className="flex flex-col gap-y-5 w-full md:max-w-2xl">
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] flex-1 bg-transparent gap-y-10 md:gap-x-12 items-start justify-start md:justify-between h-112 p-6 sm:p-8 md:p-12">
+      <div className="flex flex-col gap-y-4 w-full md:max-w-2xl">
         <motion.div
           initial={{ opacity: 0, y: 32, filter: "blur(10px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -32,7 +31,7 @@ export default function Connect() {
             willChange: "transform, opacity, filter",
           }}
         >
-          <h1 className="text-[2rem] text-[#FFFFFF] md:text-[5.25rem] md:leading-none montserrat">
+          <h1 className="text-[2.25rem] leading-[1.1] text-[#FFFFFF] sm:text-[3rem] md:text-[5.25rem] md:leading-none montserrat text-left">
             let&apos;s connect.
           </h1>
         </motion.div>
@@ -44,9 +43,9 @@ export default function Connect() {
           transition={{ ...revealTransition, delay: 0.1 }}
           className="flex flex-col w-full md:max-w-[30rem]"
         >
-          <p className="inter text-[1rem] md:text-xl text-[#969696] leading-tight text-center md:text-left cursor-pointer">
+          <p className="inter text-base sm:text-lg md:text-xl text-[#969696] leading-relaxed text-left">
             reach out to me. I&apos;m always interested in
-            <span className="inter text-[1rem] md:text-xl text-[#DEDCDC]">
+            <span className="inter text-base sm:text-lg md:text-xl text-[#DEDCDC]">
               {" "}
               hearing new ideas and learning
             </span>{" "}
@@ -60,41 +59,43 @@ export default function Connect() {
         whileInView="show"
         viewport={viewport}
         variants={listVariants}
-        className="flex flex-col gap-y-8 justify-start w-full md:w-[28rem] md:pt-3"
+        className="flex flex-col divide-y divide-white/10 md:divide-none w-full md:w-[28rem] md:gap-y-6 md:pt-3 text-left items-start"
       >
         <motion.a
           variants={itemVariants}
           href="mailto:jeevansanchez42@gmail.com"
           data-cursor="grow"
-          className="inter text-[#DEDCDC] md:text-2xl md:leading-none transition-all duration-300 hover:scale-105 w-fit"
+          className="inter text-[#DEDCDC] text-lg sm:text-xl md:text-2xl md:leading-none transition-all duration-300 active:scale-95 hover:scale-110 py-3 md:py-1 w-full md:w-fit block"
         >
-          Email
+          email
         </motion.a>
-        <motion.p
+        <motion.a
           variants={itemVariants}
-          onClick={() =>
-            window.open("https://www.linkedin.com/in/jeevansanchez/", "_blank")
-          }
+          href="https://www.linkedin.com/in/jeevansanchez/"
+          target="_blank"
+          rel="noopener noreferrer"
           data-cursor="grow"
-          className="inter text-[#DEDCDC] md:text-2xl transition-all duration-300 hover:scale-105 cursor-pointer"
+          className="inter text-[#DEDCDC] text-lg sm:text-xl md:text-2xl transition-all duration-300 active:scale-95 hover:scale-110 py-3 md:py-1 w-full md:w-fit block cursor-pointer"
         >
-          LinkedIn
-        </motion.p>
-        <motion.p
+          linkedin
+        </motion.a>
+        <motion.a
           variants={itemVariants}
-          onClick={() => window.open("https://github.com/jeevan9s", "_blank")}
+          href="https://github.com/jeevan9s"
+          target="_blank"
+          rel="noopener noreferrer"
           data-cursor="grow"
-          className="inter text-[#DEDCDC] md:text-2xl transition-all duration-300 hover:scale-105 cursor-pointer"
+          className="inter text-[#DEDCDC] text-lg sm:text-xl md:text-2xl transition-all duration-300 active:scale-95 hover:scale-110 py-3 md:py-1 w-full md:w-fit block cursor-pointer"
         >
-          GitHub
-        </motion.p>
-        <motion.p
+          github
+        </motion.a>
+        <motion.button
           variants={itemVariants}
           data-cursor="grow"
-          className="inter text-[#DEDCDC] md:text-2xl transition-all duration-300 hover:scale-105 cursor-pointer"
+          className="inter text-[#DEDCDC] text-lg sm:text-xl md:text-2xl transition-all duration-300 active:scale-95 hover:scale-110 py-3 md:py-1 w-full md:w-fit text-left cursor-pointer"
         >
-          Resume
-        </motion.p>
+          resume
+        </motion.button>
       </motion.div>
     </div>
   );
