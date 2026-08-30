@@ -1,5 +1,3 @@
-// selected work page (Non-Pinned / Fluid Layout Version)
-
 import { useRef, useLayoutEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import gsap from "gsap";
@@ -14,10 +12,12 @@ type Project =
   | { type: "firmware"; id: string; title: string; description: string; image?: string; };
 
 const projects: Project[] = [
-  { type: "hardware", id: "proj-1", title: "Title", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm" },
-  { type: "firmware", id: "proj-2", title: "Firmware Title", description: "Short description of what this firmware does." },
-  { type: "hardware", id: "proj-3", title: "Another Board", description: "Short description of the board and problem solved.", mcu: "RP2040", layers: 2, size: "35 × 20mm" },
-  { type: "firmware", id: "proj-4", title: "RTOS Scheduler", description: "A short blurb describing the scheduler's purpose." },
+  { type: "hardware", id: "proj-1", title: "Penguin", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm" },
+  { type: "hardware", id: "proj-2", title: "Avionics Sensor & Control Modules", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm" },
+  { type: "hardware", id: "proj-3", title: "Homectrl", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm" },
+  { type: "firmware", id: "proj-4", title: "Avionics Libraries", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
+  { type: "firmware", id: "proj-5", title: "LSM6DSM Library", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
+  { type: "firmware", id: "proj-6", title: "Calmeca", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
 ];
 
 export default function Work() {

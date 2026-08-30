@@ -1,9 +1,10 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { useRef } from "react";
+import { Suspense, useRef } from "react";
 import { Mesh } from "three";
 import { useFrame } from "@react-three/fiber";
+import { useGLTF, Center, Bounds } from "@react-three/drei";
 import {
   CARD_WIDTH,
   CARD_ASPECT,
@@ -19,9 +20,10 @@ interface HardwareCardProps {
   layers: number;
   size: string;
   image?: string;
+  modelPath?: string; 
 }
 
-function Board() {
+function PlaceholderBoard() {
   const meshRef = useRef<Mesh>(null);
 
   useFrame((_, delta) => {
@@ -37,12 +39,29 @@ function Board() {
   );
 }
 
+function RealBoard({ modelPath }: { modelPath: string }) {
+  const groupRef = useRef<Mesh>(null);
+  const { scene } = useGLTF(modelPath);
+
+  useFrame((_, delta) => {
+    if (!groupRef.current) return;
+    groupRef.current.rotation.y += delta * 0.35;
+  });
+
+  return (
+    <group ref={groupRef as never} rotation={[0.15, 0.6, 0]}>
+      <primitive object={scene} />
+    </group>
+  );
+}
+
 export default function HardwareCard({
   title,
   description,
   mcu,
   layers,
   size,
+  modelPath,
 }: HardwareCardProps) {
   return (
     <div className={`shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer`}>
@@ -57,32 +76,42 @@ export default function HardwareCard({
           <ambientLight intensity={0.6} />
           <directionalLight position={[3, 3, 4]} intensity={1.1} />
           <directionalLight position={[-3, -2, 2]} intensity={0.3} />
-          <Board />
+          <Suspense fallback={null}>
+            {modelPath ? (
+              <Bounds fit clip observe margin={1.2}>
+                <Center>
+                  <RealBoard modelPath={modelPath} />
+                </Center>
+              </Bounds>
+            ) : (
+              <PlaceholderBoard />
+            )}
+          </Suspense>
         </Canvas>
 
-        <div className="absolute bottom-3 right-3 bg-[#F4F4F4] rounded-md px-3 py-2 text-right pointer-events-none">
+        <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-[#F4F4F4] rounded-md px-2 py-1.5 sm:px-3 sm:py-2 text-right pointer-events-none max-w-[65%]">
           <div className="flex flex-col gap-y-0.5">
-            <div className="flex items-center justify-between gap-x-4">
-              <span className="inter text-[0.65rem] text-[#9B9B9B] uppercase tracking-wide">
+            <div className="flex items-center justify-between gap-x-2 sm:gap-x-4">
+              <span className="inter text-[0.55rem] sm:text-[0.65rem] text-[#9B9B9B] uppercase tracking-wide">
                 MCU
               </span>
-              <span className="inter text-[0.65rem] text-[#1E1E1E] font-medium">
+              <span className="inter text-[0.55rem] sm:text-[0.65rem] text-[#1E1E1E] font-medium truncate">
                 {mcu}
               </span>
             </div>
-            <div className="flex items-center justify-between gap-x-4">
-              <span className="inter text-[0.65rem] text-[#9B9B9B] uppercase tracking-wide">
+            <div className="flex items-center justify-between gap-x-2 sm:gap-x-4">
+              <span className="inter text-[0.55rem] sm:text-[0.65rem] text-[#9B9B9B] uppercase tracking-wide">
                 Layers
               </span>
-              <span className="inter text-[0.65rem] text-[#1E1E1E] font-medium">
+              <span className="inter text-[0.55rem] sm:text-[0.65rem] text-[#1E1E1E] font-medium">
                 {layers}
               </span>
             </div>
-            <div className="flex items-center justify-between gap-x-4">
-              <span className="inter text-[0.65rem] text-[#9B9B9B] uppercase tracking-wide">
+            <div className="flex items-center justify-between gap-x-2 sm:gap-x-4">
+              <span className="inter text-[0.55rem] sm:text-[0.65rem] text-[#9B9B9B] uppercase tracking-wide">
                 Size
               </span>
-              <span className="inter text-[0.65rem] text-[#1E1E1E] font-medium">
+              <span className="inter text-[0.55rem] sm:text-[0.65rem] text-[#1E1E1E] font-medium">
                 {size}
               </span>
             </div>
