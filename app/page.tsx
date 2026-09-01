@@ -82,7 +82,13 @@ export default function Page() {
       updateChromeZones();
     };
 
+    const handlePageShow = () => {
+      forceHeroTop();
+      requestAnimationFrame(forceHeroTop);
+    };
+
     forceHeroTop();
+    window.addEventListener("pageshow", handlePageShow);
 
     lenis.on("scroll", ScrollTrigger.update);
 
@@ -155,6 +161,7 @@ export default function Page() {
       if (chromeFrameId) cancelAnimationFrame(chromeFrameId);
       window.removeEventListener("scroll", scheduleChromeUpdate);
       window.removeEventListener("resize", scheduleChromeUpdate);
+      window.removeEventListener("pageshow", handlePageShow);
       gsap.ticker.remove(updateLenis);
       lenis.destroy();
       lenisRef.current = null;

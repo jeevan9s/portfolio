@@ -1,57 +1,35 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useScrollStore } from "@/lib/scrollStore";
 import { scrollToSection } from "@/lib/lenisController";
 import { sections } from "@/lib/sections";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface navbarProps {
-  currPage: string;
   theme: "light" | "dark";
 }
 
 const hidden = ["/project"];
-const HIDE_THRESHOLD = 60;
 
 export default function Navbar({ theme }: navbarProps) {
   const pathname = usePathname();
   const [time, setTime] = useState<string | null>(null);
   const activeSection = useScrollStore((s) => s.section);
-  const [isHidden, setIsHidden] = useState(false);
-  const { scrollY } = useScroll();
-  const sectionEntryY = useRef(0);
 
   useEffect(() => {
-    setIsHidden(false);
-    sectionEntryY.current = scrollY.get();
-  }, [activeSection, scrollY]);
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    const previous = scrollY.getPrevious() ?? 0;
-    const delta = latest - previous;
-    const distanceIntoSection = latest - sectionEntryY.current;
-
-    if (latest < 80) {
-      setIsHidden(false);
-      return;
-    }
-    if (Math.abs(delta) > 200) {
-      return;
-    }
-    if (delta > 0 && distanceIntoSection > HIDE_THRESHOLD) {
-      setIsHidden(true);
-    } else if (delta < 0) {
-      setIsHidden(false);
-    }
-  });
-
-  useEffect(() => {
-    setTime(new Date().toLocaleTimeString("en-US", { hour12: false }));
-    const timer = setInterval(() => {
+    const updateTime = () => {
       setTime(new Date().toLocaleTimeString("en-US", { hour12: false }));
+    };
+
+    const initialTimer = window.setTimeout(updateTime, 0);
+    const timer = setInterval(() => {
+      updateTime();
     }, 1000);
-    return () => clearInterval(timer);
+    return () => {
+      window.clearTimeout(initialTimer);
+      clearInterval(timer);
+    };
   }, []);
 
   if (hidden.includes(pathname)) return null;
@@ -66,16 +44,9 @@ export default function Navbar({ theme }: navbarProps) {
   const navSections = sections.filter((sec) => sec.id !== "hero" && sec.displayNav !== false);
 
   return (
-    <motion.div
+    <div
       data-theme={theme}
-      initial={{ y: 0, opacity: 1 }}
-      animate={{
-        y: isHidden ? "-100%" : "0%",
-        opacity: isHidden ? 0 : 1,
-      }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="flex flex-row w-full items-center justify-between px-6 py-4 bg-transparent"
-      style={{ willChange: "transform, opacity" }}
+      className="nav-theme-bg flex flex-row w-full items-center justify-between px-6 py-4"
     >
       <div className="hidden md:flex flex-row items-baseline gap-x-6 flex-1">
         <div className="flex flex-col">
@@ -127,6 +98,6 @@ export default function Navbar({ theme }: navbarProps) {
           </motion.button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

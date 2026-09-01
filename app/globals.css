@@ -93,6 +93,7 @@
 body {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .montserrat {
@@ -163,17 +164,17 @@ body {
 
 .nav-theme-bg {
   background-color: var(--nav-bg);
-  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.7s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
 .nav-theme-active {
   color: var(--text-primary);
-  transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.7s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
 .nav-theme-muted {
   color: var(--text-muted);
-  transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.7s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
 .panel-offset {

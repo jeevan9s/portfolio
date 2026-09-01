@@ -29,7 +29,7 @@ export default function Footer({ theme }: footerProps) {
   return (
     <div
       data-theme={theme}
-      className="flex flex-row bg-transparent w-full items-center justify-between px-6 py-4 transition-colors duration-300"
+      className="nav-theme-bg flex flex-row w-full items-center justify-between px-6 py-4"
     >
       <div className="hidden md:flex flex-row items-center gap-x-2 flex-1">
         <motion.button
