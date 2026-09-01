@@ -8,15 +8,15 @@ import FirmwareCard from "../work/fwCard";
 gsap.registerPlugin(ScrollTrigger);
 
 type Project =
-  | { type: "hardware"; id: string; title: string; description: string; mcu: string; layers: number; size: string; image?: string; }
+  | { type: "hardware"; id: string; title: string; description: string; mcu: string; layers: number; size: string; image?: string; modelPath?: string; }
   | { type: "firmware"; id: string; title: string; description: string; image?: string; };
 
 const projects: Project[] = [
-  { type: "hardware", id: "proj-1", title: "Penguin", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm" },
+  { type: "hardware", id: "proj-1", title: "Penguin", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm", modelPath: "/projs/models/penguin_controller.glb", },
   { type: "hardware", id: "proj-2", title: "Avionics Sensor & Control Modules", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm" },
-  { type: "hardware", id: "proj-3", title: "Homectrl", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm" },
+  { type: "hardware", id: "proj-3", title: "Homectrl", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm",  modelPath: "/projs/models/homectrl_controller.glb", },
   { type: "firmware", id: "proj-4", title: "Avionics Libraries", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
-  { type: "firmware", id: "proj-5", title: "Motion Driver", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
+  { type: "firmware", id: "proj-5", title: "Motion Library", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
   { type: "firmware", id: "proj-6", title: "Calmeca", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
 ];
 
@@ -76,7 +76,6 @@ export default function Work() {
           </motion.div>
         </div>
 
-        {/* Horizontal track driven by Framer Motion's high-performance useScroll */}
         <div className="w-full overflow-hidden">
           <motion.div 
             ref={trackRef} 
