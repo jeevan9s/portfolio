@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useScrollStore } from "@/lib/scrollStore";
@@ -13,13 +12,12 @@ interface navbarProps {
 }
 
 const hidden = ["/project"];
-const HIDE_THRESHOLD = 60; 
+const HIDE_THRESHOLD = 60;
 
 export default function Navbar({ theme }: navbarProps) {
   const pathname = usePathname();
   const [time, setTime] = useState<string | null>(null);
   const activeSection = useScrollStore((s) => s.section);
-
   const [isHidden, setIsHidden] = useState(false);
   const { scrollY } = useScroll();
   const sectionEntryY = useRef(0);
@@ -38,12 +36,9 @@ export default function Navbar({ theme }: navbarProps) {
       setIsHidden(false);
       return;
     }
-
-
     if (Math.abs(delta) > 200) {
       return;
     }
-
     if (delta > 0 && distanceIntoSection > HIDE_THRESHOLD) {
       setIsHidden(true);
     } else if (delta < 0) {
@@ -53,11 +48,9 @@ export default function Navbar({ theme }: navbarProps) {
 
   useEffect(() => {
     setTime(new Date().toLocaleTimeString("en-US", { hour12: false }));
-
     const timer = setInterval(() => {
       setTime(new Date().toLocaleTimeString("en-US", { hour12: false }));
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
 
@@ -70,7 +63,7 @@ export default function Navbar({ theme }: navbarProps) {
     }`;
   };
 
-  const navSections = sections.filter((sec) => sec.id !== "hero");
+  const navSections = sections.filter((sec) => sec.id !== "hero" && sec.displayNav !== false);
 
   return (
     <motion.div
@@ -103,7 +96,11 @@ export default function Navbar({ theme }: navbarProps) {
       <div className="flex flex-row items-center justify-end flex-1">
         <div className="hidden md:flex flex-row items-center gap-x-12 pt-0.5">
           {navSections.map((sec) => (
-            <motion.div key={sec.id} whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 400, damping: 25 }}>
+            <motion.div
+              key={sec.id}
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            >
               <a
                 href={`#${sec.id}`}
                 onClick={(e) => {
@@ -120,7 +117,12 @@ export default function Navbar({ theme }: navbarProps) {
         </div>
 
         <div className="md:hidden">
-          <motion.button whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 400, damping: 25 }} onClick={() => {}} className="text-sm bg-transparent border-none nav-theme-muted inter cursor-pointer hover:nav-theme-active transition-colors duration-300">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            onClick={() => {}}
+            className="text-sm bg-transparent border-none nav-theme-muted inter cursor-pointer hover:nav-theme-active transition-colors duration-300"
+          >
             menu
           </motion.button>
         </div>

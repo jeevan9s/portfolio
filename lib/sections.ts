@@ -11,6 +11,7 @@ export type SectionConfig = {
     Component: ComponentType;
     bgColor: bgTheme; 
     showChrome: boolean;
+    displayNav?: boolean;
 }
 
 type bgTheme = "1D1D1D" | "EFEFEF"; 
@@ -21,5 +22,5 @@ export const sections: SectionConfig[] = [
     {id: 'background', Component: Background, bgColor:"EFEFEF", showChrome:true}, 
     {id: 'connect', Component: Connect, bgColor:"1D1D1D", showChrome:true}, 
     {id: 'gallery', Component: Gallery, bgColor:"1D1D1D", showChrome: false},
-    {id: 'end', Component: EndCard, bgColor:"1D1D1D", showChrome: false}
+    {id: 'end', Component: EndCard, bgColor:"1D1D1D", showChrome: false, displayNav: false}
 ]

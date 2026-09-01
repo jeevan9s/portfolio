@@ -13,6 +13,7 @@ type Photo = {
   orientation: Orientation;
 };
 
+// add new photos here — that's it, nothing else in this file needs to change
 const photos: Photo[] = [
   { id: "1", src: "https://picsum.photos/seed/js-gallery-01/800/600", alt: "", orientation: "landscape" },
   { id: "2", src: "https://picsum.photos/seed/js-gallery-02/800/1000", alt: "", orientation: "portrait" },
@@ -61,7 +62,7 @@ function GalleryCard({
       viewport={viewport}
       variants={cardVariants}
       data-cursor="grow"
-      className={`relative w-full ${aspectClass[photo.orientation]} rounded-xl overflow-hidden bg-[#2A2A2A] mb-4 sm:mb-5 md:mb-6 break-inside-avoid`}
+      className={`relative w-full ${aspectClass[photo.orientation]} rounded-lg sm:rounded-xl overflow-hidden bg-[#2A2A2A] mb-2.5 sm:mb-4 md:mb-5 lg:mb-6 break-inside-avoid`}
     >
       <img
         src={photo.src}
@@ -92,19 +93,19 @@ export default function Gallery() {
   };
 
   return (
-    <div className="flex flex-col flex-1 bg-transparent items-center pt-24 md:pt-32 p-6 sm:p-8 md:p-12">
+    <div className="flex flex-col flex-1 bg-transparent items-center pt-24 md:pt-32 p-4 sm:p-8 md:p-12">
       <div className="w-full max-w-[100rem]">
         <motion.p
           initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={viewport}
           transition={revealTransition}
-          className="inter text-xl md:text-3xl nav-theme-muted mb-8 md:mb-10"
+          className="inter text-xl md:text-3xl nav-theme-muted mb-6 sm:mb-8 md:mb-10"
         >
           gallery
         </motion.p>
 
-        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 sm:gap-5 md:gap-6">
+        <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 gap-2.5 sm:gap-4 md:gap-5 lg:gap-6">
           {photos.map((photo) => (
             <GalleryCard
               key={photo.id}

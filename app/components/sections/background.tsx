@@ -24,6 +24,7 @@ export default function Background() {
         <motion.div
           initial={{ opacity: 0, y: 30, filter: "blur(4px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          onViewportEnter={() => setIsSecondActive(false)}
           viewport={{ once: false, amount: 0.4 }}
           onViewportLeave={() => setIsExpanded(false)}
           transition={{
@@ -126,7 +127,10 @@ export default function Background() {
             </div>
           </motion.div>
 
-          <p className="inter text-2xl sm:text-3xl md:text-[3rem] leading-[1.35] md:leading-tight">
+          <p
+            className="inter text-2xl sm:text-3xl md:text-[3rem] leading-[1.35] md:leading-tight"
+            onMouseLeave={() => canHover && setIsSecondActive(false)}
+          >
             <motion.span
               onMouseEnter={() => canHover && setIsSecondActive(false)}
               onClick={() => !canHover && setIsSecondActive(false)}
