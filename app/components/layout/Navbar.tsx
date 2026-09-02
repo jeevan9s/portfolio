@@ -8,14 +8,16 @@ import { motion } from "framer-motion";
 
 interface navbarProps {
   theme: "light" | "dark";
+  currPage?: string;
 }
 
 const hidden = ["/project"];
 
-export default function Navbar({ theme }: navbarProps) {
+export default function Navbar({ theme, currPage }: navbarProps) {
   const pathname = usePathname();
   const [time, setTime] = useState<string | null>(null);
-  const activeSection = useScrollStore((s) => s.section);
+  const storeSection = useScrollStore((s) => s.section);
+  const activeSection = currPage ?? storeSection;
 
   useEffect(() => {
     const updateTime = () => {

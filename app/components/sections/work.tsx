@@ -12,8 +12,8 @@ type Project =
   | { type: "firmware"; id: string; title: string; description: string; image?: string; };
 
 const projects: Project[] = [
-  { type: "hardware", id: "proj-1", title: "Penguin", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm", modelPath: "/projs/models/penguin_controller.glb", },
-  { type: "hardware", id: "proj-2", title: "Avionics Sensor & Control Modules", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm" },
+  { type: "hardware", id: "proj-1", title: "Penguin", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm", modelPath: "/projs/models/penguin_controller.glb"},
+  { type: "hardware", id: "proj-2", title: "Avionics Sensor & Control Modules", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm", modelPath: "/projs/models/lower_lc_board.glb"},
   { type: "hardware", id: "proj-3", title: "Homectrl", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm",  modelPath: "/projs/models/homectrl_controller.glb", },
   { type: "firmware", id: "proj-4", title: "Avionics Libraries", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
   { type: "firmware", id: "proj-5", title: "Motion Library", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
@@ -39,17 +39,20 @@ export default function Work() {
     const ctx = gsap.context(() => {
       const cards = gsap.utils.toArray<HTMLElement>(".work-card", track);
 
-      gsap.fromTo(cards, 
-        { opacity: 0, y: 40, scale: 0.95, filter: "blur(10px)" },
+      gsap.fromTo(cards,
+        { opacity: 0, y: 40 },
         {
-          opacity: 1, y: 0, scale: 1, filter: "blur(0px)",
-          duration: 1, ease: "power3.out", stagger: 0.08,
-          scrollTrigger: { 
-            trigger: container, 
-            start: "top 75%", 
-            toggleActions: "play none none reverse" 
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          stagger: 0.08,
+          scrollTrigger: {
+            trigger: container,
+            start: "top 75%",
+            toggleActions: "play none none reverse",
           },
-        }
+        },
       );
     }, container);
 
@@ -64,8 +67,8 @@ export default function Work() {
       <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden p-8 md:p-12">
         <div className="flex flex-col gap-y-3 max-w-[100rem] mb-8">
           <motion.div
-            initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.3 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >

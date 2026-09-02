@@ -1,11 +1,11 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { Suspense, useRef } from "react";
+import { Suspense, useMemo, useRef } from "react";
 import type { Group, Mesh } from "three";
+import * as THREE from "three";
 import { useInView } from "framer-motion";
-import { useFrame } from "@react-three/fiber";
-import { useGLTF, Center, Bounds } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import {
   CARD_WIDTH,
   CARD_ASPECT,
@@ -25,15 +25,8 @@ interface HardwareCardProps {
 }
 
 function PlaceholderBoard() {
-  const meshRef = useRef<Mesh>(null);
-
-  useFrame(({ clock }) => {
-    if (!meshRef.current) return;
-    meshRef.current.rotation.y = 0.6 + Math.sin(clock.elapsedTime * 0.75) * 0.2;
-  });
-
   return (
-    <mesh ref={meshRef} rotation={[0.15, 0.6, 0]}>
+    <mesh rotation={[0.05, 0, 0]}>
       <boxGeometry args={[1.6, 2, 0.08]} />
       <meshStandardMaterial color="#2B2B2B" roughness={0.5} metalness={0.2} />
     </mesh>
@@ -41,16 +34,22 @@ function PlaceholderBoard() {
 }
 
 function RealBoard({ modelPath }: { modelPath: string }) {
-  const groupRef = useRef<Group>(null);
   const { scene } = useGLTF(modelPath);
 
-  useFrame((_, delta) => {
-    if (!groupRef.current) return;
-    groupRef.current.rotation.y += delta * 0.5;
-  });
+  const { scale } = useMemo(() => {
+    const box = new THREE.Box3().setFromObject(scene);
+    const sphere = box.getBoundingSphere(new THREE.Sphere());
+    const targetRadius = 0.85;
+
+    scene.position.sub(sphere.center);
+
+    return {
+      scale: targetRadius / sphere.radius,
+    };
+  }, [scene]);
 
   return (
-    <group ref={groupRef} rotation={[0.15, 0.6, 0]}>
+    <group rotation={[0.05, 0, 0]} scale={scale}>
       <primitive object={scene} />
     </group>
   );
@@ -77,21 +76,18 @@ export default function HardwareCard({
       >
         {isPreviewNearViewport && (
           <Canvas
-            camera={{ position: [0, 0, 4], fov: 40 }}
-            dpr={1}
-            frameloop="always"
-            gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
+            camera={{ position: [0, 0.2, 4.5], fov: 26 }}
+            dpr={[1, 1.5]}
+            frameloop="demand"
+            gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+            flat
           >
-            <ambientLight intensity={0.6} />
-            <directionalLight position={[3, 3, 4]} intensity={1.1} />
-            <directionalLight position={[-3, -2, 2]} intensity={0.3} />
+            <ambientLight intensity={0.5} color="#ffffff" />
+            <directionalLight position={[3, 3, 4]} intensity={0.9} color="#ffffff" />
+            <directionalLight position={[-4, -2, 2]} intensity={0.4} color="#ffffff" />
             <Suspense fallback={null}>
               {modelPath ? (
-                <Bounds fit margin={1.8}>
-                  <Center>
-                    <RealBoard modelPath={modelPath} />
-                  </Center>
-                </Bounds>
+                <RealBoard modelPath={modelPath} />
               ) : (
                 <PlaceholderBoard />
               )}
