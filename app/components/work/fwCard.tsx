@@ -5,6 +5,7 @@ import {
   CARD_TITLE,
   CARD_DESCRIPTION,
 } from "./cardTypes";
+import Link from "next/link";
 
 export interface FirmwareSpecItem {
   label: string;
@@ -13,6 +14,7 @@ export interface FirmwareSpecItem {
 }
 
 interface FirmwareCardProps {
+  id: string;
   title: string;
   description: string;
   specs: FirmwareSpecItem[];
@@ -23,6 +25,7 @@ interface FirmwareCardProps {
 }
 
 export default function FirmwareCard({
+  id,
   title,
   description,
   specs,
@@ -32,7 +35,7 @@ export default function FirmwareCard({
   apis,
 }: FirmwareCardProps) {
   return (
-    <div className={`shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer`}>
+    <Link href={`/project/${id}`} className={`shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer`}>
       <div
         className={`relative w-full ${CARD_ASPECT} rounded-xl bg-[#1E1E1E] overflow-hidden transition-transform duration-300 hover:scale-[0.98] flex flex-col justify-between p-4 sm:p-5`}
       >
@@ -82,6 +85,6 @@ export default function FirmwareCard({
         <h4 className={CARD_TITLE}>{title}</h4>
         <p className={CARD_DESCRIPTION}>{description}</p>
       </div>
-    </div>
+    </Link>
   );
 }

@@ -5,6 +5,7 @@ import type { Group, Mesh } from "three";
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
+import Link from "next/link";
 import {
   CARD_WIDTH,
   CARD_ASPECT,
@@ -14,6 +15,7 @@ import {
 } from "./cardTypes";
 
 interface HardwareCardProps {
+  id: string;
   title: string;
   description: string;
   mcu: string;
@@ -84,6 +86,7 @@ function RealBoard({ modelPath }: { modelPath: string }) {
 }
 
 export default function HardwareCard({
+  id,
   title,
   description,
   mcu,
@@ -95,7 +98,7 @@ export default function HardwareCard({
   const isNearViewport = useNearViewport(previewRef);
 
   return (
-    <div className={`shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer [contain:layout_paint]`}>
+    <Link href={`/project/${id}`} className={`shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer [contain:layout_paint]`}>
       <div
         ref={previewRef}
         className={`relative w-full ${CARD_ASPECT} rounded-xl bg-[#1E1E1E] overflow-hidden transition-transform duration-300 hover:scale-[0.98]`}
@@ -137,6 +140,6 @@ export default function HardwareCard({
         <h4 className={CARD_TITLE}>{title}</h4>
         <p className={CARD_DESCRIPTION}>{description}</p>
       </div>
-    </div>
+    </Link>
   );
 }
