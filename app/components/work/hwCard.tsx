@@ -1,4 +1,3 @@
-// hwCard.tsx
 "use client";
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
@@ -24,26 +23,6 @@ interface HardwareCardProps {
   modelPath?: string;
 }
 
-function useMountEarly(ref: React.RefObject<HTMLElement | null>) {
-  const [shouldMount, setShouldMount] = useState(false);
-
-  useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setShouldMount(true);
-      },
-      { rootMargin: "300px 0px" },
-    );
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [ref]);
-
-  return shouldMount;
-}
-
 function useNearViewport(ref: React.RefObject<HTMLElement | null>) {
   const [isNearViewport, setIsNearViewport] = useState(false);
 
@@ -53,7 +32,7 @@ function useNearViewport(ref: React.RefObject<HTMLElement | null>) {
 
     const observer = new IntersectionObserver(
       ([entry]) => setIsNearViewport(entry.isIntersecting),
-      { rootMargin: "64px" },
+      { rootMargin: "160px" },
     );
     observer.observe(element);
     return () => observer.disconnect();
@@ -79,33 +58,17 @@ function PlaceholderBoard() {
 }
 
 function RealBoard({ modelPath }: { modelPath: string }) {
-  const { scene } = useGLTF(modelPath);
+  const { scene } = useGLTF(modelPath, true, true);
   const boardRef = useRef<Group>(null);
 
   const clonedScene = useMemo(() => scene.clone(), [scene]);
 
-  const { scale } = useMemo(() => {
+  const scale = useMemo(() => {
     const box = new THREE.Box3().setFromObject(clonedScene);
     const sphere = box.getBoundingSphere(new THREE.Sphere());
     const targetRadius = 0.85;
-
     clonedScene.position.sub(sphere.center);
-    return { scale: targetRadius / sphere.radius };
-  }, [clonedScene]);
-
-  useEffect(() => {
-    return () => {
-      clonedScene.traverse((obj) => {
-        if (obj instanceof THREE.Mesh) {
-          obj.geometry?.dispose();
-          if (Array.isArray(obj.material)) {
-            obj.material.forEach((m) => m.dispose());
-          } else {
-            obj.material?.dispose();
-          }
-        }
-      });
-    };
+    return targetRadius / sphere.radius;
   }, [clonedScene]);
 
   useFrame((_, delta) => {
@@ -129,7 +92,6 @@ export default function HardwareCard({
   modelPath,
 }: HardwareCardProps) {
   const previewRef = useRef<HTMLDivElement>(null);
-  const shouldMount = useMountEarly(previewRef);
   const isNearViewport = useNearViewport(previewRef);
 
   return (
@@ -138,22 +100,20 @@ export default function HardwareCard({
         ref={previewRef}
         className={`relative w-full ${CARD_ASPECT} rounded-xl bg-[#1E1E1E] overflow-hidden transition-transform duration-300 hover:scale-[0.98]`}
       >
-        {shouldMount && (
-          <Canvas
-            camera={{ position: [0, 0.2, 4.5], fov: 26 }}
-            dpr={0.85}
-            frameloop={isNearViewport ? "always" : "demand"}
-            gl={{ antialias: false, alpha: true, powerPreference: "default" }}
-            className="absolute inset-0 h-full w-full"
-          >
-            <ambientLight intensity={0.9} color="#ffffff" />
-            <directionalLight position={[3, 3, 4]} intensity={1.2} color="#ffffff" />
-            <directionalLight position={[-4, -2, 2]} intensity={0.6} color="#ffffff" />
-            <Suspense fallback={null}>
-              {modelPath ? <RealBoard modelPath={modelPath} /> : <PlaceholderBoard />}
-            </Suspense>
-          </Canvas>
-        )}
+        <Canvas
+          camera={{ position: [0, 0.2, 4.5], fov: 26 }}
+          dpr={isNearViewport ? 1.1 : 0.75}
+          frameloop={isNearViewport ? "always" : "never"}
+          gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
+          className="absolute inset-0 h-full w-full pointer-events-none"
+        >
+          <ambientLight intensity={0.9} color="#ffffff" />
+          <directionalLight position={[3, 3, 4]} intensity={1.2} color="#ffffff" />
+          <directionalLight position={[-4, -2, 2]} intensity={0.6} color="#ffffff" />
+          <Suspense fallback={<PlaceholderBoard />}>
+            {modelPath ? <RealBoard modelPath={modelPath} /> : <PlaceholderBoard />}
+          </Suspense>
+        </Canvas>
 
         <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-[#F4F4F4] rounded-md px-2 py-1.5 sm:px-2 sm:py-1 text-right pointer-events-none max-w-[65%] z-10">
           <div className="flex flex-col gap-y-0.5">
