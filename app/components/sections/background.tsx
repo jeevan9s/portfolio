@@ -19,7 +19,7 @@ export default function Background() {
   }, []);
 
   return (
-    <div className="flex flex-col flex-1 bg-transparent items-center min-h-screen pt-16 md:pt-36 p-6 md:p-12 pb-16">
+    <div className="flex flex-col flex-1 bg-transparent items-center min-h-screen pt-8 md:pt-12 p-6 md:p-12 pb-16">
       <div className="flex flex-col gap-y-8 max-w-[100rem] md:max-w-350 w-full">
         <motion.div
           initial={{ opacity: 0, y: 30, filter: "blur(4px)" }}

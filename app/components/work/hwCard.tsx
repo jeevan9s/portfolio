@@ -35,7 +35,7 @@ function useMountEarly(ref: React.RefObject<HTMLElement | null>) {
       ([entry]) => {
         if (entry.isIntersecting) setShouldMount(true);
       },
-      { rootMargin: "800px 0px" },
+      { rootMargin: "300px 0px" },
     );
     observer.observe(element);
     return () => observer.disconnect();
@@ -53,7 +53,7 @@ function useNearViewport(ref: React.RefObject<HTMLElement | null>) {
 
     const observer = new IntersectionObserver(
       ([entry]) => setIsNearViewport(entry.isIntersecting),
-      { rootMargin: "250px" },
+      { rootMargin: "64px" },
     );
     observer.observe(element);
     return () => observer.disconnect();

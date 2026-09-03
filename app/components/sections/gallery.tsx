@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const revealTransition = { duration: 0.7, ease: [0.16, 1, 0.3, 1] } as const;
 const viewport = { once: false, amount: 0.3, margin: "0px 0px -10% 0px" } as const;
@@ -13,20 +14,39 @@ type Photo = {
   orientation: Orientation;
 };
 
-// add new photos here — that's it, nothing else in this file needs to change
 const photos: Photo[] = [
-  { id: "1", src: "https://picsum.photos/seed/js-gallery-01/800/600", alt: "", orientation: "landscape" },
-  { id: "2", src: "https://picsum.photos/seed/js-gallery-02/800/1000", alt: "", orientation: "portrait" },
-  { id: "3", src: "https://picsum.photos/seed/js-gallery-03/800/1000", alt: "", orientation: "portrait" },
-  { id: "4", src: "https://picsum.photos/seed/js-gallery-04/800/1100", alt: "", orientation: "tall" },
-  { id: "5", src: "https://picsum.photos/seed/js-gallery-05/800/650", alt: "", orientation: "landscape" },
-  { id: "6", src: "https://picsum.photos/seed/js-gallery-06/800/1000", alt: "", orientation: "portrait" },
-  { id: "7", src: "https://picsum.photos/seed/js-gallery-07/800/800", alt: "", orientation: "square" },
-  { id: "8", src: "https://picsum.photos/seed/js-gallery-08/800/1150", alt: "", orientation: "tall" },
-  { id: "9", src: "https://picsum.photos/seed/js-gallery-09/800/700", alt: "", orientation: "landscape" },
-  { id: "10", src: "https://picsum.photos/seed/js-gallery-10/800/700", alt: "", orientation: "landscape" },
-  { id: "11", src: "https://picsum.photos/seed/js-gallery-11/800/1000", alt: "", orientation: "portrait" },
-  { id: "12", src: "https://picsum.photos/seed/js-gallery-12/800/900", alt: "", orientation: "square" },
+  { id: "1", src: "/gallery/img_01.jpg", alt: "Gallery image 1", orientation: "portrait" },
+  { id: "2", src: "/gallery/img_02.jpg", alt: "Gallery image 2", orientation: "portrait" },
+  { id: "3", src: "/gallery/img_03.jpg", alt: "Gallery image 3", orientation: "portrait" },
+  { id: "4", src: "/gallery/img_04.jpg", alt: "Gallery image 4", orientation: "portrait" },
+  { id: "5", src: "/gallery/img_05.jpg", alt: "Gallery image 5", orientation: "portrait" },
+  { id: "6", src: "/gallery/img_06.jpg", alt: "Gallery image 6", orientation: "portrait" },
+  { id: "7", src: "/gallery/img_07.jpg", alt: "Gallery image 7", orientation: "portrait" },
+  { id: "8", src: "/gallery/img_08.jpg", alt: "Gallery image 8", orientation: "landscape" },
+  { id: "9", src: "/gallery/img_09.jpg", alt: "Gallery image 9", orientation: "portrait" },
+  { id: "10", src: "/gallery/img_10.jpg", alt: "Gallery image 10", orientation: "portrait" },
+  { id: "11", src: "/gallery/img_11.jpg", alt: "Gallery image 11", orientation: "landscape" },
+  { id: "12", src: "/gallery/img_12.jpg", alt: "Gallery image 12", orientation: "square" },
+  { id: "13", src: "/gallery/img_13.jpg", alt: "Gallery image 13", orientation: "landscape" },
+  { id: "14", src: "/gallery/img_14.jpg", alt: "Gallery image 14", orientation: "portrait" },
+  { id: "15", src: "/gallery/img_15.jpg", alt: "Gallery image 15", orientation: "landscape" },
+  { id: "16", src: "/gallery/img_16.jpg", alt: "Gallery image 16", orientation: "portrait" },
+  { id: "17", src: "/gallery/img_17.jpg", alt: "Gallery image 17", orientation: "landscape" },
+  { id: "18", src: "/gallery/img_18.jpg", alt: "Gallery image 18", orientation: "portrait" },
+  { id: "19", src: "/gallery/img_19.jpg", alt: "Gallery image 19", orientation: "portrait" },
+  { id: "20", src: "/gallery/img_20.jpg", alt: "Gallery image 20", orientation: "portrait" },
+  { id: "21", src: "/gallery/img_21.jpg", alt: "Gallery image 21", orientation: "portrait" },
+  { id: "22", src: "/gallery/img_22.jpg", alt: "Gallery image 22", orientation: "portrait" },
+  { id: "23", src: "/gallery/img_23.jpg", alt: "Gallery image 23", orientation: "landscape" },
+  { id: "24", src: "/gallery/img_24.jpg", alt: "Gallery image 24", orientation: "portrait" },
+  { id: "25", src: "/gallery/img_25.jpg", alt: "Gallery image 25", orientation: "portrait" },
+  { id: "26", src: "/gallery/img_26.jpg", alt: "Gallery image 26", orientation: "portrait" },
+  { id: "27", src: "/gallery/img_27.jpg", alt: "Gallery image 27", orientation: "portrait" },
+  { id: "28", src: "/gallery/img_28.jpg", alt: "Gallery image 28", orientation: "portrait" },
+  { id: "29", src: "/gallery/img_29.jpg", alt: "Gallery image 29", orientation: "portrait" },
+  { id: "30", src: "/gallery/img_30.jpg", alt: "Gallery image 30", orientation: "portrait" },
+  { id: "31", src: "/gallery/img_31.jpg", alt: "Gallery image 31", orientation: "portrait" },
+  { id: "32", src: "/gallery/img_32.jpg", alt: "Gallery image 32", orientation: "portrait" },
 ];
 
 const aspectClass: Record<Orientation, string> = {
@@ -37,12 +57,11 @@ const aspectClass: Record<Orientation, string> = {
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 24, filter: "blur(8px)" },
+  hidden: { opacity: 0, y: 16 },
   show: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
-    transition: revealTransition,
+    transition: { duration: 0.45, ease: "easeOut" as const },
   },
 };
 
@@ -62,18 +81,21 @@ function GalleryCard({
       viewport={viewport}
       variants={cardVariants}
       data-cursor="grow"
-      className={`relative w-full ${aspectClass[photo.orientation]} rounded-lg sm:rounded-xl overflow-hidden bg-[#2A2A2A] mb-2.5 sm:mb-4 md:mb-5 lg:mb-6 break-inside-avoid`}
+      className={`relative w-full ${aspectClass[photo.orientation]} rounded-lg sm:rounded-xl overflow-hidden bg-[#2A2A2A]`}
     >
-      <img
+      <Image
         src={photo.src}
         alt={photo.alt}
+        fill
+        sizes="(min-width: 1024px) 25vw, 50vw"
+        quality={60}
         loading="lazy"
         decoding="async"
         onLoad={() => onLoad(photo.id)}
         className={`absolute inset-0 w-full h-full object-cover hover:scale-[1.03] ${
           isLoaded
-            ? "opacity-100 scale-100 blur-0 transition-transform duration-300 ease-out"
-            : "opacity-0 scale-105 blur-md transition-all duration-700 ease-out"
+            ? "opacity-100 scale-100 transition-transform duration-300 ease-out"
+            : "opacity-0 scale-105 transition-opacity duration-300 ease-out"
         }`}
       />
     </motion.div>
@@ -105,7 +127,7 @@ export default function Gallery() {
           gallery
         </motion.p>
 
-        <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 gap-2.5 sm:gap-4 md:gap-5 lg:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5 lg:gap-6">
           {photos.map((photo) => (
             <GalleryCard
               key={photo.id}
