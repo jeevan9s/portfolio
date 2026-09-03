@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import ProjectCarousel from "./ProjectCarousel";
 
 interface FirmwareProject {
   title: string;
@@ -10,6 +14,15 @@ interface FirmwareProject {
 }
 
 export default function FirmwarePage({ project }: { project: FirmwareProject }) {
+  const [activeFlowNode, setActiveFlowNode] = useState("input");
+  const flow = ["input", "driver", "application"];
+  const code = `bool readData() {\n  return sensor.ready();\n}`;
+  const slides = [
+    { label: "API surface", content: <pre className="min-h-[20rem] whitespace-pre-wrap bg-[#171717] p-8 font-mono text-sm leading-relaxed text-white/80 sm:min-h-[25rem]">{code}</pre> },
+    { label: "interactive flow", content: <div className="flex min-h-[20rem] flex-col items-center justify-center gap-3 p-8 sm:min-h-[25rem] sm:flex-row">{flow.map((node, index) => <div key={node} className="flex items-center gap-3"><button type="button" onClick={() => setActiveFlowNode(node)} className={`inter rounded-lg border px-4 py-3 text-sm transition-colors ${activeFlowNode === node ? "border-black bg-black text-white" : "border-black/15 bg-white/50"}`}>{node}</button>{index < flow.length - 1 && <span className="text-black/35">→</span>}</div>)}</div> },
+    { label: "runtime behavior", content: <div className="flex min-h-[20rem] items-center justify-center p-8 text-center inter text-xl text-black/65 sm:min-h-[25rem]">Data moves from the hardware interface through the driver and into the application layer.</div> },
+  ];
+
   return (
     <article className="min-h-screen bg-[#1D1D1D] px-6 py-10 text-white sm:px-8 md:px-12">
       <Link href="/#work" className="inter text-sm text-white/50 hover:text-white">
@@ -21,12 +34,7 @@ export default function FirmwarePage({ project }: { project: FirmwareProject }) 
           <h1 className="montserrat text-5xl md:text-8xl">{project.title}</h1>
           <p className="inter mt-6 max-w-2xl text-lg leading-relaxed text-white/60">{project.description}</p>
         </div>
-        <dl className="grid max-w-2xl grid-cols-2 gap-4 border-t border-white/15 pt-6 sm:grid-cols-4">
-          <div><dt className="inter text-xs uppercase text-white/45">Language</dt><dd className="inter mt-1 text-lg">{project.language}</dd></div>
-          <div><dt className="inter text-xs uppercase text-white/45">Framework</dt><dd className="inter mt-1 text-lg">{project.framework}</dd></div>
-          {project.protocol && <div><dt className="inter text-xs uppercase text-white/45">Protocol</dt><dd className="inter mt-1 text-lg">{project.protocol}</dd></div>}
-          {project.apis && <div><dt className="inter text-xs uppercase text-white/45">APIs</dt><dd className="inter mt-1 text-lg">{project.apis}</dd></div>}
-        </dl>
+        <ProjectCarousel slides={slides} />
       </div>
     </article>
   );
