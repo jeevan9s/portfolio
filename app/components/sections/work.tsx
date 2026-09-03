@@ -1,70 +1,99 @@
-import { useRef, useLayoutEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+// work.tsx
+"use client";
+
+import { useRef, useLayoutEffect, useEffect } from "react";
+import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGLTF } from "@react-three/drei";
 import HardwareCard from "../work/hwCard";
 import FirmwareCard from "../work/fwCard";
 
 gsap.registerPlugin(ScrollTrigger);
 
+export type specification = {
+  label: string;
+  value: string;
+  percentage?: number;
+}
+
+const avLib: specification[] = [
+  { label: "flash", value: "34%", percentage: 34 },
+  { label: "ram", value: "18%", percentage: 18 },
+];
+const lsmLib: specification[] = [
+  { label: "flash", value: "34%", percentage: 34 },
+  { label: "ram", value: "18%", percentage: 18 },
+];
+const calmeca: specification[] = [
+  { label: "platform", value: "desktop" },
+];
+
 type Project =
   | { type: "hardware"; id: string; title: string; description: string; mcu: string; layers: number; size: string; image?: string; modelPath?: string; }
-  | { type: "firmware"; id: string; title: string; description: string; image?: string; };
+  | { type: "firmware"; id: string; title: string; description: string; image?: string; language: string; framework: string; protocol?: string; apis?: string; specs: specification[] }
 
 const projects: Project[] = [
-  { type: "hardware", id: "proj-1", title: "Penguin", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm", modelPath: "/projs/models/penguin_controller.glb"},
-  { type: "hardware", id: "proj-2", title: "Avionics Sensor & Control Modules", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm", modelPath: "/projs/models/lower_lc_board.glb"},
-  { type: "hardware", id: "proj-3", title: "Homectrl", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", mcu: "STM32H7", layers: 4, size: "42 × 28mm",  modelPath: "/projs/models/homectrl_controller.glb", },
-  { type: "firmware", id: "proj-4", title: "Avionics Libraries", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
-  { type: "firmware", id: "proj-5", title: "Motion Library", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
-  { type: "firmware", id: "proj-6", title: "Calmeca", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
+  { type: "hardware", id: "proj-1", title: "Penguin", description: "Hybrid wheel-legged rover for intelligent robotics, computer vision, and embodied AI.", mcu: "ESP32-S3", layers: 4, size: "62 × 90mm", modelPath: "/projs/models/penguin_controller.glb" },
+  { type: "hardware", id: "proj-2", title: "Avionics Sensor & Control Modules", description: "Custom avionics hardware for propulsion control, sensing, and communications.", mcu: "STM32F1", layers: 4, size: "70 x 62mm", modelPath: "/projs/models/modules.glb" },
+  { type: "hardware", id: "proj-3", title: "Homectrl", description: "Home automation controller for streamlining routine household tasks.", mcu: "ESP32-S3-1U", layers: 4, size: "Ø60mm", modelPath: "/projs/models/homectrl_controller.glb" },
+  { type: "firmware", id: "proj-4", title: "Avionics Libraries", description: "Reusable embedded drivers and peripheral libraries for avionics systems.", language: "C++", framework: "PlatformIO", protocol: "SPI, I2C", specs: avLib },
+  { type: "firmware", id: "proj-5", title: "Motion Library", description: "Embedded IMU driver and motion utilities for the LSM6DSM measuring unit.", language: "C++", framework: "PlatformIO", protocol: "I2C", specs: lsmLib },
+  { type: "firmware", id: "proj-6", title: "Calmeca", description: "Academic productivity app built to streamline course scheduling and management.", language: "TypeScript", framework: "Next.js", apis: "Google, OAuth", specs: calmeca },
 ];
 
 export default function Work() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollHostRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-
-  const xTranslate = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
+  useEffect(() => {
+    projects.forEach((p) => {
+      if (p.type === "hardware" && p.modelPath) {
+        useGLTF.preload(p.modelPath);
+      }
+    });
+  }, []);
 
   useLayoutEffect(() => {
     const container = containerRef.current;
+    const host = scrollHostRef.current;
     const track = trackRef.current;
-    if (!container || !track) return;
+    if (!container || !host || !track) return;
+
+    let maxScroll = track.scrollWidth - host.clientWidth;
+
+    const recompute = () => {
+      maxScroll = track.scrollWidth - host.clientWidth;
+    };
+    const ro = new ResizeObserver(recompute);
+    ro.observe(track);
+    ro.observe(host);
 
     const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray<HTMLElement>(".work-card", track);
-
-      gsap.fromTo(cards,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          stagger: 0.08,
-          scrollTrigger: {
-            trigger: container,
-            start: "top 75%",
-            toggleActions: "play none none reverse",
-          },
+      ScrollTrigger.create({
+        trigger: container,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: true,
+        onUpdate: (self) => {
+          host.scrollLeft = self.progress * maxScroll;
         },
-      );
+      });
     }, container);
 
-    return () => ctx.revert();
+    return () => {
+      ro.disconnect();
+      ctx.revert();
+    };
   }, []);
 
   return (
-    <div 
-      ref={containerRef} 
-      className="relative h-[250vh] w-full bg-transparent min-h-screen" 
+    <div
+      ref={containerRef}
+      className="relative h-[250vh] w-full bg-transparent min-h-screen"
     >
-      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden p-8 md:p-12">
+      <div className="sticky top-0 h-screen flex flex-col justify-start overflow-hidden p-8 md:p-12 pt-10 md:pt-10">
         <div className="flex flex-col gap-y-3 max-w-[100rem] mb-8">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -79,11 +108,10 @@ export default function Work() {
           </motion.div>
         </div>
 
-        <div className="w-full overflow-hidden">
-          <motion.div 
-            ref={trackRef} 
-            style={{ x: xTranslate }}
-            className="flex flex-row items-center gap-x-10 md:gap-x-16 py-6 w-max will-change-transform"
+        <div ref={scrollHostRef} className="w-full overflow-x-hidden overflow-y-visible">
+          <div
+            ref={trackRef}
+            className="flex flex-row items-center gap-x-10 md:gap-x-16 py-6 w-max"
           >
             {projects.map((project) => (
               <div key={project.id} className="work-card shrink-0">
@@ -94,7 +122,7 @@ export default function Work() {
                 )}
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>

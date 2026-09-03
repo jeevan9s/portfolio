@@ -121,7 +121,7 @@ export default function Background() {
                   side="right"
                   className="inter max-w-55 bg-transparent border-none shadow-none nav-theme-active"
                 >
-                  जीवन, my Marathi name meaning life.
+                  my Marathi name, meaning life.
                 </TooltipContent>
               </Tooltip>
             </div>

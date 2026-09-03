@@ -100,7 +100,7 @@ export default function Gallery() {
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={viewport}
           transition={revealTransition}
-          className="inter text-xl md:text-3xl nav-theme-muted mb-6 sm:mb-8 md:mb-10"
+          className="inter text-xl md:text-2xl nav-theme-muted mb-6 sm:mb-8 md:mb-10"
         >
           gallery
         </motion.p>

@@ -16,11 +16,14 @@ export default function SectionWrapper({ id, children }: { id: string; children:
   const bgColor = sectionMeta?.bgColor ? `#${sectionMeta.bgColor}` : "#000000";
   const needsChromeClearance = sectionMeta?.showChrome === true;
   const isCompactSection = id === "connect";
+  const isViewportSection = id === "hero" || id === "end";
   const sectionHeightClass = isCompactSection
-    ? "min-h-[55vh] md:min-h-[60vh]"
-    : "min-h-screen";
+    ? ""
+    : isViewportSection
+      ? "min-h-screen"
+      : "";
 
-  const clearanceClass = needsChromeClearance ? "pt-28 pb-24 md:pt-32 md:pb-28" : "";
+  const clearanceClass = needsChromeClearance ? "pt-24 md:pt-28" : "";
 
   useEffect(() => {
     const el = containerRef.current;

@@ -33,6 +33,8 @@ export default function Page() {
       window.history.scrollRestoration = "manual";
     }
 
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+
     if (window.location.hash) {
       window.history.replaceState(
         null,
@@ -82,13 +84,19 @@ export default function Page() {
       updateChromeZones();
     };
 
-    const handlePageShow = () => {
+    const resetToHero = () => {
       forceHeroTop();
-      requestAnimationFrame(forceHeroTop);
+      requestAnimationFrame(() => {
+        forceHeroTop();
+        requestAnimationFrame(forceHeroTop);
+      });
     };
 
-    forceHeroTop();
+    const handlePageShow = () => resetToHero();
+
+    resetToHero();
     window.addEventListener("pageshow", handlePageShow);
+    window.addEventListener("load", handlePageShow, { once: true });
 
     lenis.on("scroll", ScrollTrigger.update);
 
@@ -101,7 +109,15 @@ export default function Page() {
       const isPinned = ScrollTrigger.getAll().some(
         (st) => st.vars.pin && y >= st.start && y <= st.end,
       );
-      if (isPinned) return; // Do not snap while inside pinned/horizontal sections
+      const workSection = document.getElementById("section-work");
+      const workTop = workSection
+        ? workSection.getBoundingClientRect().top + window.scrollY
+        : Infinity;
+      const workBottom = workSection
+        ? workTop + workSection.offsetHeight - window.innerHeight
+        : -Infinity;
+      const isHorizontalScroll = y >= workTop && y <= workBottom;
+      if (isPinned || isHorizontalScroll) return;
 
       snapTimeout = setTimeout(() => {
         let nearestTop = y;
@@ -162,6 +178,7 @@ export default function Page() {
       window.removeEventListener("scroll", scheduleChromeUpdate);
       window.removeEventListener("resize", scheduleChromeUpdate);
       window.removeEventListener("pageshow", handlePageShow);
+      window.removeEventListener("load", handlePageShow);
       gsap.ticker.remove(updateLenis);
       lenis.destroy();
       lenisRef.current = null;

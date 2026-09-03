@@ -1,17 +1,17 @@
+// hwCard.tsx
 "use client";
 
-import { Canvas } from "@react-three/fiber";
-import { Suspense, useMemo, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import type { Group, Mesh } from "three";
 import * as THREE from "three";
-import { useInView } from "framer-motion";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import {
   CARD_WIDTH,
   CARD_ASPECT,
   CARD_TEXT_WRAPPER,
   CARD_TITLE,
-  CARD_DESCRIPTION,
+  CARD_DESCRIPTION
 } from "./cardTypes";
 
 interface HardwareCardProps {
@@ -21,12 +21,57 @@ interface HardwareCardProps {
   layers: number;
   size: string;
   image?: string;
-  modelPath?: string; 
+  modelPath?: string;
+}
+
+function useMountEarly(ref: React.RefObject<HTMLElement | null>) {
+  const [shouldMount, setShouldMount] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setShouldMount(true);
+      },
+      { rootMargin: "800px 0px" },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [ref]);
+
+  return shouldMount;
+}
+
+function useNearViewport(ref: React.RefObject<HTMLElement | null>) {
+  const [isNearViewport, setIsNearViewport] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsNearViewport(entry.isIntersecting),
+      { rootMargin: "250px" },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [ref]);
+
+  return isNearViewport;
 }
 
 function PlaceholderBoard() {
+  const boardRef = useRef<Mesh>(null);
+
+  useFrame((_, delta) => {
+    if (!boardRef.current) return;
+    boardRef.current.rotation.y += delta * 0.3;
+  });
+
   return (
-    <mesh rotation={[0.05, 0, 0]}>
+    <mesh ref={boardRef} rotation={[0.05, 0, 0]}>
       <boxGeometry args={[1.6, 2, 0.08]} />
       <meshStandardMaterial color="#2B2B2B" roughness={0.5} metalness={0.2} />
     </mesh>
@@ -35,22 +80,42 @@ function PlaceholderBoard() {
 
 function RealBoard({ modelPath }: { modelPath: string }) {
   const { scene } = useGLTF(modelPath);
+  const boardRef = useRef<Group>(null);
+
+  const clonedScene = useMemo(() => scene.clone(), [scene]);
 
   const { scale } = useMemo(() => {
-    const box = new THREE.Box3().setFromObject(scene);
+    const box = new THREE.Box3().setFromObject(clonedScene);
     const sphere = box.getBoundingSphere(new THREE.Sphere());
     const targetRadius = 0.85;
 
-    scene.position.sub(sphere.center);
+    clonedScene.position.sub(sphere.center);
+    return { scale: targetRadius / sphere.radius };
+  }, [clonedScene]);
 
-    return {
-      scale: targetRadius / sphere.radius,
+  useEffect(() => {
+    return () => {
+      clonedScene.traverse((obj) => {
+        if (obj instanceof THREE.Mesh) {
+          obj.geometry?.dispose();
+          if (Array.isArray(obj.material)) {
+            obj.material.forEach((m) => m.dispose());
+          } else {
+            obj.material?.dispose();
+          }
+        }
+      });
     };
-  }, [scene]);
+  }, [clonedScene]);
+
+  useFrame((_, delta) => {
+    if (!boardRef.current) return;
+    boardRef.current.rotation.y += delta * 0.3;
+  });
 
   return (
-    <group rotation={[0.05, 0, 0]} scale={scale}>
-      <primitive object={scene} />
+    <group ref={boardRef} rotation={[0.05, 0, 0]} scale={scale}>
+      <primitive object={clonedScene} />
     </group>
   );
 }
@@ -64,62 +129,45 @@ export default function HardwareCard({
   modelPath,
 }: HardwareCardProps) {
   const previewRef = useRef<HTMLDivElement>(null);
-  const isPreviewNearViewport = useInView(previewRef, {
-    margin: "200px 0px",
-  });
+  const shouldMount = useMountEarly(previewRef);
+  const isNearViewport = useNearViewport(previewRef);
 
   return (
-    <div className={`shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer`}>
+    <div className={`shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer [contain:layout_paint]`}>
       <div
         ref={previewRef}
         className={`relative w-full ${CARD_ASPECT} rounded-xl bg-[#1E1E1E] overflow-hidden transition-transform duration-300 hover:scale-[0.98]`}
       >
-        {isPreviewNearViewport && (
+        {shouldMount && (
           <Canvas
             camera={{ position: [0, 0.2, 4.5], fov: 26 }}
-            dpr={[1, 1.5]}
-            frameloop="demand"
-            gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-            flat
+            dpr={0.85}
+            frameloop={isNearViewport ? "always" : "demand"}
+            gl={{ antialias: false, alpha: true, powerPreference: "default" }}
+            className="absolute inset-0 h-full w-full"
           >
-            <ambientLight intensity={0.5} color="#ffffff" />
-            <directionalLight position={[3, 3, 4]} intensity={0.9} color="#ffffff" />
-            <directionalLight position={[-4, -2, 2]} intensity={0.4} color="#ffffff" />
+            <ambientLight intensity={0.9} color="#ffffff" />
+            <directionalLight position={[3, 3, 4]} intensity={1.2} color="#ffffff" />
+            <directionalLight position={[-4, -2, 2]} intensity={0.6} color="#ffffff" />
             <Suspense fallback={null}>
-              {modelPath ? (
-                <RealBoard modelPath={modelPath} />
-              ) : (
-                <PlaceholderBoard />
-              )}
+              {modelPath ? <RealBoard modelPath={modelPath} /> : <PlaceholderBoard />}
             </Suspense>
           </Canvas>
         )}
 
-        <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-[#F4F4F4] rounded-md px-2 py-1.5 sm:px-3 sm:py-2 text-right pointer-events-none max-w-[65%]">
+        <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-[#F4F4F4] rounded-md px-2 py-1.5 sm:px-2 sm:py-1 text-right pointer-events-none max-w-[65%] z-10">
           <div className="flex flex-col gap-y-0.5">
             <div className="flex items-center justify-between gap-x-2 sm:gap-x-4">
-              <span className="inter text-[0.55rem] sm:text-[0.65rem] text-[#9B9B9B] uppercase tracking-wide">
-                MCU
-              </span>
-              <span className="inter text-[0.55rem] sm:text-[0.65rem] text-[#1E1E1E] font-medium truncate">
-                {mcu}
-              </span>
+              <span className="inter text-[0.55rem] sm:text-[0.62rem] text-[#9B9B9B] uppercase tracking-wide">MCU</span>
+              <span className="inter text-[0.55rem] sm:text-[0.62rem] text-[#1E1E1E] font-medium truncate">{mcu}</span>
             </div>
             <div className="flex items-center justify-between gap-x-2 sm:gap-x-4">
-              <span className="inter text-[0.55rem] sm:text-[0.65rem] text-[#9B9B9B] uppercase tracking-wide">
-                Layers
-              </span>
-              <span className="inter text-[0.55rem] sm:text-[0.65rem] text-[#1E1E1E] font-medium">
-                {layers}
-              </span>
+              <span className="inter text-[0.55rem] sm:text-[0.62rem] text-[#9B9B9B] uppercase tracking-wide">Layers</span>
+              <span className="inter text-[0.55rem] sm:text-[0.62rem] text-[#1E1E1E] font-medium">{layers}</span>
             </div>
             <div className="flex items-center justify-between gap-x-2 sm:gap-x-4">
-              <span className="inter text-[0.55rem] sm:text-[0.65rem] text-[#9B9B9B] uppercase tracking-wide">
-                Size
-              </span>
-              <span className="inter text-[0.55rem] sm:text-[0.65rem] text-[#1E1E1E] font-medium">
-                {size}
-              </span>
+              <span className="inter text-[0.55rem] sm:text-[0.62rem] text-[#9B9B9B] uppercase tracking-wide">Size</span>
+              <span className="inter text-[0.55rem] sm:text-[0.62rem] text-[#1E1E1E] font-medium">{size}</span>
             </div>
           </div>
         </div>

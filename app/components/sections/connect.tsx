@@ -97,6 +97,13 @@ export default function Connect() {
           resume
         </motion.button>
       </motion.div>
+
+            <motion.div
+              initial="hidden"
+              whileInView="show"
+              viewport={viewport}
+              className="col-span-full w-full h-px bg-white/10 origin-center"
+            />
     </div>
   );
 }
