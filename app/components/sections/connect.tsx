@@ -1,7 +1,12 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { motion, type Variants } from "framer-motion";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const revealTransition = { duration: 0.7, ease: [0.16, 1, 0.3, 1] } as const;
 const viewport = { once: false, amount: 0.2, margin: "0px 0px -5% 0px" } as const;
+const email = "jeevansanchez42@gmail.com";
 
 const listVariants: Variants = {
   hidden: {},
@@ -19,6 +24,32 @@ const itemVariants: Variants = {
 };
 
 export default function Connect() {
+  const [isEmailTooltipOpen, setIsEmailTooltipOpen] = useState(false);
+  const emailTooltipTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (emailTooltipTimeout.current) clearTimeout(emailTooltipTimeout.current);
+    };
+  }, []);
+
+  const copyEmail = async () => {
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(email);
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = email;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      textArea.remove();
+    }
+
+    setIsEmailTooltipOpen(true);
+    if (emailTooltipTimeout.current) clearTimeout(emailTooltipTimeout.current);
+    emailTooltipTimeout.current = setTimeout(() => setIsEmailTooltipOpen(false), 750);
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] flex-1 bg-trandsparent gap-y-10 md:gap-x-12 items-start justify-start md:justify-between h-112 p-6 sm:p-8 md:p-12">
       <div className="flex flex-col gap-y-4 w-full md:max-w-2xl">
@@ -61,14 +92,21 @@ export default function Connect() {
         variants={listVariants}
         className="flex flex-col divide-y divide-white/10 md:divide-none w-full md:w-[28rem] md:gap-y-6 md:pt-3 text-left items-start"
       >
-        <motion.a
+        <motion.div
           variants={itemVariants}
-          href="mailto:jeevansanchez42@gmail.com"
-          data-cursor="grow"
-          className="inter text-[#DEDCDC] text-lg sm:text-xl md:text-2xl md:leading-none transition-all duration-300 active:scale-95 hover:scale-110 py-3 md:py-1 w-full md:w-fit block"
         >
-          email
-        </motion.a>
+          <Tooltip open={isEmailTooltipOpen} onOpenChange={() => {}}>
+            <TooltipTrigger
+              type="button"
+              onClick={copyEmail}
+              data-cursor="grow"
+              className="inter text-[#DEDCDC] text-lg sm:text-xl md:text-2xl md:leading-none transition-all duration-300 active:scale-95 hover:scale-110 py-3 md:py-1 w-full md:w-fit block cursor-pointer bg-transparent border-none"
+            >
+              email
+            </TooltipTrigger>
+            <TooltipContent className="inter">copied email</TooltipContent>
+          </Tooltip>
+        </motion.div>
         <motion.a
           variants={itemVariants}
           href="https://www.linkedin.com/in/jeevansanchez/"

@@ -5,6 +5,7 @@ import {
   CARD_TITLE,
   CARD_DESCRIPTION,
 } from "./cardTypes";
+import { motion } from "framer-motion";
 import Link from "next/link";
 
 export interface FirmwareSpecItem {
@@ -36,8 +37,10 @@ export default function FirmwareCard({
 }: FirmwareCardProps) {
   return (
     <Link href={`/project/${id}`} className={`shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer`}>
-      <div
-        className={`relative w-full ${CARD_ASPECT} rounded-xl bg-[#1E1E1E] overflow-hidden transition-transform duration-300 hover:scale-[0.98] flex flex-col justify-between p-4 sm:p-5`}
+      <motion.div
+        whileHover={{ scale: 1.025 }}
+        transition={{ type: "spring", stiffness: 380, damping: 28, mass: 0.55 }}
+        className={`relative w-full ${CARD_ASPECT} rounded-xl bg-[#1E1E1E] overflow-hidden will-change-transform flex flex-col justify-between p-4 sm:p-5`}
       >
         <div className="relative z-10 flex flex-col gap-y-3 text-white">
           <span className="inter text-[0.6rem] uppercase tracking-[0.18em] text-white/45">
@@ -79,7 +82,7 @@ export default function FirmwareCard({
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       <div className={CARD_TEXT_WRAPPER}>
         <h4 className={CARD_TITLE}>{title}</h4>

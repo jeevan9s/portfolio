@@ -9,9 +9,9 @@ export default function Hero() {
     <div  className="flex flex-col md:flex-row flex-1 bg-transparent md:justify-between md:items-start items-start gap-y-10 justify-center min-h-screen p-8 md:p-12">
       <div className="flex flex-col gap-y-5 max-w-[100rem] md:max-w-350 md:mt-5">
         <motion.div
-          initial={{ opacity: 0, y: 50, filter: "blur(12px)" }}
+          initial={{ opacity: 0, y: 50, filter: "blur(6px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          viewport={{ once: false, amount: 0.4 }}
+          viewport={{ once: true, amount: 0.4 }}
           transition={{
             duration: 1.8,
             ease: [0.16, 1, 0.3, 1],
@@ -28,9 +28,9 @@ export default function Hero() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, filter: "blur(12px)" }}
+          initial={{ opacity: 0, filter: "blur(6px)" }}
           whileInView={{ opacity: 1, filter: "blur(0px)" }}
-          viewport={{ once: false, amount: 0.4 }}
+          viewport={{ once: true, amount: 0.4 }}
           transition={{
             duration: 2,
             ease: [0.16, 1, 0.3, 1],
@@ -46,9 +46,9 @@ export default function Hero() {
 
       <div className="flex flex-col md:gap-y-3 gap-y-5 md:max-w-85 max-w-65 md:bottom-30 md:right-40 md:absolute">
         <motion.div
-          initial={{ opacity: 0, y: 70, filter: "blur(12px)" }}
+          initial={{ opacity: 0, y: 70, filter: "blur(6px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          viewport={{ once: false, amount: 0.4 }}
+          viewport={{ once: true, amount: 0.4 }}
           transition={{
             duration: 0.6,
             ease: [0.16, 1, 0.3, 1],
@@ -65,9 +65,9 @@ export default function Hero() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, filter: "blur(12px)" }}
+          initial={{ opacity: 0, filter: "blur(6px)" }}
           whileInView={{ opacity: 1, filter: "blur(0px)" }}
-          viewport={{ once: false, amount: 0.4 }}
+          viewport={{ once: true, amount: 0.4 }}
           transition={{
             duration: 2,
             ease: [0.16, 1, 0.3, 1],

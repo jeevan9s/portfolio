@@ -33,7 +33,9 @@ const projects = {
         cameraTarget: [0, 0, 0] as [number, number, number],
       },
     ],
-    images: [{ path: "/projs/imgs/penguin_pcb.png", label: "Controller PCB" }, { path: "/projs/imgs/penguin_pcb_real.jpg", label: "Board" }],
+    images: [{ path: "/projs/imgs/penguin_pcb.png", label: "Controller PCB" }, { path: "/projs/imgs/penguin_pcb_real.jpg", label: "Board" },
+      { path: "/projs/imgs/penguin_flow.png", label: "Firmware System" },
+    ],
   },
   "proj-2": {
     type: "hardware" as const,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useLayoutEffect } from "react";
+import { useEffect, useRef, useLayoutEffect, useState } from "react";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -42,25 +42,22 @@ const projects: Project[] = [
 ];
 
 export default function Work() {
+  const [heroSettled, setHeroSettled] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollHostRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const warmModels = () => {
+    const timeout = window.setTimeout(() => {
       projects.forEach((project) => {
         if (project.type === "hardware" && project.modelPath) {
           useGLTF.preload(project.modelPath, true, true);
         }
       });
-    };
-    const idleCallback = window.requestIdleCallback?.(warmModels, { timeout: 350 });
-    const timeout = idleCallback === undefined ? window.setTimeout(warmModels, 350) : undefined;
+      setHeroSettled(true);
+    }, 1200);
 
-    return () => {
-      if (idleCallback !== undefined) window.cancelIdleCallback(idleCallback);
-      if (timeout !== undefined) window.clearTimeout(timeout);
-    };
+    return () => window.clearTimeout(timeout);
   }, []);
 
   useLayoutEffect(() => {
@@ -120,13 +117,13 @@ export default function Work() {
             ref={trackRef}
             className="flex flex-row items-center gap-x-10 md:gap-x-16 py-6 w-max will-change-transform"
           >
-            {projects.map((project) => (
+            {heroSettled && projects.map((project) => (
               <motion.div
                 key={project.id}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, ease: "easeOut" }}
-                className="work-card shrink-0"
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                className="work-card shrink-0 will-change-transform"
               >
                 {project.type === "hardware" ? (
                   <HardwareCard {...project} />

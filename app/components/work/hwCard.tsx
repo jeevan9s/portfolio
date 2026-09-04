@@ -5,6 +5,7 @@ import type { Group } from "three";
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   CARD_WIDTH,
@@ -34,7 +35,7 @@ function useNearViewport(ref: React.RefObject<HTMLElement | null>) {
 
     const observer = new IntersectionObserver(
       ([entry]) => setIsNearViewport(entry.isIntersecting),
-      { rootMargin: "0px" },
+      { rootMargin: "400px" },
     );
     observer.observe(element);
     return () => observer.disconnect();
@@ -54,7 +55,7 @@ function useWarmModel(ref: React.RefObject<HTMLElement | null>, modelPath?: stri
         useGLTF.preload(modelPath, true, true);
         observer.disconnect();
       },
-      { rootMargin: "120px" },
+      { rootMargin: "800px" },
     );
     observer.observe(element);
     return () => observer.disconnect();
@@ -96,17 +97,17 @@ function RealBoard({ modelPath }: { modelPath: string }) {
 
   useFrame(({ clock }) => {
     animationStart.current ??= clock.elapsedTime;
-    const progress = Math.min((clock.elapsedTime - animationStart.current) / 0.16, 1);
-    const easedProgress = 1 - Math.pow(1 - progress, 3);
+    const progress = Math.min((clock.elapsedTime - animationStart.current) / 0.6, 1);
+    const easedProgress = 1 - Math.pow(1 - progress, 4);
 
     if (boardRef.current) {
-      boardRef.current.scale.setScalar(scale * (0.01 + easedProgress * 0.99));
-      boardRef.current.position.y = (1 - easedProgress) * -0.12;
+      boardRef.current.scale.setScalar(scale * (0.85 + easedProgress * 0.15));
+      boardRef.current.position.y = (1 - easedProgress) * -0.15;
     }
   });
 
   return (
-    <group ref={boardRef} scale={0.01}>
+    <group ref={boardRef} scale={scale * 0.85} position={[0, -0.15, 0]}>
       <primitive object={clonedScene} />
     </group>
   );
@@ -127,14 +128,16 @@ export default function HardwareCard({
 
   return (
     <Link href={`/project/${id}`} className={`shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer [contain:layout_paint]`}>
-      <div
+      <motion.div
         ref={previewRef}
-        className={`relative w-full ${CARD_ASPECT} rounded-xl bg-[#1E1E1E] overflow-hidden transition-transform duration-300 hover:scale-[0.98]`}
+        whileHover={{ scale: 1.025 }}
+        transition={{ type: "spring", stiffness: 380, damping: 28, mass: 0.55 }}
+        className={`relative w-full ${CARD_ASPECT} rounded-xl bg-[#1E1E1E] overflow-hidden will-change-transform`}
       >
         {isNearViewport ? (
           <Canvas
             camera={{ position: [0, 0.2, 4.5], fov: 26 }}
-            dpr={1.1}
+            dpr={[1, 1.5]}
             frameloop="always"
             gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
             className="absolute inset-0 h-full w-full pointer-events-none"
@@ -168,7 +171,7 @@ export default function HardwareCard({
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <div className={CARD_TEXT_WRAPPER}>
         <h4 className={CARD_TITLE}>{title}</h4>
