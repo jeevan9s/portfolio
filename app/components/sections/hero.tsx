@@ -1,12 +1,6 @@
 "use client";
 
 // landing page
-import Image from "next/image";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/app/components/ui/tooltip";
 import { motion } from "framer-motion";
 
 

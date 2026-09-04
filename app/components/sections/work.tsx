@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useLayoutEffect } from "react";
+import { useEffect, useRef, useLayoutEffect } from "react";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -41,16 +41,27 @@ const projects: Project[] = [
   { type: "firmware", id: "proj-6", title: "Calmeca", description: "Academic productivity app built to streamline course scheduling and management.", language: "TypeScript", framework: "Next.js", apis: "Google, OAuth", specs: calmeca },
 ];
 
-projects.forEach((project) => {
-  if (project.type === "hardware" && project.modelPath) {
-    useGLTF.preload(project.modelPath, true, true);
-  }
-});
-
 export default function Work() {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollHostRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const warmModels = () => {
+      projects.forEach((project) => {
+        if (project.type === "hardware" && project.modelPath) {
+          useGLTF.preload(project.modelPath, true, true);
+        }
+      });
+    };
+    const idleCallback = window.requestIdleCallback?.(warmModels, { timeout: 350 });
+    const timeout = idleCallback === undefined ? window.setTimeout(warmModels, 350) : undefined;
+
+    return () => {
+      if (idleCallback !== undefined) window.cancelIdleCallback(idleCallback);
+      if (timeout !== undefined) window.clearTimeout(timeout);
+    };
+  }, []);
 
   useLayoutEffect(() => {
     const container = containerRef.current;

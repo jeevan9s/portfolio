@@ -27,21 +27,21 @@ export default function Page() {
   const navbarWrapperRef = useRef<HTMLDivElement | null>(null);
   const footerWrapperRef = useRef<HTMLDivElement | null>(null);
   const chromeHeightsRef = useRef({ navbar: 64, footer: 64 });
+  const initialSectionRef = useRef<string | null>(null);
 
   useLayoutEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const requestedSection = searchParams.get("section") ?? window.location.hash.slice(1);
+    const initialSection = sections.some((section) => section.id === requestedSection)
+      ? requestedSection
+      : null;
+    initialSectionRef.current = initialSection;
+
     if ("scrollRestoration" in window) {
       window.history.scrollRestoration = "manual";
     }
 
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-
-    if (window.location.hash) {
-      window.history.replaceState(
-        null,
-        "",
-        `${window.location.pathname}${window.location.search}`,
-      );
-    }
 
     const lenis = new Lenis({
       duration: 1.2,
@@ -92,9 +92,25 @@ export default function Page() {
       });
     };
 
-    const handlePageShow = () => resetToHero();
+    const resetToInitialSection = () => {
+      if (!initialSection) {
+        resetToHero();
+        return;
+      }
 
-    resetToHero();
+      const element = document.getElementById(`section-${initialSection}`);
+      if (!element) return;
+
+      const target = Math.max(0, element.getBoundingClientRect().top + window.scrollY);
+      lenis.scrollTo(target, { immediate: true });
+      window.scrollTo({ top: target, left: 0, behavior: "instant" });
+      setSection(initialSection);
+      updateChromeZones();
+    };
+
+    const handlePageShow = () => resetToInitialSection();
+
+    resetToInitialSection();
     window.addEventListener("pageshow", handlePageShow);
     window.addEventListener("load", handlePageShow, { once: true });
 
@@ -167,7 +183,7 @@ export default function Page() {
     window.addEventListener("resize", scheduleChromeUpdate);
 
     const rafId = requestAnimationFrame(() => {
-      forceHeroTop();
+      resetToInitialSection();
       setIsMounted(true);
     });
 
@@ -185,6 +201,34 @@ export default function Page() {
       lenisController.instance = null;
     };
   }, [setSection]);
+
+  useEffect(() => {
+    const initialSection = initialSectionRef.current;
+    if (!isMounted || !initialSection) return;
+
+    const firstFrame = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const element = document.getElementById(`section-${initialSection}`);
+        if (!element) return;
+
+        const target = Math.max(0, element.getBoundingClientRect().top + window.scrollY);
+        lenisController.instance?.scrollTo(target, { immediate: true });
+        window.scrollTo({ top: target, left: 0, behavior: "instant" });
+        setSection(initialSection);
+        initialSectionRef.current = null;
+
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.delete("section");
+        window.history.replaceState(
+          null,
+          "",
+          `${window.location.pathname}${searchParams.size ? `?${searchParams}` : ""}`,
+        );
+      });
+    });
+
+    return () => cancelAnimationFrame(firstFrame);
+  }, [isMounted, setSection]);
 
   useEffect(() => {
     if (!isMounted) return;

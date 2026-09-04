@@ -1,7 +1,5 @@
 "use client";
 
-// floating footer component
-import { useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -15,7 +13,6 @@ interface footerProps {
 }
 
 export default function Footer({ theme }: footerProps) {
-  const [selectedResume, setSelectedResume] = useState<"hw" | "sw">("hw");
   const copyAnimation = useAnimationControls();
 
   const handleCopyEmail = () => {
@@ -35,35 +32,10 @@ export default function Footer({ theme }: footerProps) {
         <motion.button
           whileHover={{ scale: 1.05 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          onClick={() => {
-            setSelectedResume("hw");
-            window.open("/hw-resume.pdf", "_blank");
-          }}
-          className={`inter text-base bg-transparent border-none p-0 cursor-pointer ${
-            selectedResume === "hw"
-              ? "nav-theme-active"
-              : "nav-theme-muted hover:nav-theme-active"
-          }`}
+          onClick={() => window.open("/resume.pdf", "_blank")}
+          className="inter text-base bg-transparent border-none p-0 cursor-pointer nav-theme-active"
         >
-          hw resume
-        </motion.button>
-
-        <span className="nav-theme-muted">•</span>
-
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          onClick={() => {
-            setSelectedResume("sw");
-            window.open("/sw-resume.pdf", "_blank");
-          }}
-          className={`inter text-base bg-transparent border-none p-0 cursor-pointer ${
-            selectedResume === "sw"
-              ? "nav-theme-active"
-              : "nav-theme-muted hover:nav-theme-active"
-          }`}
-        >
-          sw resume
+          resume
         </motion.button>
       </div>
 

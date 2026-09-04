@@ -1,11 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import BoardViewer from "./BoardViewer";
 
-interface CarouselSlide {
+export interface CarouselSlide {
   label: string;
-  content: React.ReactNode;
+  content?: React.ReactNode;
+  modelPath?: string;
+  cameraPosition?: [number, number, number];
+  cameraTarget?: [number, number, number];
+  cameraUp?: [number, number, number];
+  imagePath?: string;
+  imageAlt?: string;
 }
 
 export default function ProjectCarousel({ slides }: { slides: CarouselSlide[] }) {
@@ -16,6 +23,12 @@ export default function ProjectCarousel({ slides }: { slides: CarouselSlide[] })
     setActiveIndex((current) => (current + direction + slides.length) % slides.length);
   };
 
+  const slideContent = activeSlide.modelPath
+    ? <BoardViewer modelPath={activeSlide.modelPath} cameraPosition={activeSlide.cameraPosition} cameraTarget={activeSlide.cameraTarget} cameraUp={activeSlide.cameraUp} />
+    : activeSlide.imagePath
+      ? <img src={activeSlide.imagePath} alt={activeSlide.imageAlt ?? activeSlide.label} className="h-[20rem] w-full object-contain sm:h-[25rem]" />
+      : activeSlide.content;
+
   return (
     <section className="w-full" aria-label="Project details carousel">
       <div className="relative min-h-[24rem] overflow-hidden rounded-xl border border-black/10 bg-white/30 p-4 sm:min-h-[30rem] sm:p-6">
@@ -24,7 +37,7 @@ export default function ProjectCarousel({ slides }: { slides: CarouselSlide[] })
           <p className="inter text-xs tabular-nums text-black/45">{String(activeIndex + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}</p>
         </div>
         <div key={activeIndex} className="animate-[project-slide-in_350ms_ease-out]">
-          {activeSlide.content}
+          {slideContent}
         </div>
       </div>
       <div className="mt-4 flex items-center justify-between">
@@ -36,13 +49,13 @@ export default function ProjectCarousel({ slides }: { slides: CarouselSlide[] })
               aria-label={`Show ${slide.label}`}
               aria-current={index === activeIndex}
               onClick={() => setActiveIndex(index)}
-              className={`h-2.5 w-2.5 rounded-full transition-transform ${index === activeIndex ? "scale-125 bg-black" : "bg-black/20 hover:bg-black/45"}`}
+              className={`h-2.5 w-2.5 transition-colors ${index === activeIndex ? "bg-black" : "bg-black/20 hover:bg-black/45"}`}
             />
           ))}
         </div>
         <div className="flex gap-2">
-          <button type="button" aria-label="Previous slide" onClick={() => move(-1)} className="grid h-10 w-10 place-items-center rounded-full border border-black/15 transition-colors hover:bg-black hover:text-white"><ArrowLeft size={16} /></button>
-          <button type="button" aria-label="Next slide" onClick={() => move(1)} className="grid h-10 w-10 place-items-center rounded-full border border-black/15 transition-colors hover:bg-black hover:text-white"><ArrowRight size={16} /></button>
+          <button type="button" aria-label="Previous slide" onClick={() => move(-1)} className="grid h-9 w-9 place-items-center text-black/60 transition-colors hover:text-black"><ChevronLeft size={20} /></button>
+          <button type="button" aria-label="Next slide" onClick={() => move(1)} className="grid h-9 w-9 place-items-center text-black/60 transition-colors hover:text-black"><ChevronRight size={20} /></button>
         </div>
       </div>
     </section>
