@@ -31,7 +31,7 @@ interface HardwareProject {
     cameraUp?: [number, number, number];
   }>;
   images?: string | Array<{ path: string; label?: string; alt?: string }>;
-  media?: Array<Pick<CarouselSlide, "label" | "modelPath" | "imagePath" | "imageAlt">>;
+  media?: Array<Pick<CarouselSlide, "label" | "modelPath" | "imagePath" | "imageAlt" | "content">>;
   specs?: Array<{ label: string; value: string | number }>;
   links?: Array<{ label: string; href: string; download?: boolean }>;
 }
