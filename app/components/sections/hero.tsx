@@ -59,7 +59,7 @@ export default function Hero() {
           }}
         >
           <p className="nav-theme-active inter md:text-[1.2rem] spaced-paragraph">
-            hey I&apos;m Jeevan.
+            Hey I&apos;m Jeevan.
             I build hardware and write code as an outlet for creativity, curiosity, and utility.
           </p>
         </motion.div>

@@ -46,10 +46,9 @@ export default function Page() {
     const isDesktop = window.matchMedia("(min-width: 768px)").matches;
     const lenis = isDesktop
       ? new Lenis({
-          duration: 1.2,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          lerp: 0.075,
           smoothWheel: true,
-          wheelMultiplier: 0.9,
+          wheelMultiplier: 0.8,
         })
       : null;
     lenisRef.current = lenis;
@@ -296,6 +295,10 @@ export default function Page() {
   const currentTheme = current?.bgColor === "EFEFEF" ? "light" : "dark";
   const showNavbar = isMounted && navbarVisible;
   const showFooter = isMounted && footerVisible;
+
+  useEffect(() => {
+    document.title = currentId === "hero" ? "Jeevan | portfolio" : `Jeevan | ${currentId}`;
+  }, [currentId]);
 
   return (
     <>
