@@ -32,7 +32,7 @@ export default function Footer({ theme }: footerProps) {
         <motion.a
           whileHover={{ scale: 1.05 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          href="/resume.pdf"
+          href="/projs/downloads/Sanchez_Jeevan_Resume.pdf"
           target="_blank"
           rel="noreferrer"
           className="inter text-base bg-transparent border-none p-0 cursor-pointer nav-theme-active"

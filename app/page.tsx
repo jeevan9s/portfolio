@@ -43,13 +43,15 @@ export default function Page() {
 
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
 
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      wheelMultiplier: 0.9,
-      touchMultiplier: 1.5,
-    });
+    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+    const lenis = isDesktop
+      ? new Lenis({
+          duration: 1.2,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel: true,
+          wheelMultiplier: 0.9,
+        })
+      : null;
     lenisRef.current = lenis;
     lenisController.instance = lenis;
 
@@ -78,7 +80,7 @@ export default function Page() {
     };
 
     const forceHeroTop = () => {
-      lenis.scrollTo(0, { immediate: true });
+      lenis?.scrollTo(0, { immediate: true });
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       setSection("hero");
       updateChromeZones();
@@ -99,7 +101,7 @@ export default function Page() {
       if (!element) return;
 
       const target = Math.max(0, element.getBoundingClientRect().top + window.scrollY);
-      lenis.scrollTo(target, { immediate: true });
+      lenis?.scrollTo(target, { immediate: true });
       window.scrollTo({ top: target, left: 0, behavior: "instant" });
       setSection(initialSection);
       updateChromeZones();
@@ -111,9 +113,7 @@ export default function Page() {
     window.addEventListener("pageshow", handlePageShow);
     window.addEventListener("load", handlePageShow, { once: true });
 
-    lenis.on("scroll", ScrollTrigger.update);
-
-    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+    if (lenis) lenis.on("scroll", ScrollTrigger.update);
 
     // Keep section snapping to desktop, where it complements wheel scrolling.
     let snapTimeout: NodeJS.Timeout;
@@ -153,7 +153,7 @@ export default function Page() {
 
         // Only snap if offset is slight (prevents jarring long jumps)
         if (minDistance > 5 && minDistance < window.innerHeight * 0.45) {
-          lenis.scrollTo(nearestTop, {
+          lenis?.scrollTo(nearestTop, {
             duration: 0.6,
             easing: (t) => 1 - Math.pow(1 - t, 3),
           });
@@ -161,13 +161,15 @@ export default function Page() {
       }, 180); // Triggers 180ms after the user finishes scrolling
     };
 
-    if (isDesktop) lenis.on("scroll", handleScrollSnap);
+    if (lenis) lenis.on("scroll", handleScrollSnap);
 
     const updateLenis = (time: number) => {
-      lenis.raf(time * 1000);
+      lenis?.raf(time * 1000);
     };
-    gsap.ticker.add(updateLenis);
-    gsap.ticker.lagSmoothing(0);
+    if (lenis) {
+      gsap.ticker.add(updateLenis);
+      gsap.ticker.lagSmoothing(0);
+    }
 
     let chromeFrameId = 0;
     const scheduleChromeUpdate = () => {
@@ -191,8 +193,10 @@ export default function Page() {
       window.removeEventListener("resize", scheduleChromeUpdate);
       window.removeEventListener("pageshow", handlePageShow);
       window.removeEventListener("load", handlePageShow);
-      gsap.ticker.remove(updateLenis);
-      lenis.destroy();
+      if (lenis) {
+        gsap.ticker.remove(updateLenis);
+        lenis.destroy();
+      }
       lenisRef.current = null;
       lenisController.instance = null;
     };

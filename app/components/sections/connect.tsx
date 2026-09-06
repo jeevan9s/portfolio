@@ -132,7 +132,7 @@ export default function Connect() {
         </motion.a>
         <motion.a
           variants={itemVariants}
-          href="/resume.pdf"
+          href="/projs/downloads/Sanchez_Jeevan_Resume.pdf"
           target="_blank"
           rel="noreferrer"
           data-cursor="grow"
