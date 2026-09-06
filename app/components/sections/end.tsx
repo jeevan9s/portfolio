@@ -176,13 +176,16 @@ export default function EndCard() {
           >
             github
           </motion.a>
-          <motion.button
+          <motion.a
             variants={itemVariants}
+            href="/resume.pdf"
+            target="_blank"
+            rel="noreferrer"
             data-cursor="grow"
             className="inter text-sm sm:text-base md:text-lg nav-theme-active transition-all duration-300 active:scale-95 hover:opacity-70 bg-transparent border-none cursor-pointer"
           >
             resume
-          </motion.button>
+          </motion.a>
         </motion.div>
       </motion.div>
 

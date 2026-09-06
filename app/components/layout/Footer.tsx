@@ -29,14 +29,16 @@ export default function Footer({ theme }: footerProps) {
       className="nav-theme-bg flex flex-row w-full items-center justify-between px-6 py-4"
     >
       <div className="hidden md:flex flex-row items-center gap-x-2 flex-1">
-        <motion.button
+        <motion.a
           whileHover={{ scale: 1.05 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          onClick={() => window.open("/resume.pdf", "_blank")}
+          href="/resume.pdf"
+          target="_blank"
+          rel="noreferrer"
           className="inter text-base bg-transparent border-none p-0 cursor-pointer nav-theme-active"
         >
           resume
-        </motion.button>
+        </motion.a>
       </div>
 
       <div className="flex flex-row items-center justify-end flex-1">

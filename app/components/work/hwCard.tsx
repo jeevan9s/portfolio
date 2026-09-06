@@ -26,7 +26,7 @@ interface HardwareCardProps {
   modelPath?: string;
 }
 
-function useNearViewport(ref: React.RefObject<HTMLElement | null>) {
+function useNearViewport(ref: React.RefObject<HTMLElement | null>, rootMargin: string) {
   const [isNearViewport, setIsNearViewport] = useState(false);
 
   useEffect(() => {
@@ -35,11 +35,11 @@ function useNearViewport(ref: React.RefObject<HTMLElement | null>) {
 
     const observer = new IntersectionObserver(
       ([entry]) => setIsNearViewport(entry.isIntersecting),
-      { rootMargin: "400px" },
+      { rootMargin },
     );
     observer.observe(element);
     return () => observer.disconnect();
-  }, [ref]);
+  }, [ref, rootMargin]);
 
   return isNearViewport;
 }
@@ -123,7 +123,8 @@ export default function HardwareCard({
   modelPath,
 }: HardwareCardProps) {
   const previewRef = useRef<HTMLDivElement>(null);
-  const isNearViewport = useNearViewport(previewRef);
+  const isNearViewport = useNearViewport(previewRef, "400px");
+  const isVisible = useNearViewport(previewRef, "0px");
   useWarmModel(previewRef, modelPath);
 
   return (
@@ -137,8 +138,8 @@ export default function HardwareCard({
         {isNearViewport ? (
           <Canvas
             camera={{ position: [0, 0.2, 4.5], fov: 26 }}
-            dpr={[1, 1.5]}
-            frameloop="always"
+            dpr={1}
+            frameloop={isVisible ? "always" : "demand"}
             gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
             className="absolute inset-0 h-full w-full pointer-events-none"
           >

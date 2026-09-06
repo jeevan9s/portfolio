@@ -46,7 +46,7 @@ export default function Hero() {
 
       <div className="flex flex-col md:gap-y-3 gap-y-5 md:max-w-85 max-w-65 md:bottom-30 md:right-40 md:absolute">
         <motion.div
-          initial={{ opacity: 0, y: 70, filter: "blur(6px)" }}
+          initial={{ opacity: 0, y: 70, filter: "blur(3px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{
@@ -65,7 +65,7 @@ export default function Hero() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, filter: "blur(6px)" }}
+          initial={{ opacity: 0, filter: "blur(3px)" }}
           whileInView={{ opacity: 1, filter: "blur(0px)" }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{

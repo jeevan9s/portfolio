@@ -1,27 +1,9 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Suspense, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Grid, OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
-
-function disposeScene(object: THREE.Object3D) {
-  object.traverse((obj) => {
-    const mesh = obj as THREE.Mesh;
-    if (mesh.geometry) mesh.geometry.dispose();
-    if (mesh.material) {
-      const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-      materials.forEach((mat) => {
-        Object.values(mat).forEach((value) => {
-          if (value && typeof value === "object" && "isTexture" in value) {
-            (value as THREE.Texture).dispose();
-          }
-        });
-        mat.dispose();
-      });
-    }
-  });
-}
 
 function BoardModel({ modelPath }: { modelPath: string }) {
   const { scene } = useGLTF(modelPath, true, true);
@@ -34,8 +16,6 @@ function BoardModel({ modelPath }: { modelPath: string }) {
     model.position.sub(box.getCenter(new THREE.Vector3()));
     return 2.4 / Math.max(size.x, size.y, size.z);
   }, [model]);
-
-  useEffect(() => () => disposeScene(model), [model]);
 
   useFrame(({ clock, invalidate }) => {
     animationStart.current ??= clock.elapsedTime;

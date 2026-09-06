@@ -22,13 +22,13 @@ const projects = {
     modelsdownload: "/projs/models/penguin_models.zip",
     models: [
       {
-        path: "/projs/models/penguin_controller-optimized.glb",
+        path: "/projs/models/penguin_controller-final-draco.glb",
         label: "Controller",
         cameraPosition: [0, 0.25, -5] as [number, number, number],
         cameraTarget: [0, 0, 0] as [number, number, number],
       },
       {
-        path: "/projs/models/penguin_body.glb",
+        path: "/projs/models/penguin_body-final-draco.glb",
         label: "Chassis",
         cameraPosition: [0, -5, 0.25] as [number, number, number],
         cameraTarget: [0, 0, 0] as [number, number, number],
@@ -57,13 +57,13 @@ const projects = {
     repository: "https://github.com/Queens-Rocket-Engineering-Team/av-prop",
     models: [
       {
-        path: "/projs/models/lower_board-optimized.glb",
+        path: "/projs/models/lower_board-final-draco.glb",
         label: "Lower Valve Bay Control Module",
         cameraPosition: [0, 0.25, -5] as [number, number, number],
         cameraTarget: [0, 0, 0] as [number, number, number],
       },
       {
-        path: "/projs/models/upper_board-optimized.glb",
+        path: "/projs/models/upper_board-final-draco.glb",
         label: "Upper Valve Bay Control Module",
         cameraPosition: [0, 0.25, -5] as [number, number, number],
         cameraTarget: [0, 0, 0] as [number, number, number],
@@ -94,7 +94,7 @@ const projects = {
     kicaddownload: "/projs/downloads/kicad/homectrl_kicad.zip",
     models: [
       {
-        path: "/projs/models/homectrl_controller-optimized.glb",
+        path: "/projs/models/homectrl_controller-final-draco.glb",
         label: "Controller",
         cameraPosition: [0, 0.25, -5] as [number, number, number],
         cameraTarget: [0, 0, 0] as [number, number, number],

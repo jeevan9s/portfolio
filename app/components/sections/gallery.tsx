@@ -81,14 +81,14 @@ function GalleryCard({
       viewport={viewport}
       variants={cardVariants}
       data-cursor="grow"
-      className={`relative w-full ${aspectClass[photo.orientation]} rounded-lg sm:rounded-xl overflow-hidden bg-[#2A2A2A]`}
+      className={`relative w-full ${aspectClass[photo.orientation]} rounded-lg sm:rounded-xl overflow-hidden bg-[#2A2A2A] [content-visibility:auto]`}
     >
       <Image
         src={photo.src}
         alt={photo.alt}
         fill
         sizes="(min-width: 1024px) 25vw, 50vw"
-        quality={60}
+        quality={50}
         loading="lazy"
         decoding="async"
         onLoad={() => onLoad(photo.id)}

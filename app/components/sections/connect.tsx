@@ -127,13 +127,16 @@ export default function Connect() {
         >
           github
         </motion.a>
-        <motion.button
+        <motion.a
           variants={itemVariants}
+          href="/resume.pdf"
+          target="_blank"
+          rel="noreferrer"
           data-cursor="grow"
           className="inter text-[#DEDCDC] text-lg sm:text-xl md:text-2xl transition-all duration-300 active:scale-95 hover:scale-110 py-3 md:py-1 w-full md:w-fit text-left cursor-pointer"
         >
           resume
-        </motion.button>
+        </motion.a>
       </motion.div>
 
             <motion.div

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useLayoutEffect, useState } from "react";
+import { useRef, useLayoutEffect } from "react";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -33,32 +33,26 @@ type Project =
   | { type: "firmware"; id: string; title: string; description: string; image?: string; language: string; framework: string; protocol?: string; apis?: string; specs: specification[] }
 
 const projects: Project[] = [
-  { type: "hardware", id: "proj-1", title: "Penguin", description: "Hybrid wheel-legged rover for intelligent robotics, computer vision, and embodied AI.", mcu: "ESP32-S3", layers: 4, size: "62 × 90mm", modelPath: "/projs/models/penguin_controller-optimized.glb" },
-  { type: "hardware", id: "proj-2", title: "Avionics Sensor & Control Modules", description: "Custom avionics hardware for propulsion control, sensing, and communications.", mcu: "STM32F1", layers: 4, size: "70 x 62mm", modelPath: "/projs/models/modules-optimized.glb" },
-  { type: "hardware", id: "proj-3", title: "Homectrl", description: "Home automation controller for streamlining routine household tasks.", mcu: "ESP32-S3-1U", layers: 4, size: "Ø60mm", modelPath: "/projs/models/homectrl_controller-optimized.glb" },
+  { type: "hardware", id: "proj-1", title: "Penguin", description: "Hybrid wheel-legged rover for intelligent robotics, computer vision, and embodied AI.", mcu: "ESP32-S3", layers: 4, size: "62 × 90mm", modelPath: "/projs/models/penguin_controller-final-draco.glb" },
+  { type: "hardware", id: "proj-2", title: "Avionics Sensor & Control Modules", description: "Custom avionics hardware for propulsion control, sensing, and communications.", mcu: "STM32F1", layers: 4, size: "70 x 62mm", modelPath: "/projs/models/modules-final-draco.glb" },
+  { type: "hardware", id: "proj-3", title: "Homectrl", description: "Home automation controller for streamlining routine household tasks.", mcu: "ESP32-S3-1U", layers: 4, size: "Ø60mm", modelPath: "/projs/models/homectrl_controller-final-draco.glb" },
   { type: "firmware", id: "proj-4", title: "Avionics Libraries", description: "Reusable embedded drivers and peripheral libraries for avionics systems.", language: "C++", framework: "PlatformIO", protocol: "SPI, I2C", specs: avLib },
   { type: "firmware", id: "proj-5", title: "Motion Library", description: "Embedded IMU driver and motion utilities for the LSM6DSM measuring unit.", language: "C++", framework: "PlatformIO", protocol: "I2C", specs: lsmLib },
   { type: "firmware", id: "proj-6", title: "Calmeca", description: "Academic productivity app built to streamline course scheduling and management.", language: "TypeScript", framework: "Next.js", apis: "Google, OAuth", specs: calmeca },
 ];
 
+export function preloadHardwareModels() {
+  projects.forEach((project) => {
+    if (project.type === "hardware" && project.modelPath) {
+      useGLTF.preload(project.modelPath, true, true);
+    }
+  });
+}
+
 export default function Work() {
-  const [heroSettled, setHeroSettled] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollHostRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const timeout = window.setTimeout(() => {
-      projects.forEach((project) => {
-        if (project.type === "hardware" && project.modelPath) {
-          useGLTF.preload(project.modelPath, true, true);
-        }
-      });
-      setHeroSettled(true);
-    }, 1200);
-
-    return () => window.clearTimeout(timeout);
-  }, []);
 
   useLayoutEffect(() => {
     const container = containerRef.current;
@@ -117,7 +111,7 @@ export default function Work() {
             ref={trackRef}
             className="flex flex-row items-center gap-x-10 md:gap-x-16 py-6 w-max will-change-transform"
           >
-            {heroSettled && projects.map((project) => (
+            {projects.map((project) => (
               <motion.div
                 key={project.id}
                 initial={{ opacity: 0, y: 12 }}

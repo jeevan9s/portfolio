@@ -86,10 +86,7 @@ export default function Page() {
 
     const resetToHero = () => {
       forceHeroTop();
-      requestAnimationFrame(() => {
-        forceHeroTop();
-        requestAnimationFrame(forceHeroTop);
-      });
+      requestAnimationFrame(forceHeroTop);
     };
 
     const resetToInitialSection = () => {
@@ -182,10 +179,7 @@ export default function Page() {
     window.addEventListener("scroll", scheduleChromeUpdate, { passive: true });
     window.addEventListener("resize", scheduleChromeUpdate);
 
-    const rafId = requestAnimationFrame(() => {
-      resetToInitialSection();
-      setIsMounted(true);
-    });
+    const rafId = requestAnimationFrame(() => setIsMounted(true));
 
     return () => {
       cancelAnimationFrame(rafId);
