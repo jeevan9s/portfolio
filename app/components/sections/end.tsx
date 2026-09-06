@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, type Variants } from "framer-motion";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const enterEase = [0.16, 1, 0.3, 1] as const;
 const exitEase = [0.7, 0, 0.84, 0] as const;
+const email = "jeevansanchez42@gmail.com";
 
 const viewport = {
   once: false,
@@ -100,6 +102,34 @@ function useTorontoClock() {
 
 export default function EndCard() {
   const time = useTorontoClock();
+  const [isEmailTooltipOpen, setIsEmailTooltipOpen] = useState(false);
+  const emailTooltipTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (emailTooltipTimeout.current) clearTimeout(emailTooltipTimeout.current);
+    };
+  }, []);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard?.writeText(email);
+    } catch {
+      const textArea = document.createElement("textarea");
+      textArea.value = email;
+      textArea.setAttribute("readonly", "");
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      textArea.remove();
+    }
+
+    setIsEmailTooltipOpen(true);
+    if (emailTooltipTimeout.current) clearTimeout(emailTooltipTimeout.current);
+    emailTooltipTimeout.current = setTimeout(() => setIsEmailTooltipOpen(false), 750);
+  };
 
   return (
     <div className="absolute inset-x-0 bottom-0 flex flex-col justify-end bg-transparent w-full p-6 sm:p-8 md:p-12 gap-y-8 md:gap-y-10">
@@ -148,14 +178,19 @@ export default function EndCard() {
           >
             connect
           </motion.p>
-          <motion.a
-            variants={itemVariants}
-            href="mailto:jeevansanchez42@gmail.com"
-            data-cursor="grow"
-            className="inter text-sm sm:text-base md:text-lg nav-theme-active transition-all duration-300 active:scale-95 hover:opacity-70"
-          >
-            mail
-          </motion.a>
+          <motion.div variants={itemVariants}>
+            <Tooltip open={isEmailTooltipOpen} onOpenChange={() => {}}>
+              <TooltipTrigger
+                type="button"
+                onClick={copyEmail}
+                data-cursor="grow"
+                className="inter text-sm sm:text-base md:text-lg nav-theme-active transition-all duration-300 active:scale-95 hover:opacity-70 bg-transparent border-none cursor-pointer"
+              >
+                mail
+              </TooltipTrigger>
+              <TooltipContent className="inter">copied email</TooltipContent>
+            </Tooltip>
+          </motion.div>
           <motion.a
             variants={itemVariants}
             href="https://www.linkedin.com/in/jeevansanchez/"

@@ -113,7 +113,9 @@ export default function Page() {
 
     lenis.on("scroll", ScrollTrigger.update);
 
-    // Clean post-scroll snap implementation (avoids choppiness)
+    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+
+    // Keep section snapping to desktop, where it complements wheel scrolling.
     let snapTimeout: NodeJS.Timeout;
     const handleScrollSnap = () => {
       clearTimeout(snapTimeout);
@@ -159,7 +161,7 @@ export default function Page() {
       }, 180); // Triggers 180ms after the user finishes scrolling
     };
 
-    lenis.on("scroll", handleScrollSnap);
+    if (isDesktop) lenis.on("scroll", handleScrollSnap);
 
     const updateLenis = (time: number) => {
       lenis.raf(time * 1000);
@@ -226,6 +228,7 @@ export default function Page() {
 
   useEffect(() => {
     if (!isMounted) return;
+    if (!window.matchMedia("(min-width: 768px)").matches) return;
 
     const ctx = gsap.context(() => {
       panelRefs.current.forEach((panel, i) => {

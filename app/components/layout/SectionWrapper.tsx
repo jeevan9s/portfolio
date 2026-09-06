@@ -45,7 +45,8 @@ export default function SectionWrapper({ id, children }: { id: string; children:
       id={id} 
       ref={containerRef} 
       data-bgcolor={bgColor}
-      className={`${sectionHeightClass} relative ${clearanceClass}`}
+      style={{ "--section-background": bgColor } as React.CSSProperties}
+      className={`${sectionHeightClass} section-wrapper relative ${clearanceClass}`}
     >
       {children}
     </section>

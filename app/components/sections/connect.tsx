@@ -34,11 +34,14 @@ export default function Connect() {
   }, []);
 
   const copyEmail = async () => {
-    if (navigator.clipboard) {
-      await navigator.clipboard.writeText(email);
-    } else {
+    try {
+      await navigator.clipboard?.writeText(email);
+    } catch {
       const textArea = document.createElement("textarea");
       textArea.value = email;
+      textArea.setAttribute("readonly", "");
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
       document.body.appendChild(textArea);
       textArea.select();
       document.execCommand("copy");
@@ -51,7 +54,7 @@ export default function Connect() {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] flex-1 bg-trandsparent gap-y-10 md:gap-x-12 items-start justify-start md:justify-between h-112 p-6 sm:p-8 md:p-12">
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] flex-1 bg-transparent gap-y-10 md:gap-x-12 items-start justify-start md:justify-between min-h-112 md:h-112 p-6 sm:p-8 md:p-12">
       <div className="flex flex-col gap-y-4 w-full md:max-w-2xl">
         <motion.div
           initial={{ opacity: 0, y: 32, filter: "blur(10px)" }}

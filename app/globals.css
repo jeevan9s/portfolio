@@ -181,3 +181,13 @@ body {
   transform: translateY(100%);
 }
 
+.section-wrapper {
+  background-color: var(--section-background);
+}
+
+@media (min-width: 768px) {
+  .section-wrapper {
+    background-color: transparent;
+  }
+}
+

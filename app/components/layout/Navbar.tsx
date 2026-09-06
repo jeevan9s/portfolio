@@ -16,6 +16,7 @@ const hidden = ["/project"];
 export default function Navbar({ theme, currPage }: navbarProps) {
   const pathname = usePathname();
   const [time, setTime] = useState<string | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const storeSection = useScrollStore((s) => s.section);
   const activeSection = currPage ?? storeSection;
 
@@ -34,6 +35,17 @@ export default function Navbar({ theme, currPage }: navbarProps) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isMenuOpen) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsMenuOpen(false);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [isMenuOpen]);
+
   if (hidden.includes(pathname)) return null;
 
   const getLink = (id: string) => {
@@ -44,11 +56,16 @@ export default function Navbar({ theme, currPage }: navbarProps) {
   };
 
   const navSections = sections.filter((sec) => sec.id !== "hero" && sec.displayNav !== false);
+  const navigateToSection = (id: string) => {
+    scrollToSection(id);
+    window.history.replaceState(null, "", `#${id}`);
+    setIsMenuOpen(false);
+  };
 
   return (
     <div
       data-theme={theme}
-      className="nav-theme-bg flex flex-row w-full items-center justify-between px-6 py-4"
+      className="nav-theme-bg relative flex flex-row w-full items-center justify-between px-6 py-4"
     >
       <div className="hidden md:flex flex-row items-baseline gap-x-6 flex-1">
         <div className="flex flex-col">
@@ -78,8 +95,7 @@ export default function Navbar({ theme, currPage }: navbarProps) {
                 href={`#${sec.id}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  scrollToSection(sec.id);
-                  window.history.replaceState(null, "", `#${sec.id}`);
+                  navigateToSection(sec.id);
                 }}
                 className={getLink(sec.id)}
               >
@@ -93,13 +109,43 @@ export default function Navbar({ theme, currPage }: navbarProps) {
           <motion.button
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            onClick={() => {}}
+            onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-navigation"
             className="text-sm bg-transparent border-none nav-theme-muted inter cursor-pointer hover:nav-theme-active transition-colors duration-300"
           >
-            menu
+            {isMenuOpen ? "close" : "menu"}
           </motion.button>
         </div>
       </div>
+
+      <motion.nav
+        id="mobile-navigation"
+        initial={false}
+        animate={{ opacity: isMenuOpen ? 1 : 0, y: isMenuOpen ? 0 : -8 }}
+        transition={{ duration: 0.18, ease: "easeOut" }}
+        aria-hidden={!isMenuOpen}
+        className={`nav-theme-bg absolute inset-x-0 top-full z-10 border-t border-white/10 px-6 py-5 md:hidden ${
+          isMenuOpen ? "pointer-events-auto" : "pointer-events-none"
+        }`}
+      >
+        <div className="flex flex-col items-end gap-y-4">
+          {navSections.map((sec) => (
+            <a
+              key={sec.id}
+              href={`#${sec.id}`}
+              onClick={(event) => {
+                event.preventDefault();
+                navigateToSection(sec.id);
+              }}
+              tabIndex={isMenuOpen ? 0 : -1}
+              className={getLink(sec.id)}
+            >
+              {sec.id.charAt(0).toUpperCase() + sec.id.slice(1)}
+            </a>
+          ))}
+        </div>
+      </motion.nav>
     </div>
   );
 }
