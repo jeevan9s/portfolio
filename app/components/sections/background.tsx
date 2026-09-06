@@ -1,22 +1,14 @@
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 import Image from "next/image";
 
 export default function Background() {
   const [isSecondActive, setIsSecondActive] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [isChakanaOpen, setIsChakanaOpen] = useState(false);
   const [isNameOpen, setIsNameOpen] = useState(false);
-  const [canHover, setCanHover] = useState(true);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-    setCanHover(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setCanHover(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const canHover = () => window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   return (
     <div className="flex flex-col flex-1 bg-transparent items-center min-h-screen pt-8 md:pt-12 p-6 md:p-12 pb-16">
@@ -26,7 +18,6 @@ export default function Background() {
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           onViewportEnter={() => setIsSecondActive(false)}
           viewport={{ once: false, amount: 0.4 }}
-          onViewportLeave={() => setIsExpanded(false)}
           transition={{
             duration: 1.4,
             ease: [0.16, 1, 0.3, 1],
@@ -48,16 +39,16 @@ export default function Background() {
               <div className="flex mb-6">
                 <TooltipTrigger
                   onMouseEnter={() => {
-                    if (canHover) {
+                    if (canHover()) {
                       setIsChakanaOpen(true);
                       setIsNameOpen(false);
                     }
                   }}
                   onMouseLeave={() => {
-                    if (canHover) setIsChakanaOpen(false);
+                    if (canHover()) setIsChakanaOpen(false);
                   }}
                   onClick={() => {
-                    if (!canHover) {
+                    if (!canHover()) {
                       setIsChakanaOpen((prev) => !prev);
                       setIsNameOpen(false);
                     }
@@ -98,16 +89,16 @@ export default function Background() {
               >
                 <TooltipTrigger
                   onMouseEnter={() => {
-                    if (canHover) {
+                    if (canHover()) {
                       setIsNameOpen(true);
                       setIsChakanaOpen(false);
                     }
                   }}
                   onMouseLeave={() => {
-                    if (canHover) setIsNameOpen(false);
+                    if (canHover()) setIsNameOpen(false);
                   }}
                   onClick={() => {
-                    if (!canHover) {
+                    if (!canHover()) {
                       setIsNameOpen((prev) => !prev);
                       setIsChakanaOpen(false);
                     }
@@ -129,11 +120,11 @@ export default function Background() {
 
           <p
             className="inter text-2xl sm:text-3xl md:text-[3rem] leading-[1.35] md:leading-tight"
-            onMouseLeave={() => canHover && setIsSecondActive(false)}
+            onMouseLeave={() => canHover() && setIsSecondActive(false)}
           >
             <motion.span
-              onMouseEnter={() => canHover && setIsSecondActive(false)}
-              onClick={() => !canHover && setIsSecondActive(false)}
+              onMouseEnter={() => canHover() && setIsSecondActive(false)}
+              onClick={() => !canHover() && setIsSecondActive(false)}
               animate={{
                 color: isSecondActive
                   ? "var(--text-muted)"
@@ -147,8 +138,8 @@ export default function Background() {
             </motion.span>
 
             <motion.span
-              onMouseEnter={() => canHover && setIsSecondActive(true)}
-              onClick={() => !canHover && setIsSecondActive(true)}
+              onMouseEnter={() => canHover() && setIsSecondActive(true)}
+              onClick={() => !canHover() && setIsSecondActive(true)}
               animate={{
                 color: isSecondActive
                   ? "var(--text-primary)"
@@ -162,9 +153,11 @@ export default function Background() {
           </p>
 
           <motion.button
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={() => setIsExpanded((expanded) => !expanded)}
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            aria-expanded={isExpanded}
+            aria-controls="background-details"
             className="inter text-sm md:text-base mt-8 -mx-1 px-1 py-2 font-medium nav-theme-muted hover:nav-theme-active duration-300 flex items-center gap-2 cursor-pointer bg-transparent border-none overflow-hidden"
           >
             <AnimatePresence mode="wait" initial={false}>
@@ -180,15 +173,17 @@ export default function Background() {
               </motion.span>
             </AnimatePresence>
           </motion.button>
+
         </motion.div>
 
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {isExpanded && (
             <motion.div
+              id="background-details"
               initial={{ opacity: 0, height: 0, y: 20 }}
               animate={{ opacity: 1, height: "auto", y: 0 }}
               exit={{ opacity: 0, height: 0, y: 20 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="md:ml-10 overflow-hidden"
             >
               <div className="flex flex-col gap-8 md:grid md:grid-cols-3 md:gap-8 pt-8 mt-2 border-t border-[var(--text-muted)]/20">
