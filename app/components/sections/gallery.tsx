@@ -81,7 +81,7 @@ function GalleryCard({
       viewport={viewport}
       variants={cardVariants}
       data-cursor="grow"
-      className={`relative mb-0 inline-block w-full break-inside-avoid ${aspectClass[photo.orientation]} overflow-hidden bg-[#2A2A2A] [content-visibility:auto]`}
+      className={`relative mb-1 inline-block w-full break-inside-avoid ${aspectClass[photo.orientation]} overflow-hidden rounded-lg bg-[#2A2A2A] [content-visibility:auto]`}
     >
       <Image
         src={photo.src}
@@ -127,7 +127,7 @@ export default function Gallery() {
           gallery
         </motion.p>
 
-        <div className="columns-2 gap-0 md:columns-3 lg:columns-4">
+        <div className="columns-2 gap-1 md:columns-3 lg:columns-4">
           {photos.map((photo) => (
             <GalleryCard
               key={photo.id}
