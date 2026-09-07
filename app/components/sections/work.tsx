@@ -13,17 +13,10 @@ gsap.registerPlugin(ScrollTrigger);
 export type specification = {
   label: string;
   value: string;
-  percentage?: number;
 }
 
-const avLib: specification[] = [
-  { label: "flash", value: "34%", percentage: 34 },
-  { label: "ram", value: "18%", percentage: 18 },
-];
-const lsmLib: specification[] = [
-  { label: "flash", value: "34%", percentage: 34 },
-  { label: "ram", value: "18%", percentage: 18 },
-];
+const avLib: specification[] = [];
+const lsmLib: specification[] = [];
 const calmeca: specification[] = [
   { label: "platform", value: "desktop" },
 ];

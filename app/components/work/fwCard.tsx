@@ -11,7 +11,6 @@ import Link from "next/link";
 export interface FirmwareSpecItem {
   label: string;
   value: string;
-  percentage?: number;
 }
 
 interface FirmwareCardProps {
@@ -66,19 +65,9 @@ export default function FirmwareCard({
 
         <div className="relative z-15 mt-auto pt-4 border-t border-white/10 flex flex-col gap-y-2.5">
           {specs.map((spec, index) => (
-            <div key={index} className="flex flex-col gap-y-1">
-              <div className="flex items-center justify-between text-[0.65rem] sm:text-[0.7rem] uppercase tracking-wide">
-                <span className="inter text-[#9B9B9B]">{spec.label}</span>
-                <span className="inter text-white font-medium">{spec.value}</span>
-              </div>
-              {spec.percentage !== undefined && (
-                <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                  <div
-                    className="bg-white/80 h-full rounded-full transition-all duration-500"
-                    style={{ width: `${spec.percentage}%` }}
-                  />
-                </div>
-              )}
+            <div key={index} className="flex items-center justify-between text-[0.65rem] sm:text-[0.7rem] uppercase tracking-wide">
+              <span className="inter text-[#9B9B9B]">{spec.label}</span>
+              <span className="inter text-white font-medium">{spec.value}</span>
             </div>
           ))}
         </div>

@@ -17,7 +17,6 @@ interface FirmwareProject {
   framework: string;
   protocol?: string;
   apis?: string;
-  footprint?: string;
   build?: string;
   version?: string;
   repository?: string;
@@ -130,7 +129,6 @@ export default function FirmwarePage({ project }: { project: FirmwareProject }) 
     { label: "Framework", value: project.framework },
     ...(project.protocol ? [{ label: "Protocol", value: project.protocol }] : []),
     ...(project.apis ? [{ label: "APIs", value: project.apis }] : []),
-    ...(project.footprint ? [{ label: "Footprint", value: project.footprint }] : []),
     ...(project.build ? [{ label: "Build", value: project.build }] : []),
     ...(project.version ? [{ label: "Version", value: project.version }] : []),
   ];
