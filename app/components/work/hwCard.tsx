@@ -71,11 +71,11 @@ function PlaceholderBoard() {
   );
 }
 
-function RotatingPreview({ children, isDesktop }: { children: React.ReactNode; isDesktop: boolean }) {
+function RotatingPreview({ children }: { children: React.ReactNode }) {
   const previewRef = useRef<Group>(null);
 
   useFrame((_, delta) => {
-    if (isDesktop && previewRef.current) previewRef.current.rotation.y += delta * 0.3;
+    if (previewRef.current) previewRef.current.rotation.y += delta * 0.3;
   });
 
   return <group ref={previewRef} rotation={[0.05, 0, 0]}>{children}</group>;
@@ -149,14 +149,14 @@ export default function HardwareCard({
           <Canvas
             camera={{ position: [0, 0.2, 4.5], fov: 26 }}
             dpr={isDesktop ? [1, 1.5] : 1}
-            frameloop={isDesktop && isVisible ? "always" : "demand"}
+            frameloop={isVisible ? "always" : "demand"}
             gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
             className="absolute inset-0 h-full w-full pointer-events-none"
           >
             <ambientLight intensity={0.9} color="#ffffff" />
             <directionalLight position={[3, 3, 4]} intensity={1.2} color="#ffffff" />
             <directionalLight position={[-4, -2, 2]} intensity={0.6} color="#ffffff" />
-            <RotatingPreview isDesktop={isDesktop}>
+            <RotatingPreview>
               <Suspense fallback={<PlaceholderBoard />}>
                 {modelPath ? <RealBoard modelPath={modelPath} /> : <PlaceholderBoard />}
               </Suspense>
