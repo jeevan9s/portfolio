@@ -5,6 +5,7 @@ import { ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import ProjectCarousel, { type CarouselSlide } from "./ProjectCarousel";
+import ProjectDescription from "./ProjectDescription";
 
 const MotionLink = motion.create(Link);
 
@@ -118,14 +119,7 @@ export default function HardwarePage({ project }: { project: HardwareProject }) 
         <div className="flex flex-col">
           <p className="inter mb-3 text-sm uppercase tracking-[0.18em] text-[#878787]">{project.category ?? "Hardware"}</p>
           <h1 className="montserrat text-4xl sm:text-5xl md:text-6xl">{project.title}</h1>
-          <p className="inter mt-5 max-w-xl text-base leading-relaxed text-[#5F5F5F]">{project.description}</p>
-          {project.details && (
-            <div className="mt-5 space-y-4">
-              {project.details.split("\n\n").map((paragraph) => (
-                <DetailParagraph key={paragraph}>{paragraph}</DetailParagraph>
-              ))}
-            </div>
-          )}
+          <ProjectDescription description={project.description} details={project.details} />
 
           <div className="mt-10 space-y-5">
             <Disclosure label="Specifications" isOpen={openPanels.specs} onClick={() => setOpenPanels((panels) => ({ ...panels, specs: !panels.specs }))}>

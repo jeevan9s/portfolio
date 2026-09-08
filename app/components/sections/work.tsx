@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useLayoutEffect } from "react";
+import { useEffect, useRef, useLayoutEffect, useState } from "react";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -43,11 +43,22 @@ export function preloadHardwareModels() {
 }
 
 export default function Work() {
+  const [isDesktop, setIsDesktop] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollHostRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, []);
+
   useLayoutEffect(() => {
+    if (!isDesktop) return;
+
     const container = containerRef.current;
     const host = scrollHostRef.current;
     const track = trackRef.current;
@@ -77,14 +88,14 @@ export default function Work() {
     }, container);
 
     return () => ctx.revert();
-  }, []);
+  }, [isDesktop]);
 
   return (
     <div
       ref={containerRef}
-      className="relative h-[250vh] w-full bg-transparent min-h-screen"
+      className="relative min-h-0 w-full bg-transparent md:h-[250vh] md:min-h-screen"
     >
-      <div className="sticky top-0 h-screen flex flex-col justify-start overflow-hidden p-8 md:p-12 pt-10 md:pt-10">
+      <div className="flex flex-col justify-start p-8 pt-10 md:sticky md:top-0 md:h-screen md:overflow-hidden md:p-12 md:pt-10 xl:p-16 2xl:p-20">
         <div className="flex flex-col gap-y-3 max-w-[100rem] mb-8">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -92,17 +103,17 @@ export default function Work() {
             viewport={{ once: false, amount: 0.3 }}
             transition={{ duration: 0.45, ease: "easeOut" }}
           >
-            <h1 className="text-[3rem] text-[#1E1E1E] md:text-[5.25rem] montserrat">selected works</h1>
-            <h3 className="text-[1.5rem] text-[#878787] md:text-[2rem] inter font-light">
+            <h1 className="text-[3rem] text-[#1E1E1E] md:text-[5.25rem] 2xl:text-[6rem] montserrat">selected works</h1>
+            <h3 className="text-[1.5rem] text-[#878787] md:text-[2rem] 2xl:text-[2.25rem] inter font-light">
               an index of builds
             </h3>
           </motion.div>
         </div>
 
-        <div ref={scrollHostRef} className="w-full overflow-hidden overflow-y-visible">
+        <div ref={scrollHostRef} className="w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain touch-pan-x overflow-y-visible md:overflow-hidden md:snap-none md:touch-auto">
           <div
             ref={trackRef}
-            className="flex flex-row items-center gap-x-10 md:gap-x-16 py-6 w-max will-change-transform"
+            className="flex w-max flex-row items-center gap-x-4 py-6 will-change-transform md:gap-x-16"
           >
             {projects.map((project) => (
               <motion.div
@@ -110,7 +121,7 @@ export default function Work() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, ease: "easeOut" }}
-                className="work-card shrink-0 will-change-transform"
+                className="work-card shrink-0 snap-start will-change-transform"
               >
                 {project.type === "hardware" ? (
                   <HardwareCard {...project} />

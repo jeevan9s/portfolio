@@ -1,0 +1,47 @@
+"use client";
+
+import { useState } from "react";
+
+type ProjectDescriptionProps = {
+  description: string;
+  details?: string;
+};
+
+function paragraphs(value: string) {
+  return value.split("\n\n").filter(Boolean);
+}
+
+export default function ProjectDescription({ description, details }: ProjectDescriptionProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const descriptionParagraphs = paragraphs(description);
+  const detailParagraphs = paragraphs(details ?? "");
+  const introParagraphs = [descriptionParagraphs[0] ?? description, ...(detailParagraphs.length > 0 ? [detailParagraphs[0]] : [])];
+  const extended = [...descriptionParagraphs.slice(1), ...detailParagraphs.slice(1)];
+
+  return (
+    <div className="inter mt-5 max-w-xl text-base leading-relaxed text-[#5F5F5F]">
+      {introParagraphs.map((paragraph, index) => (
+        <p key={`${index}-${paragraph}`} className={index > 0 ? "mt-4" : undefined}>
+          {paragraph}
+        </p>
+      ))}
+      {extended.length > 0 && (
+        <>
+          <div className={`mt-4 space-y-4 ${isExpanded ? "block" : "hidden md:block"}`}>
+            {extended.map((paragraph, index) => (
+              <p key={`${index}-${paragraph}`}>{paragraph}</p>
+            ))}
+          </div>
+          <button
+            type="button"
+            aria-expanded={isExpanded}
+            onClick={() => setIsExpanded((expanded) => !expanded)}
+            className="mt-3 text-sm text-[#1E1E1E] underline decoration-black/20 underline-offset-4 md:hidden"
+          >
+            {isExpanded ? "read less" : "read more"}
+          </button>
+        </>
+      )}
+    </div>
+  );
+}

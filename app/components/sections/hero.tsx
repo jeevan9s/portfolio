@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <div  className="flex flex-col md:flex-row flex-1 bg-transparent md:justify-between md:items-start items-start gap-y-10 justify-center min-h-screen p-8 md:p-12">
+    <div  className="flex flex-col md:flex-row flex-1 bg-transparent md:justify-between md:items-start items-start gap-y-10 justify-center min-h-screen p-8 md:p-12 xl:p-16 2xl:p-20">
       <div className="flex flex-col gap-y-5 max-w-[100rem] md:max-w-350 md:mt-5">
         <motion.div
           initial={{ opacity: 0, y: 50, filter: "blur(6px)" }}
@@ -22,7 +22,7 @@ export default function Hero() {
             willChange: "transform, opacity, filter",
           }}
         >
-          <h1 className="text-[2rem] nav-theme-active md:text-[6rem] md:leading-[6.25rem] montserrat">
+          <h1 className="text-[2rem] nav-theme-active md:text-[4rem] md:leading-[6rem] 2xl:text-[6.15rem] 2xl:leading-[7.25rem] montserrat">
             Developing hardware and firmware for embedded platforms.
           </h1>
         </motion.div>

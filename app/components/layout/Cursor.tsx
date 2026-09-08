@@ -68,7 +68,7 @@ const Cursor = () => {
   return (
     <div
       ref={cursorRef}
-      className="max-lg:hidden fixed top-0 left-0 w-4 h-4 bg-white rounded-sm pointer-events-none z-[9999] mix-blend-exclusion"
+      className="custom-cursor fixed top-0 left-0 w-4 h-4 bg-white rounded-sm pointer-events-none z-[9999] mix-blend-exclusion"
     />
   );
 };

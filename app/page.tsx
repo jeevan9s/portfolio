@@ -16,11 +16,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Page() {
   const [isMounted, setIsMounted] = useState(false);
-  const [navbarVisible, setNavbarVisible] = useState(false);
-  const [navbarTheme, setNavbarTheme] = useState<"light" | "dark">("dark");
-  const [footerVisible, setFooterVisible] = useState(false);
-  const [footerTheme, setFooterTheme] = useState<"light" | "dark">("dark");
-  
+
   const setSection = useScrollStore((s) => s.setSection);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const lenisRef = useRef<Lenis | null>(null);
@@ -54,35 +50,10 @@ export default function Page() {
     lenisRef.current = lenis;
     lenisController.instance = lenis;
 
-    const findSectionAtViewportY = (y: number) => {
-      for (const sec of sections) {
-        const el = document.getElementById(`section-${sec.id}`);
-        if (!el) continue;
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= y && rect.bottom > y) return sec;
-      }
-      return null;
-    };
-
-    const updateChromeZones = () => {
-      const { navbar: navH, footer: footH } = chromeHeightsRef.current;
-      const navSection = findSectionAtViewportY(Math.max(1, navH / 2));
-      const footSection = findSectionAtViewportY(
-        Math.min(window.innerHeight - 1, window.innerHeight - footH / 2),
-      );
-
-      setNavbarVisible(navSection?.showChrome === true);
-      setNavbarTheme(navSection?.bgColor === "EFEFEF" ? "light" : "dark");
-
-      setFooterVisible(footSection?.showChrome === true);
-      setFooterTheme(footSection?.bgColor === "EFEFEF" ? "light" : "dark");
-    };
-
     const forceHeroTop = () => {
       lenis?.scrollTo(0, { immediate: true });
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       setSection("hero");
-      updateChromeZones();
     };
 
     const resetToHero = () => {
@@ -103,7 +74,6 @@ export default function Page() {
       lenis?.scrollTo(target, { immediate: true });
       window.scrollTo({ top: target, left: 0, behavior: "instant" });
       setSection(initialSection);
-      updateChromeZones();
     };
 
     const handlePageShow = () => resetToInitialSection();
@@ -114,11 +84,10 @@ export default function Page() {
 
     if (lenis) lenis.on("scroll", ScrollTrigger.update);
 
-    // Keep section snapping to desktop, where it complements wheel scrolling.
     let snapTimeout: NodeJS.Timeout;
     const handleScrollSnap = () => {
       clearTimeout(snapTimeout);
-      
+
       const y = window.scrollY;
       const isPinned = ScrollTrigger.getAll().some(
         (st) => st.vars.pin && y >= st.start && y <= st.end,
@@ -150,14 +119,13 @@ export default function Page() {
           }
         });
 
-        // Only snap if offset is slight (prevents jarring long jumps)
         if (minDistance > 5 && minDistance < window.innerHeight * 0.45) {
           lenis?.scrollTo(nearestTop, {
             duration: 0.6,
             easing: (t) => 1 - Math.pow(1 - t, 3),
           });
         }
-      }, 180); // Triggers 180ms after the user finishes scrolling
+      }, 180);
     };
 
     if (lenis) lenis.on("scroll", handleScrollSnap);
@@ -167,29 +135,13 @@ export default function Page() {
     };
     if (lenis) {
       gsap.ticker.add(updateLenis);
-      gsap.ticker.lagSmoothing(0);
     }
-
-    let chromeFrameId = 0;
-    const scheduleChromeUpdate = () => {
-      if (chromeFrameId) return;
-      chromeFrameId = requestAnimationFrame(() => {
-        chromeFrameId = 0;
-        updateChromeZones();
-      });
-    };
-
-    window.addEventListener("scroll", scheduleChromeUpdate, { passive: true });
-    window.addEventListener("resize", scheduleChromeUpdate);
 
     const rafId = requestAnimationFrame(() => setIsMounted(true));
 
     return () => {
       cancelAnimationFrame(rafId);
       clearTimeout(snapTimeout);
-      if (chromeFrameId) cancelAnimationFrame(chromeFrameId);
-      window.removeEventListener("scroll", scheduleChromeUpdate);
-      window.removeEventListener("resize", scheduleChromeUpdate);
       window.removeEventListener("pageshow", handlePageShow);
       window.removeEventListener("load", handlePageShow);
       if (lenis) {
@@ -265,8 +217,13 @@ export default function Page() {
     return () => ctx.revert();
   }, [isMounted]);
 
+  const currentId = useScrollStore((s) => s.section);
+  const current = sections.find((s) => s.id === currentId);
+  const currentTheme = current?.bgColor === "EFEFEF" ? "light" : "dark";
+
   useEffect(() => {
     const root = document.documentElement;
+    let refreshTimeout: ReturnType<typeof setTimeout>;
 
     const applyHeight = (key: "navbar" | "footer", value: number) => {
       if (value <= 0) return;
@@ -281,20 +238,24 @@ export default function Page() {
         if (entry.target === navbarWrapperRef.current) applyHeight("navbar", height);
         if (entry.target === footerWrapperRef.current) applyHeight("footer", height);
       }
-      ScrollTrigger.refresh();
+      clearTimeout(refreshTimeout);
+      refreshTimeout = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 150);
     });
 
     if (navbarWrapperRef.current) observer.observe(navbarWrapperRef.current);
     if (footerWrapperRef.current) observer.observe(footerWrapperRef.current);
 
-    return () => observer.disconnect();
-  }, [navbarVisible, footerVisible]);
+    return () => {
+      clearTimeout(refreshTimeout);
+      observer.disconnect();
+    };
+  }, [currentId]);
 
-  const currentId = useScrollStore((s) => s.section);
-  const current = sections.find((s) => s.id === currentId);
-  const currentTheme = current?.bgColor === "EFEFEF" ? "light" : "dark";
-  const showNavbar = isMounted && navbarVisible;
-  const showFooter = isMounted && footerVisible;
+  const showChrome = current?.showChrome === true;
+  const showNavbar = isMounted && showChrome;
+  const showFooter = isMounted && showChrome;
 
   useEffect(() => {
     document.title = currentId === "hero" ? "Jeevan | portfolio" : `Jeevan | ${currentId}`;
@@ -328,7 +289,7 @@ export default function Page() {
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="fixed top-0 inset-x-0 z-50 pointer-events-auto"
           >
-            <Navbar currPage={currentId} theme={navbarTheme} />
+            <Navbar currPage={currentId} theme={currentTheme} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -357,7 +318,7 @@ export default function Page() {
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="fixed bottom-0 inset-x-0 w-full z-50 pointer-events-auto"
           >
-            <Footer theme={footerTheme} />
+            <Footer theme={currentTheme} />
           </motion.div>
         )}
       </AnimatePresence>

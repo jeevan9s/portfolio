@@ -23,7 +23,7 @@ export default function SectionWrapper({ id, children }: { id: string; children:
       ? "min-h-screen"
       : "";
 
-  const clearanceClass = needsChromeClearance ? "pt-24 md:pt-28" : "";
+  const clearanceClass = needsChromeClearance ? "pt-24 md:pt-28 xl:pt-32" : "";
 
   useEffect(() => {
     const el = containerRef.current;

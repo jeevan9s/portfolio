@@ -54,8 +54,8 @@ export default function Connect() {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] flex-1 bg-transparent gap-y-10 md:gap-x-12 items-start justify-start md:justify-between min-h-112 md:h-112 p-6 sm:p-8 md:p-12">
-      <div className="flex flex-col gap-y-4 w-full md:max-w-2xl">
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] flex-1 bg-transparent gap-y-10 md:gap-x-12 items-start justify-start md:justify-between min-h-112 md:h-112 p-6 sm:p-8 md:p-12 xl:p-16 2xl:p-20">
+      <div className="flex flex-col gap-y-4 w-full md:max-w-2xl 2xl:max-w-3xl">
         <motion.div
           initial={{ opacity: 0, y: 32, filter: "blur(10px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -65,7 +65,7 @@ export default function Connect() {
             willChange: "transform, opacity, filter",
           }}
         >
-          <h1 className="text-[2.25rem] leading-[1.1] text-[#FFFFFF] sm:text-[3rem] md:text-[5.25rem] md:leading-none montserrat text-left">
+          <h1 className="text-[2.25rem] leading-[1.1] text-[#FFFFFF] sm:text-[3rem] md:text-[5.25rem] md:leading-none 2xl:text-[6rem] montserrat text-left">
             let&apos;s connect.
           </h1>
         </motion.div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -104,6 +104,17 @@ function GalleryCard({
 
 export default function Gallery() {
   const [loadedIds, setLoadedIds] = useState<Set<string>>(new Set());
+  const [columnCount, setColumnCount] = useState(2);
+
+  useEffect(() => {
+    const updateColumnCount = () => {
+      setColumnCount(window.matchMedia("(min-width: 1024px)").matches ? 4 : window.matchMedia("(min-width: 768px)").matches ? 3 : 2);
+    };
+
+    updateColumnCount();
+    window.addEventListener("resize", updateColumnCount);
+    return () => window.removeEventListener("resize", updateColumnCount);
+  }, []);
 
   const handleLoad = (id: string) => {
     setLoadedIds((prev) => {
@@ -115,8 +126,8 @@ export default function Gallery() {
   };
 
   return (
-    <div className="flex flex-col flex-1 bg-transparent items-center pt-24 md:pt-32 p-4 sm:p-8 md:p-12">
-      <div className="w-full max-w-[100rem]">
+    <div className="flex flex-col flex-1 bg-transparent items-center pt-24 md:pt-32 p-4 sm:p-8 md:p-12 xl:p-16 2xl:p-20">
+      <div className="w-full max-w-[100rem] 2xl:max-w-[120rem]">
         <motion.p
           initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -128,13 +139,19 @@ export default function Gallery() {
         </motion.p>
 
         <div className="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-4">
-          {photos.map((photo) => (
-            <GalleryCard
-              key={photo.id}
-              photo={photo}
-              isLoaded={loadedIds.has(photo.id)}
-              onLoad={handleLoad}
-            />
+          {Array.from({ length: columnCount }, (_, columnIndex) => (
+            <div key={columnIndex} className="flex min-w-0 flex-col gap-1">
+              {photos
+                .filter((_, photoIndex) => photoIndex % columnCount === columnIndex)
+                .map((photo) => (
+                  <GalleryCard
+                    key={photo.id}
+                    photo={photo}
+                    isLoaded={loadedIds.has(photo.id)}
+                    onLoad={handleLoad}
+                  />
+                ))}
+            </div>
           ))}
         </div>
       </div>
