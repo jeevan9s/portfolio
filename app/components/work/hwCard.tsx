@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { motion } from "framer-motion";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import {
   CARD_WIDTH,
@@ -78,7 +79,7 @@ function RotatingPreview({ children }: { children: React.ReactNode }) {
     if (previewRef.current) previewRef.current.rotation.y += delta * 0.3;
   });
 
-  return <group ref={previewRef} rotation={[0.05, 0, 0]}>{children}</group>;
+  return <group ref={previewRef} rotation={[0.05, Math.PI, 0]}>{children}</group>;
 }
 
 function RealBoard({ modelPath }: { modelPath: string }) {
@@ -138,12 +139,12 @@ export default function HardwareCard({
   }, []);
 
   return (
-    <Link href={`/project/${id}`} className={`shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer [contain:layout_paint]`}>
+    <Link href={`/project/${id}`} className={`group shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer [contain:layout_paint] focus:outline-none`}>
       <motion.div
         ref={previewRef}
         whileHover={{ scale: 1.025 }}
         transition={{ type: "spring", stiffness: 380, damping: 28, mass: 0.55 }}
-        className={`relative w-full ${CARD_ASPECT} rounded-xl bg-[#1E1E1E] overflow-hidden will-change-transform`}
+        className={`relative w-full ${CARD_ASPECT} rounded-xl bg-[#1E1E1E] overflow-hidden will-change-transform ring-offset-2 ring-offset-[#EFEFEF] group-focus-visible:ring-2 group-focus-visible:ring-[#1E1E1E]`}
       >
         {isNearViewport ? (
           <Canvas
@@ -165,6 +166,10 @@ export default function HardwareCard({
         ) : (
           <div className="absolute inset-0 h-full w-full bg-[#1E1E1E]" />
         )}
+
+        <div className="absolute right-3 top-3 z-10 grid h-8 w-8 place-items-center rounded-full bg-[#F4F4F4]/90 text-[#1E1E1E] transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1">
+          <ChevronRight size={18} strokeWidth={1.75} aria-hidden="true" />
+        </div>
 
         <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-[#F4F4F4] rounded-md px-2 py-1.5 sm:px-2 sm:py-1 text-right pointer-events-none max-w-[65%] z-10">
           <div className="flex flex-col gap-y-0.5">
