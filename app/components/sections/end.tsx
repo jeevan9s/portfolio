@@ -7,22 +7,19 @@ const exitEase = [0.7, 0, 0.84, 0] as const;
 const email = "jeevansanchez42@gmail.com";
 
 const viewport = {
-  once: false,
-  amount: 0.3,
-  margin: "0px 0px -5% 0px",
+  once: true,
+  amount: 0.2,
 } as const;
 
 const fadeUp: Variants = {
   hidden: {
     opacity: 0,
     y: -10,
-    filter: "blur(4px)",
     transition: { duration: 0.4, ease: exitEase },
   },
   show: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: { duration: 0.7, ease: enterEase },
   },
 };
@@ -45,14 +42,12 @@ const wordmarkVariants: Variants = {
     opacity: 0,
     y: 16,
     scale: 0.97,
-    filter: "blur(6px)",
     transition: { duration: 0.4, ease: exitEase },
   },
   show: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: "blur(0px)",
     transition: { duration: 0.8, ease: enterEase },
   },
 };
@@ -73,13 +68,11 @@ const itemVariants: Variants = {
   hidden: {
     opacity: 0,
     y: 8,
-    filter: "blur(4px)",
     transition: { duration: 0.3, ease: exitEase },
   },
   show: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: { duration: 0.6, ease: enterEase },
   },
 };

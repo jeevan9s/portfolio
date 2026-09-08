@@ -5,7 +5,7 @@ import { motion, type Variants } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const revealTransition = { duration: 0.7, ease: [0.16, 1, 0.3, 1] } as const;
-const viewport = { once: false, amount: 0.2, margin: "0px 0px -5% 0px" } as const;
+const viewport = { once: true, amount: 0.2 } as const;
 const email = "jeevansanchez42@gmail.com";
 
 const listVariants: Variants = {
@@ -14,11 +14,10 @@ const listVariants: Variants = {
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 14, filter: "blur(6px)" },
+  hidden: { opacity: 0, y: 14 },
   show: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: revealTransition,
   },
 };
@@ -54,15 +53,15 @@ export default function Connect() {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] flex-1 bg-transparent gap-y-10 md:gap-x-12 items-start justify-start md:justify-between min-h-112 md:h-112 p-6 sm:p-8 md:p-12 xl:p-16 2xl:p-20">
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] flex-1 bg-transparent gap-y-10 md:gap-x-12 items-start justify-start md:justify-between min-h-[26rem] p-6 sm:p-8 md:p-12 xl:p-16 2xl:p-20">
       <div className="flex flex-col gap-y-4 w-full md:max-w-2xl 2xl:max-w-3xl">
         <motion.div
-          initial={{ opacity: 0, y: 32, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={viewport}
           transition={revealTransition}
           style={{
-            willChange: "transform, opacity, filter",
+            willChange: "transform, opacity",
           }}
         >
           <h1 className="text-[2.25rem] leading-[1.1] text-[#FFFFFF] sm:text-[3rem] md:text-[5.25rem] md:leading-none 2xl:text-[6rem] montserrat text-left">
@@ -71,8 +70,8 @@ export default function Connect() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={viewport}
           transition={{ ...revealTransition, delay: 0.1 }}
           className="flex flex-col w-full md:max-w-[30rem]"
@@ -142,12 +141,13 @@ export default function Connect() {
         </motion.a>
       </motion.div>
 
-            <motion.div
-              initial="hidden"
-              whileInView="show"
-              viewport={viewport}
-              className="col-span-full w-full h-px bg-white/10 origin-center"
-            />
+      <motion.div
+        initial={{ opacity: 0, scaleX: 0 }}
+        whileInView={{ opacity: 1, scaleX: 1 }}
+        viewport={viewport}
+        transition={revealTransition}
+        className="col-span-full w-full h-px bg-white/10 origin-center"
+      />
     </div>
   );
 }

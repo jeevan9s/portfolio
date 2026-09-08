@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
 const revealTransition = { duration: 0.7, ease: [0.16, 1, 0.3, 1] } as const;
-const viewport = { once: false, amount: 0.3, margin: "0px 0px -10% 0px" } as const;
+const viewport = { once: true, amount: 0.2 } as const;
 
 type Orientation = "landscape" | "portrait" | "square" | "tall";
 
@@ -117,6 +117,31 @@ export default function Gallery() {
     return () => window.removeEventListener("resize", updateColumnCount);
   }, []);
 
+  const columns = useMemo(() => {
+    const cols: Photo[][] = Array.from({ length: columnCount }, () => []);
+    const heights = new Array(columnCount).fill(0);
+
+    const aspectHeights: Record<Orientation, number> = {
+      landscape: 0.75,
+      square: 1.0,
+      portrait: 1.25,
+      tall: 1.375,
+    };
+
+    photos.forEach((photo) => {
+      let minCol = 0;
+      for (let i = 1; i < columnCount; i++) {
+        if (heights[i] < heights[minCol]) {
+          minCol = i;
+        }
+      }
+      cols[minCol].push(photo);
+      heights[minCol] += aspectHeights[photo.orientation];
+    });
+
+    return cols;
+  }, [columnCount]);
+
   const handleLoad = (id: string) => {
     setLoadedIds((prev) => {
       if (prev.has(id)) return prev;
@@ -130,8 +155,8 @@ export default function Gallery() {
     <div className="flex flex-col flex-1 bg-transparent items-center pt-24 md:pt-32 p-4 sm:p-8 md:p-12 xl:p-16 2xl:p-20">
       <div className="w-full max-w-[100rem] 2xl:max-w-[120rem]">
         <motion.p
-          initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={viewport}
           transition={revealTransition}
           className="inter text-xl md:text-2xl nav-theme-muted mb-6 sm:mb-8 md:mb-10"
@@ -140,18 +165,16 @@ export default function Gallery() {
         </motion.p>
 
         <div className="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: columnCount }, (_, columnIndex) => (
+          {columns.map((columnPhotos, columnIndex) => (
             <div key={columnIndex} className="flex min-w-0 flex-col gap-1">
-              {photos
-                .filter((_, photoIndex) => photoIndex % columnCount === columnIndex)
-                .map((photo) => (
-                  <GalleryCard
-                    key={photo.id}
-                    photo={photo}
-                    isLoaded={loadedIds.has(photo.id)}
-                    onLoad={handleLoad}
-                  />
-                ))}
+              {columnPhotos.map((photo) => (
+                <GalleryCard
+                  key={photo.id}
+                  photo={photo}
+                  isLoaded={loadedIds.has(photo.id)}
+                  onLoad={handleLoad}
+                />
+              ))}
             </div>
           ))}
         </div>

@@ -240,7 +240,9 @@ export default function Page() {
       }
       clearTimeout(refreshTimeout);
       refreshTimeout = setTimeout(() => {
-        ScrollTrigger.refresh();
+        if (window.matchMedia("(min-width: 768px)").matches) {
+          ScrollTrigger.refresh();
+        }
       }, 150);
     });
 

@@ -14,18 +14,18 @@ export default function Background() {
     <div className="flex flex-col flex-1 bg-transparent items-center min-h-screen pt-8 md:pt-12 p-6 md:p-12 pb-16">
       <div className="flex flex-col gap-y-8 max-w-[100rem] md:max-w-350 w-full">
         <motion.div
-          initial={{ opacity: 0, y: 30, filter: "blur(4px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
           onViewportEnter={() => setIsSecondActive(false)}
-          viewport={{ once: false, amount: 0.4 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{
-            duration: 1.4,
+            duration: 1,
             ease: [0.16, 1, 0.3, 1],
             opacity: { duration: 0.5, ease: "linear", delay: 0.2 },
-            delay: 0.5,
+            delay: 0.2,
           }}
           style={{
-            willChange: "transform, opacity, filter",
+            willChange: "transform, opacity",
           }}
         >
           <motion.div className="flex gap-x-4">
@@ -163,9 +163,9 @@ export default function Background() {
             <AnimatePresence mode="wait" initial={false}>
               <motion.span
                 key={isExpanded ? "less" : "more"}
-                initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 className="inline-block"
               >
@@ -188,9 +188,9 @@ export default function Background() {
             >
               <div className="flex flex-col gap-8 md:grid md:grid-cols-3 md:gap-8 pt-8 mt-2 border-t border-[var(--text-muted)]/20">
                 <motion.div
-                  initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                   className="flex flex-col gap-2"
                 >
                   <h3 className="inter font-semibold text-lg md:text-lg nav-theme-active">
@@ -205,9 +205,9 @@ export default function Background() {
                 </motion.div>
 
                 <motion.div
-                  initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                   className="flex flex-col gap-2"
                 >
                   <h3 className="inter font-semibold text-lg md:text-lg nav-theme-active">
@@ -220,9 +220,9 @@ export default function Background() {
                 </motion.div>
 
                 <motion.div
-                  initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                   className="flex flex-col gap-2"
                 >
                   <h3 className="inter font-semibold text-lg md:text-lg nav-theme-active">

@@ -71,11 +71,11 @@ function PlaceholderBoard() {
   );
 }
 
-function RotatingPreview({ children }: { children: React.ReactNode }) {
+function RotatingPreview({ children, isDesktop }: { children: React.ReactNode; isDesktop: boolean }) {
   const previewRef = useRef<Group>(null);
 
   useFrame((_, delta) => {
-    if (previewRef.current) previewRef.current.rotation.y += delta * 0.3;
+    if (isDesktop && previewRef.current) previewRef.current.rotation.y += delta * 0.3;
   });
 
   return <group ref={previewRef} rotation={[0.05, 0, 0]}>{children}</group>;
@@ -127,6 +127,16 @@ export default function HardwareCard({
   const isVisible = useNearViewport(previewRef, "0px");
   useWarmModel(previewRef, modelPath);
 
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, []);
+
   return (
     <Link href={`/project/${id}`} className={`shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer [contain:layout_paint]`}>
       <motion.div
@@ -138,15 +148,15 @@ export default function HardwareCard({
         {isNearViewport ? (
           <Canvas
             camera={{ position: [0, 0.2, 4.5], fov: 26 }}
-            dpr={1}
-            frameloop={isVisible ? "always" : "demand"}
+            dpr={isDesktop ? [1, 1.5] : 1}
+            frameloop={isDesktop && isVisible ? "always" : "demand"}
             gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
             className="absolute inset-0 h-full w-full pointer-events-none"
           >
             <ambientLight intensity={0.9} color="#ffffff" />
             <directionalLight position={[3, 3, 4]} intensity={1.2} color="#ffffff" />
             <directionalLight position={[-4, -2, 2]} intensity={0.6} color="#ffffff" />
-            <RotatingPreview>
+            <RotatingPreview isDesktop={isDesktop}>
               <Suspense fallback={<PlaceholderBoard />}>
                 {modelPath ? <RealBoard modelPath={modelPath} /> : <PlaceholderBoard />}
               </Suspense>
