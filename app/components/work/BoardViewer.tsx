@@ -5,6 +5,9 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Grid, OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
+// serve draco decoder locally instead of fetching from gstatic's CDN
+useGLTF.setDecoderPath("/draco/");
+
 function BoardModel({ modelPath }: { modelPath: string }) {
   const { scene } = useGLTF(modelPath, true, true);
   const boardRef = useRef<THREE.Group>(null);

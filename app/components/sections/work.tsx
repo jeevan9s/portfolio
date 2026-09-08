@@ -10,6 +10,9 @@ import FirmwareCard from "../work/fwCard";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// serve draco decoder locally instead of fetching from gstatic's CDN
+useGLTF.setDecoderPath("/draco/");
+
 export type specification = {
   label: string;
   value: string;
