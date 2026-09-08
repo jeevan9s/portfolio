@@ -47,7 +47,8 @@ const photos: Photo[] = [
   { id: "30", src: "/gallery/img_30.jpg", alt: "Gallery image 30", orientation: "portrait" },
   { id: "31", src: "/gallery/img_31.jpg", alt: "Gallery image 31", orientation: "portrait" },
   { id: "32", src: "/gallery/img_32.jpg", alt: "Gallery image 32", orientation: "portrait" },
-  { id: "33", src: "/gallery/img_33.jpg", alt: "Gallery image 32", orientation: "landscape" },
+  { id: "33", src: "/gallery/img_33.jpg", alt: "Gallery image 33", orientation: "portrait" },
+  { id: "34", src: "/gallery/img_34.jpg", alt: "Gallery image 34", orientation: "landscape" },
 ];
 
 const aspectClass: Record<Orientation, string> = {
