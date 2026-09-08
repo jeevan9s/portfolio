@@ -69,7 +69,7 @@ function DeferredWork() {
 
     return createElement(
         "div",
-        { ref: containerRef, className: "min-h-[250vh]" },
+        { ref: containerRef, className: "min-h-screen md:min-h-[250vh]" },
         Work && createElement(Work),
     );
 }

@@ -31,8 +31,8 @@ export default function SectionWrapper({ id, children }: { id: string; children:
 
     const st = ScrollTrigger.create({
       trigger: el,
-      start: 'top top',
-      end: 'bottom center',
+      start: 'top 40%',
+      end: 'bottom 40%',
       onEnter: () => setSection(id),
       onEnterBack: () => setSection(id),
     });

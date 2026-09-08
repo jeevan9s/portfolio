@@ -48,7 +48,6 @@ const photos: Photo[] = [
   { id: "31", src: "/gallery/img_31.jpg", alt: "Gallery image 31", orientation: "portrait" },
   { id: "32", src: "/gallery/img_32.jpg", alt: "Gallery image 32", orientation: "portrait" },
   { id: "33", src: "/gallery/img_33.jpg", alt: "Gallery image 33", orientation: "portrait" },
-  { id: "34", src: "/gallery/img_34.jpg", alt: "Gallery image 34", orientation: "landscape" },
 ];
 
 const aspectClass: Record<Orientation, string> = {
@@ -83,7 +82,7 @@ function GalleryCard({
       viewport={viewport}
       variants={cardVariants}
       data-cursor="grow"
-      className={`relative w-full ${aspectClass[photo.orientation]} overflow-hidden rounded-lg bg-[#2A2A2A] [content-visibility:auto]`}
+      className={`relative w-full ${aspectClass[photo.orientation]} overflow-hidden rounded-lg bg-[#2A2A2A]`}
     >
       <Image
         src={photo.src}

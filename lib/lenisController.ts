@@ -1,4 +1,5 @@
 import type Lenis from "lenis";
+import { sections } from "@/lib/sections";
 
 export const lenisController: { instance: Lenis | null; navbarHeight: number } = {
   instance: null,
@@ -9,9 +10,12 @@ export function scrollToSection(id: string) {
   const el = document.getElementById(`section-${id}`);
   if (!el) return;
 
+  const sec = sections.find((s) => s.id === id);
+  const offset = sec?.showChrome ? lenisController.navbarHeight : 0;
+
   const target = Math.max(
     0,
-    el.getBoundingClientRect().top + window.scrollY - lenisController.navbarHeight,
+    el.getBoundingClientRect().top + window.scrollY - offset,
   );
 
   const lenis = lenisController.instance;
