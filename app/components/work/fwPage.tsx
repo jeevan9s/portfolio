@@ -9,6 +9,23 @@ import ProjectDescription from "./ProjectDescription";
 
 const MotionLink = motion.create(Link);
 
+const revealEase = [0.16, 1, 0.3, 1] as const;
+const pageVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { duration: 0.3, ease: revealEase, staggerChildren: 0.14, delayChildren: 0.1 },
+  },
+};
+const contentVariants = {
+  hidden: { opacity: 0, y: 28 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.72, ease: revealEase } },
+};
+const mediaVariants = {
+  hidden: { opacity: 0, y: 32, scale: 0.975 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.85, ease: revealEase } },
+};
+
 interface FirmwareProject {
   title: string;
   description: string;
@@ -173,30 +190,24 @@ export default function FirmwarePage({ project }: { project: FirmwareProject }) 
 
   return (
     <motion.article
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.45, ease: "easeOut" }}
+      initial="hidden"
+      animate="show"
+      variants={pageVariants}
       className="min-h-screen bg-[#EFEFEF] px-6 py-10 text-[#1E1E1E] sm:px-8 md:px-12"
     >
       <MotionLink
         href="/?section=work"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, delay: 0.05, ease: "easeOut" }}
+        transition={{ duration: 0.5, delay: 0.04, ease: revealEase }}
         whileHover={{ scale: 1.25 }}
         className="inter inline-block text-sm text-[#878787] hover:text-[#1E1E1E]"
       >
         back to work
       </MotionLink>
-      <motion.div
-        initial="hidden"
-        animate="show"
-        transition={{ staggerChildren: 0.12, delayChildren: 0.12 }}
-        className="mx-auto grid w-full max-w-[100rem] gap-12 pt-16 md:grid-cols-[minmax(17rem,0.7fr)_minmax(0,1.3fr)] md:pt-24"
-      >
+      <div className="mx-auto grid w-full max-w-[100rem] gap-12 pt-16 md:grid-cols-[minmax(17rem,0.7fr)_minmax(0,1.3fr)] md:pt-24">
         <motion.div
-          variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          variants={contentVariants}
           className="flex flex-col"
         >
           <p className="inter mb-3 text-sm uppercase tracking-[0.18em] text-[#878787]">{project.category ?? "Firmware"}</p>
@@ -229,13 +240,12 @@ export default function FirmwarePage({ project }: { project: FirmwareProject }) 
           </div>
         </motion.div>
         <motion.div
-          variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
+          variants={mediaVariants}
           className="min-w-0"
         >
           <ProjectCarousel slides={slides} />
         </motion.div>
-      </motion.div>
+      </div>
     </motion.article>
   );
 }
