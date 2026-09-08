@@ -111,12 +111,33 @@ export default function HardwarePage({ project }: { project: HardwareProject }) 
   ];
 
   return (
-    <article className="min-h-screen bg-[#EFEFEF] px-6 py-10 text-[#1E1E1E] sm:px-8 md:px-12">
-      <MotionLink href="/?section=work" whileHover={{ scale: 1.25 }} transition={{ type: "spring", stiffness: 400, damping: 25 }} className="inter inline-block text-sm text-[#878787] hover:text-[#1E1E1E]">
+    <motion.article
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
+      className="min-h-screen bg-[#EFEFEF] px-6 py-10 text-[#1E1E1E] sm:px-8 md:px-12"
+    >
+      <MotionLink
+        href="/?section=work"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, delay: 0.05, ease: "easeOut" }}
+        whileHover={{ scale: 1.25 }}
+        className="inter inline-block text-sm text-[#878787] hover:text-[#1E1E1E]"
+      >
         back to work
       </MotionLink>
-      <div className="mx-auto grid w-full max-w-[100rem] gap-12 pt-16 md:grid-cols-[minmax(17rem,0.7fr)_minmax(0,1.3fr)] md:pt-24">
-        <div className="flex flex-col">
+      <motion.div
+        initial="hidden"
+        animate="show"
+        transition={{ staggerChildren: 0.12, delayChildren: 0.12 }}
+        className="mx-auto grid w-full max-w-[100rem] gap-12 pt-16 md:grid-cols-[minmax(17rem,0.7fr)_minmax(0,1.3fr)] md:pt-24"
+      >
+        <motion.div
+          variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="flex flex-col"
+        >
           <p className="inter mb-3 text-sm uppercase tracking-[0.18em] text-[#878787]">{project.category ?? "Hardware"}</p>
           <h1 className="montserrat text-4xl sm:text-5xl md:text-6xl">{project.title}</h1>
           <ProjectDescription description={project.description} details={project.details} />
@@ -145,11 +166,15 @@ export default function HardwarePage({ project }: { project: HardwareProject }) 
               </Disclosure>
             )}
           </div>
-        </div>
-        <div className="min-w-0">
+        </motion.div>
+        <motion.div
+          variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="min-w-0"
+        >
           <ProjectCarousel slides={slides} />
-        </div>
-      </div>
-    </article>
+        </motion.div>
+      </motion.div>
+    </motion.article>
   );
 }
