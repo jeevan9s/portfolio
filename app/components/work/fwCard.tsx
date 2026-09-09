@@ -42,8 +42,8 @@ export default function FirmwareCard({
         transition={{ type: "spring", stiffness: 380, damping: 28, mass: 0.55 }}
         className={`relative w-full ${CARD_ASPECT} rounded-xl bg-[#1E1E1E] overflow-hidden will-change-transform flex flex-col justify-between p-4 sm:p-5 ring-offset-2 ring-offset-[#EFEFEF] group-focus-visible:ring-2 group-focus-visible:ring-[#1E1E1E]`}
       >
-        <div className="absolute right-3 top-3 z-20 grid h-8 w-8 place-items-center rounded-full bg-white/10 text-white transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1">
-          <ChevronRight size={18} strokeWidth={1.75} aria-hidden="true" />
+        <div className="absolute right-3 top-3 z-20 text-white/80 transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1">
+          <ChevronRight size={22} strokeWidth={1.5} aria-hidden="true" />
         </div>
         <div className="relative z-10 flex flex-col gap-y-3 text-white">
           <span className="inter text-[0.6rem] uppercase tracking-[0.18em] text-white/45">

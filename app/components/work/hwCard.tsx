@@ -167,8 +167,8 @@ export default function HardwareCard({
           <div className="absolute inset-0 h-full w-full bg-[#1E1E1E]" />
         )}
 
-        <div className="absolute right-3 top-3 z-10 grid h-8 w-8 place-items-center rounded-full bg-[#F4F4F4]/90 text-[#1E1E1E] transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1">
-          <ChevronRight size={18} strokeWidth={1.75} aria-hidden="true" />
+        <div className="absolute right-3 top-3 z-10 text-[#F4F4F4] transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1">
+          <ChevronRight size={22} strokeWidth={1.5} aria-hidden="true" />
         </div>
 
         <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-[#F4F4F4] rounded-md px-2 py-1.5 sm:px-2 sm:py-1 text-right pointer-events-none max-w-[65%] z-10">

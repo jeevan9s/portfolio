@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, type Variants, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import ProjectCarousel, { type CarouselSlide } from "./ProjectCarousel";
 import ProjectDescription from "./ProjectDescription";
@@ -10,21 +10,35 @@ import ProjectDescription from "./ProjectDescription";
 const MotionLink = motion.create(Link);
 
 const revealEase = [0.16, 1, 0.3, 1] as const;
+
 const pageVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { duration: 0.3, ease: revealEase, staggerChildren: 0.14, delayChildren: 0.1 },
+    transition: { duration: 0.3, ease: revealEase, staggerChildren: 0.08, delayChildren: 0.04 },
   },
-};
+} satisfies Variants;
 const contentVariants = {
-  hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.72, ease: revealEase } },
-};
+  hidden: { opacity: 0, y: 16 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 320, damping: 32, mass: 0.8 },
+  },
+} satisfies Variants;
 const mediaVariants = {
-  hidden: { opacity: 0, y: 32, scale: 0.975 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.85, ease: revealEase } },
-};
+  hidden: { opacity: 0, y: 18, scale: 0.98 },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { type: "spring", stiffness: 260, damping: 30, mass: 0.9 },
+  },
+} satisfies Variants;
+const disclosureContentVariants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { duration: 0.25, ease: revealEase } },
+} satisfies Variants;
 
 interface FirmwareProject {
   title: string;
@@ -49,12 +63,26 @@ interface FirmwareProject {
 function Disclosure({ children, isOpen, label, onClick }: { children: React.ReactNode; isOpen: boolean; label: string; onClick: () => void }) {
   return (
     <section className="border-t border-black/10 pt-4">
-      <button type="button" onClick={onClick} aria-expanded={isOpen} className="inter flex w-full items-center justify-between text-left text-xs uppercase tracking-[0.14em] text-[#878787] transition-colors hover:text-[#1E1E1E]">
+      <motion.button
+        type="button"
+        onClick={onClick}
+        aria-expanded={isOpen}
+        whileTap={{ scale: 0.97 }}
+        className="inter flex w-full items-center justify-between text-left text-xs uppercase tracking-[0.14em] text-[#878787] transition-colors hover:text-[#1E1E1E]"
+      >
         {label}
         <ChevronDown size={15} className={`transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
-      </button>
+      </motion.button>
       <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${isOpen ? "mt-4 grid-rows-[1fr]" : "mt-0 grid-rows-[0fr]"}`}>
-        <div className="overflow-hidden">{children}</div>
+        <div className="overflow-hidden">
+          <motion.div
+            initial={false}
+            animate={isOpen ? "show" : "hidden"}
+            variants={disclosureContentVariants}
+          >
+            {children}
+          </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -142,6 +170,8 @@ function ConsoleOutput({ output }: { output: string }) {
 
 export default function FirmwarePage({ project }: { project: FirmwareProject }) {
   const [openPanels, setOpenPanels] = useState({ specs: true, links: true });
+  const shouldReduceMotion = useReducedMotion();
+
   const metadataSpecifications = [
     { label: "Language", value: project.language },
     { label: "Framework", value: project.framework },
@@ -190,17 +220,18 @@ export default function FirmwarePage({ project }: { project: FirmwareProject }) 
 
   return (
     <motion.article
-      initial="hidden"
+      initial={shouldReduceMotion ? false : "hidden"}
       animate="show"
       variants={pageVariants}
       className="min-h-screen bg-[#EFEFEF] px-6 py-10 text-[#1E1E1E] sm:px-8 md:px-12"
     >
       <MotionLink
         href="/?section=work"
-        initial={{ opacity: 0, y: -10 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.04, ease: revealEase }}
-        whileHover={{ scale: 1.25 }}
+        transition={{ duration: 0.4, delay: 0.02, ease: revealEase }}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.96 }}
         className="inter inline-block text-sm text-[#878787] hover:text-[#1E1E1E]"
       >
         back to work
@@ -240,6 +271,9 @@ export default function FirmwarePage({ project }: { project: FirmwareProject }) 
           </div>
         </motion.div>
         <motion.div
+          initial={shouldReduceMotion ? false : "hidden"}
+          whileInView="show"
+          viewport={{ once: true, amount: 0.15 }}
           variants={mediaVariants}
           className="min-w-0"
         >
