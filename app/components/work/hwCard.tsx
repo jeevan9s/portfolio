@@ -154,9 +154,10 @@ export default function HardwareCard({
             gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
             className="absolute inset-0 h-full w-full pointer-events-none"
           >
-            <ambientLight intensity={0.9} color="#ffffff" />
-            <directionalLight position={[3, 3, 4]} intensity={1.2} color="#ffffff" />
-            <directionalLight position={[-4, -2, 2]} intensity={0.6} color="#ffffff" />
+            <hemisphereLight args={["#ffffff", "#454545", 0.7]} />
+            <ambientLight intensity={0.45} color="#ffffff" />
+            <directionalLight position={[3, 3, 4]} intensity={1.35} color="#ffffff" />
+            <directionalLight position={[-4, -2, 2]} intensity={0.45} color="#d8e5ff" />
             <RotatingPreview>
               <Suspense fallback={<PlaceholderBoard />}>
                 {modelPath ? <RealBoard modelPath={modelPath} /> : <PlaceholderBoard />}
