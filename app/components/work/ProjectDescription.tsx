@@ -17,19 +17,38 @@ function renderParagraph(paragraph: string) {
   const acronym = `${acronymStart} and ${acronymEnd}`;
   const acronymIndex = paragraph.indexOf(acronym);
 
-  if (acronymIndex === -1) {
-    return paragraph;
+  if (acronymIndex !== -1) {
+    return (
+      <>
+        {paragraph.slice(0, acronymIndex)}
+        <strong className="font-semibold text-[#1E1E1E]">{acronymStart}</strong>
+        {" and "}
+        <strong className="font-semibold text-[#1E1E1E]">{acronymEnd}</strong>
+        {paragraph.slice(acronymIndex + acronym.length)}
+      </>
+    );
   }
 
-  return (
-    <>
-      {paragraph.slice(0, acronymIndex)}
-      <strong className="font-semibold text-[#1E1E1E]">{acronymStart}</strong>
-      {" and "}
-      <strong className="font-semibold text-[#1E1E1E]">{acronymEnd}</strong>
-      {paragraph.slice(acronymIndex + acronym.length)}
-    </>
-  );
+  const collaborator = "Tristan Alderson";
+  const collaboratorIndex = paragraph.indexOf(collaborator);
+
+  if (collaboratorIndex !== -1) {
+    const linkClass = "text-[#1E1E1E] underline decoration-black/20 underline-offset-4 hover:decoration-black/45";
+    return (
+      <>
+        {paragraph.slice(0, collaboratorIndex)}
+        {collaborator}
+        {" ("}
+        <a href="https://github.com/tristanalderson" target="_blank" rel="noreferrer" className={linkClass}>GitHub</a>
+        {", "}
+        <a href="https://www.linkedin.com/in/tristanalderson/" target="_blank" rel="noreferrer" className={linkClass}>LinkedIn</a>
+        {")"}
+        {paragraph.slice(collaboratorIndex + collaborator.length)}
+      </>
+    );
+  }
+
+  return paragraph;
 }
 
 export default function ProjectDescription({ description, details }: ProjectDescriptionProps) {
