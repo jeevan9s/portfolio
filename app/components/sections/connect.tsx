@@ -31,7 +31,7 @@ export default function Connect() {
 
   const resumeLinks = {
     "hw-resume": "/projs/downloads/Sanchez_Jeevan_Resume.pdf",
-    "sw-resume": "/projs/downloads/Sanchez_Jeevan_SW_Resume.pdf",
+    "sw-resume": "/projs/downloads/Sanchez_Jeevan_FW_Resume.pdf",
   };
 
   useEffect(() => {

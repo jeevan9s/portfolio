@@ -21,7 +21,7 @@ export default function Footer({ theme }: footerProps) {
 
   const resumeLinks = {
     "hw-resume": "/projs/downloads/Sanchez_Jeevan_Resume.pdf",
-    "sw-resume": "/projs/downloads/Sanchez_Jeevan_SW_Resume.pdf",
+    "sw-resume": "/projs/downloads/Sanchez_Jeevan_FW_Resume.pdf",
   };
 
   const handleCopyEmail = () => {
