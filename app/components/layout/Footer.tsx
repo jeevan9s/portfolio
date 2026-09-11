@@ -20,7 +20,7 @@ export default function Footer({ theme }: footerProps) {
   );
 
   const resumeLinks = {
-    "hw-resume": "/projs/downloads/Sanchez_Jeevan_Resume.pdf",
+    "hw-resume": "/projs/downloads/Sanchez_Jeevan_HW_Resume.pdf",
     "sw-resume": "/projs/downloads/Sanchez_Jeevan_FW_Resume.pdf",
   };
 
