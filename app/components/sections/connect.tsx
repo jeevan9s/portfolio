@@ -30,7 +30,7 @@ export default function Connect() {
   const emailTooltipTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const resumeLinks = {
-    "hw-resume": "/projs/downloads/Sanchez_Jeevan_Resume.pdf",
+    "hw-resume": "/projs/downloads/Sanchez_Jeevan_HW_Resume.pdf",
     "sw-resume": "/projs/downloads/Sanchez_Jeevan_FW_Resume.pdf",
   };
 
