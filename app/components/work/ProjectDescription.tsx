@@ -11,6 +11,27 @@ function paragraphs(value: string) {
   return value.split("\n\n").filter(Boolean);
 }
 
+function renderParagraph(paragraph: string) {
+  const acronymStart = "Perception-Enabled Navigation";
+  const acronymEnd = "General Utility Intelligence";
+  const acronym = `${acronymStart} and ${acronymEnd}`;
+  const acronymIndex = paragraph.indexOf(acronym);
+
+  if (acronymIndex === -1) {
+    return paragraph;
+  }
+
+  return (
+    <>
+      {paragraph.slice(0, acronymIndex)}
+      <strong className="font-semibold text-[#1E1E1E]">{acronymStart}</strong>
+      {" and "}
+      <strong className="font-semibold text-[#1E1E1E]">{acronymEnd}</strong>
+      {paragraph.slice(acronymIndex + acronym.length)}
+    </>
+  );
+}
+
 export default function ProjectDescription({ description, details }: ProjectDescriptionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const descriptionParagraphs = paragraphs(description);
@@ -22,14 +43,14 @@ export default function ProjectDescription({ description, details }: ProjectDesc
     <div className="inter mt-5 max-w-xl text-base leading-relaxed text-[#5F5F5F]">
       {introParagraphs.map((paragraph, index) => (
         <p key={`${index}-${paragraph}`} className={index > 0 ? "mt-4" : undefined}>
-          {paragraph}
+          {renderParagraph(paragraph)}
         </p>
       ))}
       {extended.length > 0 && (
         <>
           <div className={`mt-4 space-y-4 ${isExpanded ? "block" : "hidden md:block"}`}>
             {extended.map((paragraph, index) => (
-              <p key={`${index}-${paragraph}`}>{paragraph}</p>
+              <p key={`${index}-${paragraph}`}>{renderParagraph(paragraph)}</p>
             ))}
           </div>
           <button
