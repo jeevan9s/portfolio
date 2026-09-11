@@ -64,7 +64,7 @@ export default function BoardViewer({
 
   return (
     <div className="h-[20rem] w-full touch-none sm:h-[25rem]">
-      <Canvas frameloop="demand" camera={{ position: cameraPosition, up: cameraUp, fov: 28 }} dpr={[1, 1.1]} gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}>
+      <Canvas frameloop="demand" camera={{ position: cameraPosition, up: cameraUp, fov: 28 }} dpr={[1, 2]} gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}>
         <ambientLight intensity={1.1} />
         <directionalLight position={[3, 4, 5]} intensity={1.4} />
         <directionalLight position={[-3, -2, 2]} intensity={0.5} />
