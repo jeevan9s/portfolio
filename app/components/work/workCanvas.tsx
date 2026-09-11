@@ -11,7 +11,7 @@ export default function WorkCanvas() {
       camera={{ position: [0, 0.2, 4.5], fov: 26 }}
       dpr={[1, 1.25]}
       frameloop="always"
-      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+      gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
       flat
     >
       <ambientLight intensity={0.9} color="#ffffff" />
