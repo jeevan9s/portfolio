@@ -24,7 +24,15 @@ const itemVariants: Variants = {
 
 export default function Connect() {
   const [isEmailTooltipOpen, setIsEmailTooltipOpen] = useState(false);
+  const [resumeType, setResumeType] = useState<"hw-resume" | "sw-resume">(
+    "hw-resume",
+  );
   const emailTooltipTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const resumeLinks = {
+    "hw-resume": "/projs/downloads/Sanchez_Jeevan_Resume.pdf",
+    "sw-resume": "/projs/downloads/Sanchez_Jeevan_SW_Resume.pdf",
+  };
 
   useEffect(() => {
     return () => {
@@ -129,16 +137,29 @@ export default function Connect() {
         >
           github
         </motion.a>
-        <motion.a
+        <motion.div
           variants={itemVariants}
-          href="/projs/downloads/Sanchez_Jeevan_Resume.pdf"
-          target="_blank"
-          rel="noreferrer"
-          data-cursor="grow"
-          className="inter text-[#DEDCDC] text-lg sm:text-xl md:text-2xl transition-all duration-300 active:scale-95 hover:scale-110 py-3 md:py-1 w-full md:w-fit text-left cursor-pointer"
+          className="flex items-center gap-x-3 py-3 md:py-1"
         >
-          resume
-        </motion.a>
+          {(["hw-resume", "sw-resume"] as const).map((type, index) => (
+            <div key={type} className="flex items-center gap-x-3">
+              {index > 0 && <span className="inter text-[#DEDCDC]/50">/</span>}
+              <motion.a
+                whileHover={{ scale: 1.1 }}
+                href={resumeLinks[type]}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => setResumeType(type)}
+                data-cursor="grow"
+                className={`inter text-lg sm:text-xl md:text-2xl transition-all duration-300 active:scale-95 cursor-pointer ${
+                  resumeType === type ? "text-[#DEDCDC]" : "text-[#DEDCDC]/50"
+                }`}
+              >
+                {type === "hw-resume" ? "hw resume" : "fw resume"}
+              </motion.a>
+            </div>
+          ))}
+        </motion.div>
       </motion.div>
 
       <motion.div

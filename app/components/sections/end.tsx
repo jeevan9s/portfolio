@@ -94,6 +94,15 @@ function useTorontoClock() {
 }
 
 export default function EndCard() {
+  const [resumeType, setResumeType] = useState<"hw-resume" | "sw-resume">(
+    "hw-resume",
+  ); 
+
+  const resumeLinks = {
+    "hw-resume": "/projs/downloads/Sanchez_Jeevan_HW_Resume.pdf",
+    "sw-resume": "/projs/downloads/Sanchez_Jeevan_FW_Resume.pdf",
+  };
+
   const time = useTorontoClock();
   const [isEmailTooltipOpen, setIsEmailTooltipOpen] = useState(false);
   const emailTooltipTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -204,16 +213,29 @@ export default function EndCard() {
           >
             github
           </motion.a>
-          <motion.a
+          <motion.div
             variants={itemVariants}
-            href="/projs/downloads/Sanchez_Jeevan_Resume.pdf"
-            target="_blank"
-            rel="noreferrer"
-            data-cursor="grow"
-            className="inter text-sm sm:text-base md:text-lg nav-theme-active transition-all duration-300 active:scale-95 hover:opacity-70 bg-transparent border-none cursor-pointer"
+            className="flex items-center gap-x-3"
           >
-            resume
-          </motion.a>
+            {(["hw-resume", "sw-resume"] as const).map((type, index) => (
+              <div key={type} className="flex items-center gap-x-3">
+                {index > 0 && <span className="inter nav-theme-muted">/</span>}
+                <motion.a
+                  whileHover={{ scale: 1.05 }}
+                  href={resumeLinks[type]}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => setResumeType(type)}
+                  data-cursor="grow"
+                  className={`inter text-sm sm:text-base md:text-lg transition-all duration-300 active:scale-95 hover:opacity-70 bg-transparent border-none cursor-pointer ${
+                    resumeType === type ? "nav-theme-active" : "nav-theme-muted"
+                  }`}
+                >
+                  {type === "hw-resume" ? "hw resume" : "fw resume"}
+                </motion.a>
+              </div>
+            ))}
+          </motion.div>
         </motion.div>
       </motion.div>
 

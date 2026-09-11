@@ -7,6 +7,7 @@ import {
 } from "@/app/components/ui/tooltip";
 
 import { motion, useAnimationControls } from "framer-motion";
+import { useState } from "react";
 
 interface footerProps {
   theme: "light" | "dark";
@@ -14,6 +15,14 @@ interface footerProps {
 
 export default function Footer({ theme }: footerProps) {
   const copyAnimation = useAnimationControls();
+  const [resumeType, setResumeType] = useState<"hw-resume" | "sw-resume">(
+    "hw-resume",
+  );
+
+  const resumeLinks = {
+    "hw-resume": "/projs/downloads/Sanchez_Jeevan_Resume.pdf",
+    "sw-resume": "/projs/downloads/Sanchez_Jeevan_SW_Resume.pdf",
+  };
 
   const handleCopyEmail = () => {
     void navigator.clipboard.writeText("jeevansanchez42@gmail.com");
@@ -28,17 +37,25 @@ export default function Footer({ theme }: footerProps) {
       data-theme={theme}
       className="nav-theme-bg flex flex-row w-full items-center justify-between px-6 py-4"
     >
-      <div className="hidden md:flex flex-row items-center gap-x-2 flex-1">
-        <motion.a
-          whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          href="/projs/downloads/Sanchez_Jeevan_Resume.pdf"
-          target="_blank"
-          rel="noreferrer"
-          className="inter text-base bg-transparent border-none p-0 cursor-pointer nav-theme-active"
-        >
-          resume
-        </motion.a>
+      <div className="hidden md:flex flex-row items-center gap-x-3 flex-1">
+        {(["hw-resume", "sw-resume"] as const).map((type, index) => (
+          <div key={type} className="flex items-center gap-x-3">
+            {index > 0 && <span className="inter text-base nav-theme-muted">/</span>}
+            <motion.a
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              href={resumeLinks[type]}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => setResumeType(type)}
+              className={`inter text-base bg-transparent border-none p-0 cursor-pointer ${
+                resumeType === type ? "nav-theme-active" : "nav-theme-muted"
+              }`}
+            >
+              {type === "hw-resume" ? "hw resume" : "fw resume"}
+            </motion.a>
+          </div>
+        ))}
       </div>
 
       <div className="flex flex-row items-center justify-end flex-1">
