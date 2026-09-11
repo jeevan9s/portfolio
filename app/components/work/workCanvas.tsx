@@ -2,6 +2,7 @@
 
 import { Canvas } from "@react-three/fiber";
 import { View } from "@react-three/drei";
+import { EffectComposer, SMAA } from "@react-three/postprocessing";
 
 export default function WorkCanvas() {
   return (
@@ -18,6 +19,9 @@ export default function WorkCanvas() {
       <directionalLight position={[3, 3, 4]} intensity={0.9} color="#ffffff" />
       <directionalLight position={[-4, -2, 2]} intensity={0.4} color="#ffffff" />
       <View.Port />
+      <EffectComposer multisampling={0} enableNormalPass={false}>
+        <SMAA />
+      </EffectComposer>
     </Canvas>
   );
 }

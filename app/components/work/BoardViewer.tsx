@@ -3,6 +3,7 @@
 import { Suspense, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Grid, OrbitControls, useGLTF } from "@react-three/drei";
+import { EffectComposer, SMAA } from "@react-three/postprocessing";
 import * as THREE from "three";
 
 // serve draco decoder locally instead of fetching from gstatic's CDN
@@ -70,6 +71,9 @@ export default function BoardViewer({
         <Suspense fallback={null}><BoardModel modelPath={modelPath} /></Suspense>
         <Grid position={gridTransform.position} rotation={gridTransform.rotation} args={[6, 6]} cellSize={0.4} cellThickness={0.45} cellColor="#d1d1d1" sectionSize={2} sectionThickness={0.7} sectionColor="#b8b8b8" fadeDistance={6} fadeStrength={1.2} />
         <OrbitControls target={cameraTarget} enableDamping dampingFactor={0.08} enablePan minDistance={3} maxDistance={8} />
+        <EffectComposer multisampling={0} enableNormalPass={false}>
+          <SMAA />
+        </EffectComposer>
       </Canvas>
     </div>
   );

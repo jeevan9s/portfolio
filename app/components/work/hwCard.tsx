@@ -5,6 +5,7 @@ import type { Group } from "three";
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
+import { EffectComposer, SMAA } from "@react-three/postprocessing";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -163,6 +164,9 @@ export default function HardwareCard({
                 {modelPath ? <RealBoard modelPath={modelPath} /> : <PlaceholderBoard />}
               </Suspense>
             </RotatingPreview>
+            <EffectComposer multisampling={0} enableNormalPass={false}>
+              <SMAA />
+            </EffectComposer>
           </Canvas>
         ) : (
           <div className="absolute inset-0 h-full w-full bg-[#1E1E1E]" />
