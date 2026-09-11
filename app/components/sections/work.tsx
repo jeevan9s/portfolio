@@ -113,7 +113,7 @@ export default function Work() {
           </motion.div>
         </div>
 
-        <div ref={scrollHostRef} className="w-full snap-x snap-proximity overflow-x-auto touch-auto overscroll-x-contain overflow-y-visible md:overflow-hidden md:snap-none">
+        <div ref={scrollHostRef} className="work-scrollbar w-full snap-x snap-proximity overflow-x-auto touch-auto overscroll-x-contain overflow-y-visible md:overflow-hidden md:snap-none">
           <div
             ref={trackRef}
             className="flex w-max flex-row items-center gap-x-4 py-6 will-change-transform md:gap-x-16"

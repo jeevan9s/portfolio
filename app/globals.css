@@ -195,6 +195,23 @@ body {
   transform: translateY(100%);
 }
 
+.work-scrollbar {
+  scrollbar-color: rgba(30, 30, 30, 0.5) transparent;
+}
+
+.work-scrollbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.work-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.work-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(30, 30, 30, 0.5);
+  border-radius: 9999px;
+}
+
 .section-wrapper {
   background-color: var(--section-background);
 }
