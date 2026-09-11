@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { motion, type Variants, useReducedMotion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProjectCarousel, { type CarouselSlide } from "./ProjectCarousel";
 import ProjectDescription from "./ProjectDescription";
 
@@ -97,8 +97,13 @@ function Disclosure({ children, isOpen, label, onClick }: { children: React.Reac
 }
 
 export default function HardwarePage({ project }: { project: HardwareProject }) {
-  const [openPanels, setOpenPanels] = useState({ specs: true, links: true });
+  const [openPanels, setOpenPanels] = useState({ specs: false, links: false });
   const shouldReduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    if (mediaQuery.matches) setOpenPanels({ specs: true, links: true });
+  }, []);
 
   const specifications = project.specs ?? [
     { label: "MCU", value: project.mcu },
