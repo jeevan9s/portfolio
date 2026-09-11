@@ -150,7 +150,7 @@ export default function HardwareCard({
         {isNearViewport ? (
           <Canvas
             camera={{ position: [0, 0.2, 4.5], fov: 26 }}
-            dpr={isDesktop ? [1, 1.5] : 1}
+            dpr={isDesktop ? [1, 1.5] : [1, 2]}
             frameloop={isVisible ? "always" : "demand"}
             gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
             className="absolute inset-0 h-full w-full pointer-events-none"
