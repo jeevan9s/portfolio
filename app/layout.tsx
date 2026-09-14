@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono,Montserrat, Inter } from "next/font/google";
+import { Geist, Geist_Mono,Montserrat, Inter, Nunito, Outfit , Google_Sans} from "next/font/google";
 import "./globals.css";
 import Cursor from "./components/layout/Cursor";
 import { cn } from "@/lib/utils";
