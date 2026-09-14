@@ -109,7 +109,17 @@ export default function Gallery() {
 
   useEffect(() => {
     const updateColumnCount = () => {
-      setColumnCount(window.matchMedia("(min-width: 1024px)").matches ? 4 : window.matchMedia("(min-width: 768px)").matches ? 3 : 2);
+      setColumnCount(
+        window.matchMedia("(min-width: 2560px)").matches
+          ? 6
+          : window.matchMedia("(min-width: 1920px)").matches
+            ? 5
+            : window.matchMedia("(min-width: 1024px)").matches
+              ? 4
+              : window.matchMedia("(min-width: 768px)").matches
+                ? 3
+                : 2,
+      );
     };
 
     updateColumnCount();
@@ -153,7 +163,7 @@ export default function Gallery() {
 
   return (
     <div className="flex flex-col flex-1 bg-transparent items-center pt-24 md:pt-32 p-4 sm:p-8 md:p-12 xl:p-16 2xl:p-20">
-      <div className="w-full max-w-[100rem] 2xl:max-w-[120rem]">
+      <div className="w-full max-w-[100rem] 2xl:max-w-[120rem] 3xl:max-w-[140rem] 4xl:max-w-[170rem]">
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}

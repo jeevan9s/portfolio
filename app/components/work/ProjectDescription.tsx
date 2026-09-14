@@ -59,7 +59,7 @@ export default function ProjectDescription({ description, details }: ProjectDesc
   const extended = [...descriptionParagraphs.slice(1), ...detailParagraphs.slice(1)];
 
   return (
-    <div className="inter mt-5 max-w-xl text-base leading-relaxed text-[#5F5F5F]">
+    <div className="inter mt-5 max-w-xl 3xl:max-w-2xl 4xl:max-w-3xl text-base 3xl:text-lg 4xl:text-xl leading-relaxed text-[#5F5F5F]">
       {introParagraphs.map((paragraph, index) => (
         <p key={`${index}-${paragraph}`} className={index > 0 ? "mt-4" : undefined}>
           {renderParagraph(paragraph)}

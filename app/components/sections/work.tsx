@@ -68,8 +68,16 @@ export default function Work() {
     if (!container || !host || !track) return;
 
     const ctx = gsap.context(() => {
+      const getDistance = () => Math.max(0, track.scrollWidth - host.clientWidth);
+
+      // sticky needs real scroll room (viewport + distance) to hold the pin through
+      const syncHeight = () => {
+        container.style.height = `calc(100vh + ${getDistance()}px)`;
+      };
+      syncHeight();
+
       const tween = gsap.to(track, {
-        x: () => -(track.scrollWidth - host.clientWidth),
+        x: () => -getDistance(),
         ease: "none",
         scrollTrigger: {
           trigger: container,
@@ -80,13 +88,17 @@ export default function Work() {
         },
       });
 
-      const ro = new ResizeObserver(() => ScrollTrigger.refresh());
+      const ro = new ResizeObserver(() => {
+        syncHeight();
+        ScrollTrigger.refresh();
+      });
       ro.observe(track);
       ro.observe(host);
 
       return () => {
         ro.disconnect();
         tween.kill();
+        container.style.height = "";
       };
     }, container);
 
@@ -96,7 +108,7 @@ export default function Work() {
   return (
     <div
       ref={containerRef}
-      className="relative min-h-0 w-full bg-transparent md:h-[250vh] md:min-h-screen"
+      className="relative min-h-0 w-full bg-transparent md:min-h-screen"
     >
       <div className="flex flex-col justify-start p-8 pt-10 md:sticky md:top-0 md:h-screen md:overflow-hidden md:p-12 md:pt-10 xl:p-16 2xl:p-20">
         <div className="flex flex-col gap-y-3 max-w-[100rem] mb-8">
@@ -116,7 +128,7 @@ export default function Work() {
         <div ref={scrollHostRef} className="work-scrollbar w-full snap-x snap-proximity overflow-x-auto touch-auto overscroll-x-contain overflow-y-visible md:overflow-hidden md:snap-none">
           <div
             ref={trackRef}
-            className="flex w-max flex-row items-center gap-x-4 py-6 will-change-transform md:gap-x-16"
+            className="flex w-max flex-row items-center gap-x-4 py-6 will-change-transform md:gap-x-16 3xl:gap-x-20 4xl:gap-x-24"
           >
             {projects.map((project) => (
               <motion.div

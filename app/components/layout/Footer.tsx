@@ -35,105 +35,107 @@ export default function Footer({ theme }: footerProps) {
   return (
     <div
       data-theme={theme}
-      className="nav-theme-bg flex flex-row w-full items-center justify-between px-6 py-4"
+      className="nav-theme-bg w-full"
     >
-      <div className="hidden md:flex flex-row items-center gap-x-3 flex-1">
-        {(["hw-resume", "sw-resume"] as const).map((type, index) => (
-          <div key={type} className="flex items-center gap-x-3">
-            {index > 0 && <span className="inter text-base nav-theme-muted">/</span>}
-            <motion.a
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              href={resumeLinks[type]}
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => setResumeType(type)}
-              className={`inter text-base bg-transparent border-none p-0 cursor-pointer ${
-                resumeType === type ? "nav-theme-active" : "nav-theme-muted"
-              }`}
-            >
-              {type === "hw-resume" ? "hw resume" : "fw resume"}
-            </motion.a>
+      <div className="flex flex-row items-center justify-between px-6 py-4 3xl:mx-auto 3xl:max-w-[160rem] 3xl:px-10 3xl:py-6">
+        <div className="hidden md:flex flex-row items-center gap-x-3 3xl:gap-x-4 flex-1">
+          {(["hw-resume", "sw-resume"] as const).map((type, index) => (
+            <div key={type} className="flex items-center gap-x-3">
+              {index > 0 && <span className="inter text-base 3xl:text-lg 4xl:text-xl nav-theme-muted">/</span>}
+              <motion.a
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                href={resumeLinks[type]}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => setResumeType(type)}
+                className={`inter text-base 3xl:text-lg 4xl:text-xl bg-transparent border-none p-0 cursor-pointer ${
+                  resumeType === type ? "nav-theme-active" : "nav-theme-muted"
+                }`}
+              >
+                {type === "hw-resume" ? "hw resume" : "fw resume"}
+              </motion.a>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-row items-center justify-end flex-1">
+          <div className="hidden md:flex flex-row items-center gap-x-10 3xl:gap-x-12 pt-0.5">
+            <Tooltip>
+              <motion.div
+                whileHover={{ scale: 1.25 }}
+                animate={copyAnimation}
+                transition={{
+                  scale: {
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 25,
+                    duration: 0.5,
+                  },
+                }}
+                className="relative z-10 w-4 h-4 3xl:w-5 3xl:h-5"
+              >
+                <TooltipTrigger
+                  onClick={handleCopyEmail}
+                  className="absolute inset-0 w-full h-full bg-[#878787] rounded-sm cursor-pointer border-none block"
+                />
+              </motion.div>
+              <TooltipContent
+                data-theme={theme}
+                side="top"
+                className="inter text-xs bg-transparent border-none shadow-none nav-theme-active"
+              >
+                copy email
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <motion.div
+                whileHover={{ scale: 1.25 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="relative z-10 w-4 h-4 3xl:w-5 3xl:h-5"
+              >
+                <TooltipTrigger
+                  onClick={() =>
+                    window.open(
+                      "https://www.linkedin.com/in/jeevansanchez/",
+                      "_blank",
+                    )
+                  }
+                  className="absolute inset-0 w-full h-full bg-[#4B4A4A] rounded-sm cursor-pointer border-none"
+                />
+              </motion.div>
+              <TooltipContent
+                data-theme={theme}
+                side="top"
+                className="inter text-xs bg-transparent border-none shadow-none nav-theme-active"
+              >
+                linkedin
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <motion.div
+                whileHover={{ scale: 1.25 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="relative z-10 w-4 h-4 3xl:w-5 3xl:h-5"
+              >
+                <TooltipTrigger
+                  onClick={() =>
+                    window.open("https://github.com/jeevan9s", "_blank")
+                  }
+                  className="absolute inset-0 w-full h-full bg-[#111111] rounded-sm cursor-pointer border-none"
+                />
+              </motion.div>
+              <TooltipContent
+                data-theme={theme}
+                side="top"
+                className="inter text-xs bg-transparent border-none shadow-none nav-theme-active"
+              >
+                github
+              </TooltipContent>
+            </Tooltip>
           </div>
-        ))}
-      </div>
-
-      <div className="flex flex-row items-center justify-end flex-1">
-        <div className="hidden md:flex flex-row items-center gap-x-10 pt-0.5">
-          <Tooltip>
-            <motion.div
-              whileHover={{ scale: 1.25 }}
-              animate={copyAnimation}
-              transition={{
-                scale: {
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 25,
-                  duration: 0.5,
-                },
-              }}
-              className="relative z-10 w-4 h-4"
-            >
-              <TooltipTrigger
-                onClick={handleCopyEmail}
-                className="absolute inset-0 w-full h-full bg-[#878787] rounded-sm cursor-pointer border-none block"
-              />
-            </motion.div>
-            <TooltipContent
-              data-theme={theme}
-              side="top"
-              className="inter text-xs bg-transparent border-none shadow-none nav-theme-active"
-            >
-              copy email
-            </TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <motion.div
-              whileHover={{ scale: 1.25 }}
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              className="relative z-10 w-4 h-4"
-            >
-              <TooltipTrigger
-                onClick={() =>
-                  window.open(
-                    "https://www.linkedin.com/in/jeevansanchez/",
-                    "_blank",
-                  )
-                }
-                className="absolute inset-0 w-full h-full bg-[#4B4A4A] rounded-sm cursor-pointer border-none"
-              />
-            </motion.div>
-            <TooltipContent
-              data-theme={theme}
-              side="top"
-              className="inter text-xs bg-transparent border-none shadow-none nav-theme-active"
-            >
-              linkedin
-            </TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <motion.div
-              whileHover={{ scale: 1.25 }}
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              className="relative z-10 w-4 h-4"
-            >
-              <TooltipTrigger
-                onClick={() =>
-                  window.open("https://github.com/jeevan9s", "_blank")
-                }
-                className="absolute inset-0 w-full h-full bg-[#111111] rounded-sm cursor-pointer border-none"
-              />
-            </motion.div>
-            <TooltipContent
-              data-theme={theme}
-              side="top"
-              className="inter text-xs bg-transparent border-none shadow-none nav-theme-active"
-            >
-              github
-            </TooltipContent>
-          </Tooltip>
         </div>
       </div>
     </div>

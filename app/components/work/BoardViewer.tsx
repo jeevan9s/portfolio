@@ -63,7 +63,7 @@ export default function BoardViewer({
   if (!modelPath) return <div className="grid h-full min-h-[20rem] place-items-center inter text-sm text-black/45">No viewer available</div>;
 
   return (
-    <div className="h-[20rem] w-full touch-none sm:h-[25rem]">
+    <div className="h-[20rem] w-full touch-none sm:h-[25rem] 3xl:h-[32rem] 4xl:h-[38rem]">
       <Canvas frameloop="demand" camera={{ position: cameraPosition, up: cameraUp, fov: 28 }} dpr={[1, 2]} gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}>
         <ambientLight intensity={1.1} />
         <directionalLight position={[3, 4, 5]} intensity={1.4} />

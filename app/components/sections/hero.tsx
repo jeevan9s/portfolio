@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 export default function Hero() {
   return (
     <div  className="flex flex-col md:flex-row flex-1 bg-transparent md:justify-between md:items-start items-start gap-y-10 justify-center min-h-screen p-8 md:p-12 xl:p-16 2xl:p-20">
-      <div className="flex flex-col gap-y-5 max-w-[100rem] md:max-w-350 md:mt-5">
+      <div className="flex flex-col gap-y-5 max-w-[100rem] md:max-w-350 3xl:max-w-[115rem] 4xl:max-w-[135rem] md:mt-5">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -22,7 +22,7 @@ export default function Hero() {
             willChange: "transform, opacity",
           }}
         >
-          <h1 className="text-[2rem] nav-theme-active md:text-[4rem] md:leading-[6rem] 2xl:text-[6.15rem] 2xl:leading-[7.25rem] montserrat">
+          <h1 className="text-[2rem] nav-theme-active md:text-[4rem] md:leading-[6rem] 2xl:text-[6.15rem] 2xl:leading-[7.25rem] 3xl:text-[7.5rem] 3xl:leading-[8.5rem] 4xl:text-[8.75rem] 4xl:leading-[9.75rem] montserrat">
             Developing hardware and firmware for embedded platforms.
           </h1>
         </motion.div>
@@ -44,7 +44,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      <div className="flex flex-col md:gap-y-3 gap-y-5 md:max-w-85 max-w-65 md:bottom-30 md:right-40 md:absolute">
+      <div className="flex flex-col md:gap-y-3 gap-y-5 md:max-w-85 max-w-65 3xl:max-w-[26rem] 4xl:max-w-[30rem] md:bottom-30 md:right-40 md:absolute">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -58,7 +58,7 @@ export default function Hero() {
             willChange: "transform, opacity",
           }}
         >
-          <p className="nav-theme-active inter md:text-[1.2rem] spaced-paragraph">
+          <p className="nav-theme-active inter md:text-[1.2rem] 3xl:text-[1.5rem] 4xl:text-[1.7rem] spaced-paragraph">
             Hey, I&apos;m Jeevan.
             I build hardware and write code as an outlet for creativity, curiosity, and utility.
           </p>
@@ -79,7 +79,7 @@ export default function Hero() {
           }}
           className="opacity-0"
         >
-          <p className="text-[#9C9A9A] inter md:text-[1.2rem]">
+          <p className="text-[#9C9A9A] inter md:text-[1.2rem] 3xl:text-[1.5rem] 4xl:text-[1.7rem]">
             based in Toronto, CA.
           </p>{" "}
         </motion.div>

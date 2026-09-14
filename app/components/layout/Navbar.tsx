@@ -65,57 +65,59 @@ export default function Navbar({ theme, currPage }: navbarProps) {
   return (
     <div
       data-theme={theme}
-      className="nav-theme-bg relative flex flex-row w-full items-center justify-between px-6 py-4"
+      className="nav-theme-bg relative w-full"
     >
-      <div className="hidden md:flex flex-row items-baseline gap-x-6 flex-1">
-        <div className="flex flex-col">
-          <p className="inter text-base nav-theme-active font-medium whitespace-nowrap transition-colors duration-300">
-            Jeevan Sanchez
-          </p>
-          <p className="inter text-xs nav-theme-muted whitespace-nowrap transition-colors duration-300">
-            {time} ET
+      <div className="flex flex-row items-center justify-between px-6 py-4 3xl:mx-auto 3xl:max-w-[160rem] 3xl:px-10 3xl:py-6">
+        <div className="hidden md:flex flex-row items-baseline gap-x-6 3xl:gap-x-8 flex-1">
+          <div className="flex flex-col">
+            <p className="inter text-base 3xl:text-lg 4xl:text-xl nav-theme-active font-medium whitespace-nowrap transition-colors duration-300">
+              Jeevan Sanchez
+            </p>
+            <p className="inter text-xs 3xl:text-sm 4xl:text-base nav-theme-muted whitespace-nowrap transition-colors duration-300">
+              {time} ET
+            </p>
+          </div>
+          <p className="inter text-base 3xl:text-lg 4xl:text-xl nav-theme-muted whitespace-nowrap transition-colors duration-300">
+            Embedded Systems Engineer
           </p>
         </div>
-        <p className="inter text-base nav-theme-muted whitespace-nowrap transition-colors duration-300">
-          Embedded Systems Engineer
-        </p>
-      </div>
 
-      <div className="hidden md:flex flex-1 justify-center"></div>
+        <div className="hidden md:flex flex-1 justify-center"></div>
 
-      <div className="flex flex-row items-center justify-end flex-1">
-        <div className="hidden md:flex flex-row items-center gap-x-12 pt-0.5">
-          {navSections.map((sec) => (
-            <motion.div
-              key={sec.id}
+        <div className="flex flex-row items-center justify-end flex-1">
+          <div className="hidden md:flex flex-row items-center gap-x-12 3xl:gap-x-16 pt-0.5">
+            {navSections.map((sec) => (
+              <motion.div
+                key={sec.id}
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              >
+                <a
+                  href={`#${sec.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateToSection(sec.id);
+                  }}
+                  className={`${getLink(sec.id)} 3xl:text-lg 4xl:text-xl`}
+                >
+                  {sec.id.charAt(0).toUpperCase() + sec.id.slice(1)}
+                </a>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="md:hidden">
+            <motion.button
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-navigation"
+              className="text-sm bg-transparent border-none nav-theme-muted inter cursor-pointer hover:nav-theme-active transition-colors duration-300"
             >
-              <a
-                href={`#${sec.id}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigateToSection(sec.id);
-                }}
-                className={getLink(sec.id)}
-              >
-                {sec.id.charAt(0).toUpperCase() + sec.id.slice(1)}
-              </a>
-            </motion.div>
-          ))}
-        </div>
-
-        <div className="md:hidden">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-navigation"
-            className="text-sm bg-transparent border-none nav-theme-muted inter cursor-pointer hover:nav-theme-active transition-colors duration-300"
-          >
-            {isMenuOpen ? "close" : "menu"}
-          </motion.button>
+              {isMenuOpen ? "close" : "menu"}
+            </motion.button>
+          </div>
         </div>
       </div>
 

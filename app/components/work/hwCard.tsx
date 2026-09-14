@@ -140,7 +140,13 @@ export default function HardwareCard({
   }, []);
 
   return (
-    <Link href={`/project/${id}`} className={`group shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer [contain:layout_paint] focus:outline-none`}>
+    <Link
+      href={`/project/${id}`}
+      onPointerEnter={() => {
+        if (modelPath) useGLTF.preload(modelPath, true, true);
+      }}
+      className={`group shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer [contain:layout_paint] focus:outline-none`}
+    >
       <motion.div
         ref={previewRef}
         whileHover={{ scale: 1.025 }}

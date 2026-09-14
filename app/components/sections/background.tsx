@@ -12,7 +12,7 @@ export default function Background() {
 
   return (
     <div className="flex flex-col flex-1 bg-transparent items-center min-h-screen pt-8 md:pt-12 p-6 md:p-12 pb-16">
-      <div className="flex flex-col gap-y-8 max-w-[100rem] md:max-w-350 w-full">
+      <div className="flex flex-col gap-y-8 max-w-[100rem] md:max-w-350 3xl:max-w-[110rem] 4xl:max-w-[128rem] w-full">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -119,7 +119,7 @@ export default function Background() {
           </motion.div>
 
           <p
-            className="inter text-2xl sm:text-3xl md:text-[3rem] leading-[1.35] md:leading-tight"
+            className="inter text-2xl sm:text-3xl md:text-[3rem] 3xl:text-[3.75rem] 4xl:text-[4.25rem] leading-[1.35] md:leading-tight 3xl:leading-[1.3] 3xl:tracking-wide"
             onMouseLeave={() => canHover() && setIsSecondActive(false)}
           >
             <motion.span

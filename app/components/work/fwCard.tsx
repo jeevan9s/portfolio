@@ -40,36 +40,39 @@ export default function FirmwareCard({
       <motion.div
         whileHover={{ scale: 1.025 }}
         transition={{ type: "spring", stiffness: 380, damping: 28, mass: 0.55 }}
-        className={`relative w-full ${CARD_ASPECT} rounded-xl bg-[#1E1E1E] overflow-hidden will-change-transform flex flex-col justify-between p-4 sm:p-5 ring-offset-2 ring-offset-[#EFEFEF] group-focus-visible:ring-2 group-focus-visible:ring-[#1E1E1E]`}
+        className={`relative w-full ${CARD_ASPECT} rounded-xl bg-[#1E1E1E] overflow-hidden will-change-transform flex flex-col justify-between p-4 sm:p-5 3xl:p-7 4xl:p-8 ring-offset-2 ring-offset-[#EFEFEF] group-focus-visible:ring-2 group-focus-visible:ring-[#1E1E1E]`}
       >
         <div className="absolute right-3 top-3 z-20 text-white/80 transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1">
           <ChevronRight size={22} strokeWidth={1.5} aria-hidden="true" />
         </div>
-        <div className="relative z-10 flex flex-col gap-y-3 text-white">
-          <span className="inter text-[0.6rem] uppercase tracking-[0.18em] text-white/45">
+        <div className="relative z-10 flex flex-col gap-y-3 3xl:gap-y-4 text-white">
+          <span className="inter text-[0.65rem] 3xl:text-sm 4xl:text-base uppercase tracking-[0.2em] text-white/35">
+            firmware
+          </span>
+          <span className="inter text-xs 3xl:text-base 4xl:text-lg uppercase tracking-[0.18em] text-white/45">
             specs
           </span>
-          <div className="flex flex-col gap-y-1.5 border-l border-white/20 pl-3">
+          <div className="flex flex-col gap-y-1.5 3xl:gap-y-2 border-l border-white/20 pl-3 3xl:pl-4">
             <div className="flex items-center justify-between gap-x-4">
-              <span className="inter text-xs text-white/45">language</span>
-              <span className="inter text-xs font-medium text-white">{language}</span>
+              <span className="inter text-sm 3xl:text-lg 4xl:text-xl text-white/45">language</span>
+              <span className="inter text-sm 3xl:text-lg 4xl:text-xl font-medium text-white">{language}</span>
             </div>
             <div className="flex items-center justify-between gap-x-4">
-              <span className="inter text-xs text-white/45">framework</span>
-              <span className="inter text-xs font-medium text-white">{framework}</span>
+              <span className="inter text-sm 3xl:text-lg 4xl:text-xl text-white/45">framework</span>
+              <span className="inter text-sm 3xl:text-lg 4xl:text-xl font-medium text-white">{framework}</span>
             </div>
             {(protocol || apis) && (
               <div className="flex items-center justify-between gap-x-4">
-                <span className="inter text-xs text-white/45">{protocol ? "protocol" : "APIs"}</span>
-                <span className="inter text-xs font-medium text-white">{protocol ?? apis}</span>
+                <span className="inter text-sm 3xl:text-lg 4xl:text-xl text-white/45">{protocol ? "protocol" : "APIs"}</span>
+                <span className="inter text-sm 3xl:text-lg 4xl:text-xl font-medium text-white">{protocol ?? apis}</span>
               </div>
             )}
           </div>
         </div>
 
-        <div className="relative z-15 mt-auto pt-4 border-t border-white/10 flex flex-col gap-y-2.5">
+        <div className="relative z-15 mt-auto pt-4 3xl:pt-6 border-t border-white/10 flex flex-col gap-y-2.5 3xl:gap-y-3.5">
           {specs.map((spec, index) => (
-            <div key={index} className="flex items-center justify-between text-[0.65rem] sm:text-[0.7rem] uppercase tracking-wide">
+            <div key={index} className="flex items-center justify-between text-xs sm:text-sm 3xl:text-base 4xl:text-lg uppercase tracking-wide">
               <span className="inter text-[#9B9B9B]">{spec.label}</span>
               <span className="inter text-white font-medium">{spec.value}</span>
             </div>

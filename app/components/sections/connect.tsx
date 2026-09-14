@@ -61,8 +61,8 @@ export default function Connect() {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] flex-1 bg-transparent gap-y-10 md:gap-x-12 items-start justify-start md:justify-between min-h-[26rem] p-6 sm:p-8 md:p-12 xl:p-16 2xl:p-20">
-      <div className="flex flex-col gap-y-4 w-full md:max-w-2xl 2xl:max-w-3xl">
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] flex-1 bg-transparent gap-y-10 md:gap-x-12 items-start justify-start md:justify-between min-h-[26rem] p-6 sm:p-8 md:p-12 xl:p-16 2xl:p-20 3xl:mx-auto 3xl:max-w-[160rem]">
+      <div className="flex flex-col gap-y-4 w-full md:max-w-2xl 2xl:max-w-3xl 3xl:max-w-4xl 4xl:max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -72,7 +72,7 @@ export default function Connect() {
             willChange: "transform, opacity",
           }}
         >
-          <h1 className="text-[2.25rem] leading-[1.1] text-[#FFFFFF] sm:text-[3rem] md:text-[5.25rem] md:leading-none 2xl:text-[6rem] montserrat text-left">
+          <h1 className="text-[2.25rem] leading-[1.1] text-[#FFFFFF] sm:text-[3rem] md:text-[5.25rem] md:leading-none 2xl:text-[6rem] 3xl:text-[7.25rem] 4xl:text-[8.25rem] montserrat text-left">
             let&apos;s connect.
           </h1>
         </motion.div>
@@ -82,11 +82,11 @@ export default function Connect() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={viewport}
           transition={{ ...revealTransition, delay: 0.1 }}
-          className="flex flex-col w-full md:max-w-[30rem]"
+          className="flex flex-col w-full md:max-w-[30rem] 3xl:max-w-[38rem] 4xl:max-w-[44rem]"
         >
-          <p className="inter text-base sm:text-lg md:text-xl text-[#969696] leading-relaxed text-left">
+          <p className="inter text-base sm:text-lg md:text-xl 3xl:text-2xl 4xl:text-[1.75rem] text-[#969696] leading-relaxed text-left">
             reach out to me. I&apos;m always interested in
-            <span className="inter text-base sm:text-lg md:text-xl text-[#DEDCDC]">
+            <span className="inter text-base sm:text-lg md:text-xl 3xl:text-2xl 4xl:text-[1.75rem] text-[#DEDCDC]">
               {" "}
               hearing new ideas and learning
             </span>{" "}
@@ -100,7 +100,7 @@ export default function Connect() {
         whileInView="show"
         viewport={viewport}
         variants={listVariants}
-        className="flex flex-col divide-y divide-white/10 md:divide-none w-full md:w-[28rem] md:gap-y-6 md:pt-3 text-left items-start"
+        className="flex flex-col divide-y divide-white/10 md:divide-none w-full md:w-[28rem] 3xl:w-[34rem] 4xl:w-[38rem] md:gap-y-6 3xl:gap-y-8 md:pt-3 text-left items-start"
       >
         <motion.div
           variants={itemVariants}
@@ -110,7 +110,7 @@ export default function Connect() {
               type="button"
               onClick={copyEmail}
               data-cursor="grow"
-              className="inter text-[#DEDCDC] text-lg sm:text-xl md:text-2xl md:leading-none transition-all duration-300 active:scale-95 hover:scale-110 py-3 md:py-1 w-full md:w-fit block cursor-pointer bg-transparent border-none"
+              className="inter text-[#DEDCDC] text-lg sm:text-xl md:text-2xl 3xl:text-3xl 4xl:text-[2.25rem] md:leading-none transition-all duration-300 active:scale-95 hover:scale-110 py-3 md:py-1 w-full md:w-fit block cursor-pointer bg-transparent border-none"
             >
               email
             </TooltipTrigger>
@@ -123,7 +123,7 @@ export default function Connect() {
           target="_blank"
           rel="noopener noreferrer"
           data-cursor="grow"
-          className="inter text-[#DEDCDC] text-lg sm:text-xl md:text-2xl transition-all duration-300 active:scale-95 hover:scale-110 py-3 md:py-1 w-full md:w-fit block cursor-pointer"
+          className="inter text-[#DEDCDC] text-lg sm:text-xl md:text-2xl 3xl:text-3xl 4xl:text-[2.25rem] transition-all duration-300 active:scale-95 hover:scale-110 py-3 md:py-1 w-full md:w-fit block cursor-pointer"
         >
           linkedin
         </motion.a>
@@ -133,7 +133,7 @@ export default function Connect() {
           target="_blank"
           rel="noopener noreferrer"
           data-cursor="grow"
-          className="inter text-[#DEDCDC] text-lg sm:text-xl md:text-2xl transition-all duration-300 active:scale-95 hover:scale-110 py-3 md:py-1 w-full md:w-fit block cursor-pointer"
+          className="inter text-[#DEDCDC] text-lg sm:text-xl md:text-2xl 3xl:text-3xl 4xl:text-[2.25rem] transition-all duration-300 active:scale-95 hover:scale-110 py-3 md:py-1 w-full md:w-fit block cursor-pointer"
         >
           github
         </motion.a>
@@ -151,7 +151,7 @@ export default function Connect() {
                 rel="noreferrer"
                 onClick={() => setResumeType(type)}
                 data-cursor="grow"
-                className={`inter text-lg sm:text-xl md:text-2xl transition-all duration-300 active:scale-95 cursor-pointer ${
+                className={`inter text-lg sm:text-xl md:text-2xl 3xl:text-3xl 4xl:text-[2.25rem] transition-all duration-300 active:scale-95 cursor-pointer ${
                   resumeType === type ? "text-[#DEDCDC]" : "text-[#DEDCDC]/50"
                 }`}
               >

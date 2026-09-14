@@ -1,11 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { ChevronDown } from "lucide-react";
 import { motion, type Variants, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
-import ProjectCarousel, { type CarouselSlide } from "./ProjectCarousel";
+import type { CarouselSlide } from "./ProjectCarousel";
 import ProjectDescription from "./ProjectDescription";
+
+// keeps three.js/drei out of the initial page chunk
+const ProjectCarousel = dynamic(() => import("./ProjectCarousel"), {
+  ssr: false,
+  loading: () => <div className="min-h-[24rem] animate-pulse rounded-xl bg-black/5 sm:min-h-[30rem]" />,
+});
 
 const MotionLink = motion.create(Link);
 
@@ -76,7 +83,7 @@ function Disclosure({ children, isOpen, label, onClick }: { children: React.Reac
         onClick={onClick}
         aria-expanded={isOpen}
         whileTap={{ scale: 0.97 }}
-        className="inter flex w-full items-center justify-between text-left text-xs uppercase tracking-[0.14em] text-[#878787] transition-colors hover:text-[#1E1E1E]"
+        className="inter flex w-full items-center justify-between text-left text-xs 3xl:text-sm uppercase tracking-[0.14em] text-[#878787] transition-colors hover:text-[#1E1E1E]"
       >
         {label}
         <ChevronDown size={15} className={`transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
@@ -156,24 +163,24 @@ export default function HardwarePage({ project }: { project: HardwareProject }) 
         transition={{ duration: 0.4, delay: 0.02, ease: revealEase }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.96 }}
-        className="inter inline-block text-sm text-[#878787] hover:text-[#1E1E1E]"
-      >
+      className="inter inline-block text-sm 3xl:text-base text-[#878787] hover:text-[#1E1E1E]"
+    >
         back to work
       </MotionLink>
-      <div className="mx-auto grid w-full max-w-[100rem] gap-12 pt-16 md:grid-cols-[minmax(17rem,0.7fr)_minmax(0,1.3fr)] md:pt-24">
+      <div className="mx-auto grid w-full max-w-[100rem] 3xl:max-w-[130rem] 4xl:max-w-[150rem] gap-12 3xl:gap-16 pt-16 md:grid-cols-[minmax(17rem,0.7fr)_minmax(0,1.3fr)] md:pt-24">
         <motion.div
           variants={contentVariants}
           className="flex flex-col"
         >
-          <p className="inter mb-3 text-sm uppercase tracking-[0.18em] text-[#878787]">{project.category ?? "Hardware"}</p>
-          <h1 className="montserrat text-4xl sm:text-5xl md:text-6xl">{project.title}</h1>
+          <p className="inter mb-3 text-sm 3xl:text-base text-[#878787] uppercase tracking-[0.18em]">{project.category ?? "Hardware"}</p>
+          <h1 className="montserrat text-4xl sm:text-5xl md:text-6xl 3xl:text-7xl 4xl:text-8xl">{project.title}</h1>
           <ProjectDescription description={project.description} details={project.details} />
 
           <div className="mt-10 space-y-5">
             <Disclosure label="Specifications" isOpen={openPanels.specs} onClick={() => setOpenPanels((panels) => ({ ...panels, specs: !panels.specs }))}>
-              <dl className="space-y-2.5">
+              <dl className="space-y-2.5 3xl:space-y-3">
                 {specifications.map((spec) => (
-                  <div key={spec.label} className="inter flex items-baseline justify-between gap-6 text-sm">
+                  <div key={spec.label} className="inter flex items-baseline justify-between gap-6 text-sm 3xl:text-base">
                     <dt className="text-[#878787]">{spec.label}</dt>
                     <dd className="text-right text-[#1E1E1E]">{spec.value}</dd>
                   </div>
@@ -183,10 +190,10 @@ export default function HardwarePage({ project }: { project: HardwareProject }) 
 
             {projectLinks.length > 0 && (
               <Disclosure label="Links" isOpen={openPanels.links} onClick={() => setOpenPanels((panels) => ({ ...panels, links: !panels.links }))}>
-                <ul className="space-y-2.5">
+                <ul className="space-y-2.5 3xl:space-y-3">
                   {projectLinks.map((link) => (
                     <li key={link.href}>
-                      <a href={link.href} download={link.download} target={link.download ? undefined : "_blank"} rel={link.download ? undefined : "noreferrer"} className="inter text-sm text-[#5F5F5F] underline decoration-black/20 underline-offset-4 transition-colors hover:text-[#1E1E1E]">{link.label}</a>
+                      <a href={link.href} download={link.download} target={link.download ? undefined : "_blank"} rel={link.download ? undefined : "noreferrer"} className="inter text-sm 3xl:text-base text-[#5F5F5F] underline decoration-black/20 underline-offset-4 transition-colors hover:text-[#1E1E1E]">{link.label}</a>
                     </li>
                   ))}
                 </ul>
