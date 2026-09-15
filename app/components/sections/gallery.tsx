@@ -110,9 +110,9 @@ export default function Gallery() {
   useEffect(() => {
     const updateColumnCount = () => {
       setColumnCount(
-        window.matchMedia("(min-width: 2560px)").matches
+        window.matchMedia("(min-width: 3440px)").matches
           ? 6
-          : window.matchMedia("(min-width: 1920px)").matches
+          : window.matchMedia("(min-width: 2560px)").matches
             ? 5
             : window.matchMedia("(min-width: 1024px)").matches
               ? 4

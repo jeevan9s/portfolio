@@ -42,8 +42,9 @@
 }
 
 @theme inline {
-  --breakpoint-3xl: 120rem;
-  --breakpoint-4xl: 160rem;
+  /* 3xl/4xl gate the ultrawide scaling; 120rem (1920px) matched normal 1080p desktops */
+  --breakpoint-3xl: 160rem;
+  --breakpoint-4xl: 215rem;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);

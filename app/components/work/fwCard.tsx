@@ -49,22 +49,22 @@ export default function FirmwareCard({
           <span className="inter text-[0.65rem] 3xl:text-sm 4xl:text-base uppercase tracking-[0.2em] text-white/35">
             firmware
           </span>
-          <span className="inter text-xs 3xl:text-base 4xl:text-lg uppercase tracking-[0.18em] text-white/45">
+          <span className="inter text-[0.6rem] 3xl:text-base 4xl:text-lg uppercase tracking-[0.18em] text-white/45">
             specs
           </span>
           <div className="flex flex-col gap-y-1.5 3xl:gap-y-2 border-l border-white/20 pl-3 3xl:pl-4">
             <div className="flex items-center justify-between gap-x-4">
-              <span className="inter text-sm 3xl:text-lg 4xl:text-xl text-white/45">language</span>
-              <span className="inter text-sm 3xl:text-lg 4xl:text-xl font-medium text-white">{language}</span>
+              <span className="inter text-xs 3xl:text-lg 4xl:text-xl text-white/45">language</span>
+              <span className="inter text-xs 3xl:text-lg 4xl:text-xl font-medium text-white">{language}</span>
             </div>
             <div className="flex items-center justify-between gap-x-4">
-              <span className="inter text-sm 3xl:text-lg 4xl:text-xl text-white/45">framework</span>
-              <span className="inter text-sm 3xl:text-lg 4xl:text-xl font-medium text-white">{framework}</span>
+              <span className="inter text-xs 3xl:text-lg 4xl:text-xl text-white/45">framework</span>
+              <span className="inter text-xs 3xl:text-lg 4xl:text-xl font-medium text-white">{framework}</span>
             </div>
             {(protocol || apis) && (
               <div className="flex items-center justify-between gap-x-4">
-                <span className="inter text-sm 3xl:text-lg 4xl:text-xl text-white/45">{protocol ? "protocol" : "APIs"}</span>
-                <span className="inter text-sm 3xl:text-lg 4xl:text-xl font-medium text-white">{protocol ?? apis}</span>
+                <span className="inter text-xs 3xl:text-lg 4xl:text-xl text-white/45">{protocol ? "protocol" : "APIs"}</span>
+                <span className="inter text-xs 3xl:text-lg 4xl:text-xl font-medium text-white">{protocol ?? apis}</span>
               </div>
             )}
           </div>
@@ -72,7 +72,7 @@ export default function FirmwareCard({
 
         <div className="relative z-15 mt-auto pt-4 3xl:pt-6 border-t border-white/10 flex flex-col gap-y-2.5 3xl:gap-y-3.5">
           {specs.map((spec, index) => (
-            <div key={index} className="flex items-center justify-between text-xs sm:text-sm 3xl:text-base 4xl:text-lg uppercase tracking-wide">
+            <div key={index} className="flex items-center justify-between text-[0.65rem] sm:text-[0.7rem] 3xl:text-base 4xl:text-lg uppercase tracking-wide">
               <span className="inter text-[#9B9B9B]">{spec.label}</span>
               <span className="inter text-white font-medium">{spec.value}</span>
             </div>
