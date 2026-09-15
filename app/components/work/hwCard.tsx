@@ -46,6 +46,31 @@ function useNearViewport(ref: React.RefObject<HTMLElement | null>, rootMargin: s
   return isNearViewport;
 }
 
+// mounts the Canvas once and keeps it mounted so scrolling away doesn't reload the model
+function useHasEnteredViewport(ref: React.RefObject<HTMLElement | null>, rootMargin: string) {
+  const [hasEntered, setHasEntered] = useState(false);
+
+  useEffect(() => {
+    if (hasEntered) return;
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHasEntered(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [ref, rootMargin, hasEntered]);
+
+  return hasEntered;
+}
+
 function useWarmModel(ref: React.RefObject<HTMLElement | null>, modelPath?: string) {
   useEffect(() => {
     const element = ref.current;
@@ -125,7 +150,7 @@ export default function HardwareCard({
   modelPath,
 }: HardwareCardProps) {
   const previewRef = useRef<HTMLDivElement>(null);
-  const isNearViewport = useNearViewport(previewRef, "400px");
+  const hasMounted = useHasEnteredViewport(previewRef, "400px");
   const isVisible = useNearViewport(previewRef, "0px");
   useWarmModel(previewRef, modelPath);
 
@@ -153,7 +178,7 @@ export default function HardwareCard({
         transition={{ type: "spring", stiffness: 380, damping: 28, mass: 0.55 }}
         className={`relative w-full ${CARD_ASPECT} rounded-xl bg-[#1E1E1E] overflow-hidden will-change-transform ring-offset-2 ring-offset-[#EFEFEF] group-focus-visible:ring-2 group-focus-visible:ring-[#1E1E1E]`}
       >
-        {isNearViewport ? (
+        {hasMounted ? (
           <Canvas
             camera={{ position: [0, 0.2, 4.5], fov: 26 }}
             dpr={isDesktop ? [1, 1.5] : [1, 2]}
