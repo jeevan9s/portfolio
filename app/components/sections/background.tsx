@@ -61,12 +61,12 @@ export default function Background() {
                     src="/chakana.svg"
                     width={32}
                     height={32}
-                    className="md:w-[50px] md:h-[50px]"
+                    className="md:w-[50px] md:h-[50px] 3xl:w-[60px] 3xl:h-[60px] 4xl:w-[70px] 4xl:h-[70px]"
                   />
                 </TooltipTrigger>
                 <TooltipContent
                   side="right"
-                  className="inter max-w-45 bg-transparent border-none shadow-none nav-theme-active"
+                  className="inter max-w-45 3xl:max-w-70 4xl:max-w-80 3xl:text-lg 4xl:text-xl bg-transparent border-none shadow-none nav-theme-active"
                 >
                   la Chakana, a symbol of my Peruvian background.
                 </TooltipContent>
@@ -104,13 +104,13 @@ export default function Background() {
                     }
                   }}
                   data-cursor="grow"
-                  className="inter text-base md:text-lg transition-all duration-300 hover:scale-105 active:scale-95 bg-transparent border-none p-0 cursor-pointer"
+                  className="inter text-base md:text-lg 3xl:text-2xl 4xl:text-3xl transition-all duration-300 hover:scale-105 active:scale-95 bg-transparent border-none p-0 cursor-pointer"
                 >
                   जीवन
                 </TooltipTrigger>
                 <TooltipContent
                   side="right"
-                  className="inter max-w-55 bg-transparent border-none shadow-none nav-theme-active"
+                  className="inter max-w-55 3xl:max-w-75 4xl:max-w-85 3xl:text-lg 4xl:text-xl bg-transparent border-none shadow-none nav-theme-active"
                 >
                   my Marathi name, meaning life.
                 </TooltipContent>
@@ -158,7 +158,7 @@ export default function Background() {
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             aria-expanded={isExpanded}
             aria-controls="background-details"
-            className="inter text-sm md:text-base mt-8 -mx-1 px-1 py-2 font-medium nav-theme-muted hover:nav-theme-active duration-300 flex items-center gap-2 cursor-pointer bg-transparent border-none overflow-hidden"
+            className="inter text-sm md:text-base 3xl:text-2xl 4xl:text-3xl mt-8 3xl:mt-10 4xl:mt-12 -mx-1 px-1 py-2 font-medium nav-theme-muted hover:nav-theme-active duration-300 flex items-center gap-2 cursor-pointer bg-transparent border-none overflow-hidden"
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.span
@@ -167,7 +167,7 @@ export default function Background() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                className="inline-block"
+                className="inline-block text-sm md:text-base 3xl:text-2xl 4xl:text-3xl"
               >
                 {isExpanded ? "less" : "more about me"}
               </motion.span>
@@ -184,19 +184,19 @@ export default function Background() {
               animate={{ opacity: 1, height: "auto", y: 0 }}
               exit={{ opacity: 0, height: 0, y: 20 }}
               transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="md:ml-10 overflow-hidden"
+              className="md:ml-10 3xl:ml-12 4xl:ml-16 overflow-hidden"
             >
-              <div className="flex flex-col gap-8 md:grid md:grid-cols-3 md:gap-8 pt-8 mt-2 border-t border-[var(--text-muted)]/20">
+              <div className="flex flex-col gap-8 md:grid md:grid-cols-3 md:gap-8 3xl:gap-12 4xl:gap-16 pt-8 3xl:pt-10 4xl:pt-12 mt-2 border-t border-[var(--text-muted)]/20">
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex flex-col gap-2"
+                  className="flex flex-col gap-2 3xl:gap-3 4xl:gap-4"
                 >
-                  <h3 className="inter font-semibold text-lg md:text-lg nav-theme-active">
+                  <h3 className="inter font-semibold text-lg md:text-lg 3xl:text-2xl 4xl:text-3xl nav-theme-active">
                     background
                   </h3>
-                  <p className="inter text-base md:text-base nav-theme-muted leading-relaxed">
+                  <p className="inter text-base md:text-base 3xl:text-xl 4xl:text-2xl 3xl:leading-relaxed 4xl:leading-relaxed nav-theme-muted leading-relaxed">
                     I started teaching myself tech and got into robotics late in high school.
                     Since then, it&apos;s been projects, independent study, and figuring things out.
                     Now I&apos;m
@@ -208,12 +208,12 @@ export default function Background() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex flex-col gap-2"
+                  className="flex flex-col gap-2 3xl:gap-3 4xl:gap-4"
                 >
-                  <h3 className="inter font-semibold text-lg md:text-lg nav-theme-active">
+                  <h3 className="inter font-semibold text-lg md:text-lg 3xl:text-2xl 4xl:text-3xl nav-theme-active">
                     scope
                   </h3>
-                  <p className="inter text-base md:text-base nav-theme-muted leading-relaxed">
+                  <p className="inter text-base md:text-base 3xl:text-xl 4xl:text-2xl 3xl:leading-relaxed 4xl:leading-relaxed nav-theme-muted leading-relaxed">
                     I work across schematic and PCB design in <span className="font-semibold">KiCad</span>, embedded software in <span className="font-semibold">C++</span> and <span className="font-semibold">Python</span>, and systems development,
                     with a focus on avionics, intelligent robotics, and embedded AI.
                   </p>
@@ -223,12 +223,12 @@ export default function Background() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex flex-col gap-2"
+                  className="flex flex-col gap-2 3xl:gap-3 4xl:gap-4"
                 >
-                  <h3 className="inter font-semibold text-lg md:text-lg nav-theme-active">
+                  <h3 className="inter font-semibold text-lg md:text-lg 3xl:text-2xl 4xl:text-3xl nav-theme-active">
                     next
                   </h3>
-                  <p className="inter text-base md:text-base nav-theme-muted leading-relaxed">
+                  <p className="inter text-base md:text-base 3xl:text-xl 4xl:text-2xl 3xl:leading-relaxed 4xl:leading-relaxed nav-theme-muted leading-relaxed">
                     Currently co-leading the Avionics subteam at QRET, building an audio interface,
                     and keeping learning and growth constant.
                   </p>
