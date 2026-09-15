@@ -113,19 +113,19 @@ export default function Work() {
       className={`relative min-h-0 w-full bg-transparent ${isDesktop ? "md:min-h-screen" : ""}`}
     >
       <div
-        className={`flex flex-col justify-start p-8 pt-10 md:p-12 md:pt-10 xl:p-16 2xl:p-20 ${
+        className={`flex flex-col justify-start p-6 pt-8 md:p-0 md:px-12 md:pt-20 md:pb-20 lg:px-16 lg:pt-22 lg:pb-20 xl:px-20 xl:pt-24 xl:pb-22 2xl:px-24 2xl:pt-24 2xl:pb-22 3xl:px-28 3xl:pt-28 3xl:pb-24 ${
           isDesktop ? "md:sticky md:top-0 md:h-screen md:justify-center md:overflow-hidden" : ""
         }`}
       >
-        <div className="flex flex-col gap-y-3 max-w-[100rem] mb-4 md:mb-6">
+        <div className="flex flex-col gap-y-2 max-w-[100rem] mb-3 md:mb-4 2xl:mb-5 shrink-0">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.3 }}
             transition={{ duration: 0.45, ease: "easeOut" }}
           >
-            <h1 className="text-[2.5rem] text-[#1E1E1E] md:text-[3.75rem] lg:text-[4.5rem] 2xl:text-[5.25rem] 3xl:text-[6rem] montserrat leading-tight">selected works</h1>
-            <h3 className="text-[1.15rem] text-[#878787] md:text-[1.35rem] lg:text-[1.6rem] 2xl:text-[1.85rem] 3xl:text-[2.1rem] inter font-light">
+            <h1 className="text-[2.25rem] text-[#1E1E1E] md:text-[3.25rem] lg:text-[4rem] 2xl:text-[4.75rem] 3xl:text-[5.5rem] montserrat leading-tight">selected works</h1>
+            <h3 className="text-[1rem] text-[#878787] md:text-[1.2rem] lg:text-[1.4rem] 2xl:text-[1.65rem] 3xl:text-[1.9rem] inter font-light">
               an index of builds
             </h3>
           </motion.div>
@@ -133,13 +133,13 @@ export default function Work() {
 
         <div
           ref={scrollHostRef}
-          className={`work-scrollbar w-full snap-x snap-proximity overflow-x-auto touch-auto overscroll-x-contain overflow-y-visible ${
+          className={`work-scrollbar w-full snap-x snap-proximity overflow-x-auto touch-auto overscroll-x-contain overflow-y-visible shrink-0 ${
             isDesktop ? "md:overflow-hidden md:snap-none" : ""
           }`}
         >
           <div
             ref={trackRef}
-            className="flex w-max flex-row items-center gap-x-4 py-2 will-change-transform md:gap-x-12 lg:gap-x-14 xl:gap-x-16 3xl:gap-x-20 4xl:gap-x-24"
+            className="flex w-max flex-row items-start gap-x-4 py-1 will-change-transform md:gap-x-12 lg:gap-x-14 xl:gap-x-16 3xl:gap-x-20 4xl:gap-x-24"
           >
             {projects.map((project) => (
               <motion.div
