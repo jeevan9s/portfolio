@@ -52,7 +52,9 @@ export default function Work() {
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    // pointer: fine excludes touch devices (iPad, tablets) so they get the
+    // native horizontal-swipe experience instead of the pinned scrollytelling
+    const mediaQuery = window.matchMedia("(min-width: 768px) and (pointer: fine)");
     const update = () => setIsDesktop(mediaQuery.matches);
     update();
     mediaQuery.addEventListener("change", update);
@@ -108,10 +110,14 @@ export default function Work() {
   return (
     <div
       ref={containerRef}
-      className="relative min-h-0 w-full bg-transparent md:min-h-screen"
+      className={`relative min-h-0 w-full bg-transparent ${isDesktop ? "md:min-h-screen" : ""}`}
     >
-      <div className="flex flex-col justify-start p-8 pt-10 md:sticky md:top-0 md:h-screen md:overflow-hidden md:p-12 md:pt-10 xl:p-16 2xl:p-20">
-        <div className="flex flex-col gap-y-3 max-w-[100rem] mb-8">
+      <div
+        className={`flex flex-col justify-start p-8 pt-10 md:p-12 md:pt-10 xl:p-16 2xl:p-20 ${
+          isDesktop ? "md:sticky md:top-0 md:h-screen md:justify-center md:overflow-hidden" : ""
+        }`}
+      >
+        <div className="flex flex-col gap-y-3 max-w-[100rem] mb-4 md:mb-6">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -125,7 +131,12 @@ export default function Work() {
           </motion.div>
         </div>
 
-        <div ref={scrollHostRef} className="work-scrollbar w-full snap-x snap-proximity overflow-x-auto touch-auto overscroll-x-contain overflow-y-visible md:overflow-hidden md:snap-none">
+        <div
+          ref={scrollHostRef}
+          className={`work-scrollbar w-full snap-x snap-proximity overflow-x-auto touch-auto overscroll-x-contain overflow-y-visible ${
+            isDesktop ? "md:overflow-hidden md:snap-none" : ""
+          }`}
+        >
           <div
             ref={trackRef}
             className="flex w-max flex-row items-center gap-x-4 py-6 will-change-transform md:gap-x-16 3xl:gap-x-20 4xl:gap-x-24"
