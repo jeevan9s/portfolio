@@ -75,7 +75,6 @@ const projects = {
       { path: "/projs/imgs/modules_pcb_real.jpg", label: "Module Boards" },
     ],
   },
-
   "proj-3": {
     type: "hardware" as const,
     title: "Homectrl",
@@ -183,7 +182,7 @@ if (imu.init(0x6A, Wire)) {
 acc X: 0.02 | acc Y: -0.01 | acc Z: 0.98 G
 gyr X: 0.14 | gyr Y: -0.08 | gyr Z: 0.21 dps
 Temp: 24.63 C`,
-  media: [{ label: "LSM6DSM read loop", content: <LSM6DSMFlowchart /> }],
+    media: [{ label: "LSM6DSM read loop", content: <LSM6DSMFlowchart /> }],
     specs: [
       { label: "Sensor", value: "LSM6DSM · 6-axis IMU" },
       { label: "Accelerometer", value: "3-axis · G" },
@@ -198,38 +197,38 @@ Temp: 24.63 C`,
   },
   "proj-6": {
     type: "firmware" as const,
-    title: "Calmeca",
+    title: "Beaver",
     description:
-      "I built Calmeca because I wanted a tool to make course organization and scheduling less tedious, especially during syllabus week.\n\nIt turns course syllabi into structured academic data, extracting exams, assignments, recurring tasks, and other key dates before syncing them with Google Calendar. The app combines a React frontend with a NeutralinoJS desktop runtime, IndexedDB for local course and task data, Google OAuth and Calendar integrations, and an OpenAI-powered extraction pipeline.",
+      "I built Beaver to make course organization and scheduling less tedious, especially during syllabus week.\n\nIt turns course syllabi into structured academic data, extracting exams, assignments, recurring tasks, and other key dates before letting users review and sync them with Google Calendar. Unlike my embedded systems projects, Beaver is a full-stack web application built around server-side processing, AI-powered extraction, and external API integrations.",
     language: "TypeScript",
-    framework: "React, NeutralinoJS",
-    apis: "Google Calendar, OpenAI",
-    build: "Vite",
+    framework: "Next.js, React",
+    apis: "Google Calendar, OpenAI, OAuth",
+    build: "Next.js",
     version: "2026",
-    code: `// an abstract snippet of the extraction service
-    
-    const extraction = await extractionService.extract(
-    await PDFService.extractText(syllabus),
-);
+    code: `const file = await extractFile(req);
+const { text, pageCount } = await processPDF(file);
+const events = await extractEvents(text);
 
-await addGoogleCalendarEvent({
-    summary: extraction.exam.title,
-    start: extraction.exam.start,
-    end: extraction.exam.end,
+return NextResponse.json({
+  success: true,
+  filename: file.name,
+  pageCount,
+  events,
 });`,
-    consoleOutput: `extracting syllabus...
-course data extracted
-4 assignments found
-2 exams found
-3 recurring tasks found
+    consoleOutput: `extracting file...
+PDF parsed: syllabus.pdf (3 pages)
+extracted 14 events via OpenAI
 syncing with Google Calendar...
-calendar sync complete`,
+events synchronized successfully`,
     specs: [
-      { label: "Runtime", value: "NeutralinoJS" },
-      { label: "Database", value: "IndexedDB · Dexie" },
-      { label: "Integrations", value: "Google Calendar · OpenAI" },
+      { label: "Category", value: "Software Automation" },
+      { label: "Platform", value: "Web" },
+      { label: "Frontend", value: "Next.js · React · TypeScript" },
+      { label: "Backend", value: "Next.js API Routes" },
+      { label: "AI", value: "OpenAI" },
+      { label: "Integrations", value: "Google Calendar · OAuth" },
     ],
-    repository: "https://github.com/jeevan9s/calmeca-app",
+    repository: "https://github.com/jeevan9s/beaver",
   },
 };
 

@@ -46,7 +46,6 @@ function useNearViewport(ref: React.RefObject<HTMLElement | null>, rootMargin: s
   return isNearViewport;
 }
 
-// mounts the Canvas once and keeps it mounted so scrolling away doesn't reload the model
 function useHasEnteredViewport(ref: React.RefObject<HTMLElement | null>, rootMargin: string) {
   const [hasEntered, setHasEntered] = useState(false);
 

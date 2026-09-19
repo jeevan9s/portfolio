@@ -10,7 +10,6 @@ import FirmwareCard from "../work/fwCard";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// serve draco decoder locally instead of fetching from gstatic's CDN
 useGLTF.setDecoderPath("/draco/");
 
 export type specification = {
@@ -20,10 +19,7 @@ export type specification = {
 
 const avLib: specification[] = [];
 const lsmLib: specification[] = [];
-const calmeca: specification[] = [
-  { label: "platform", value: "desktop" },
-];
-
+const beaver: specification[] = [];
 type Project =
   | { type: "hardware"; id: string; title: string; description: string; mcu: string; layers: number; size: string; image?: string; modelPath?: string; }
   | { type: "firmware"; id: string; title: string; description: string; image?: string; language: string; framework: string; protocol?: string; apis?: string; specs: specification[] }
@@ -34,7 +30,7 @@ const projects: Project[] = [
   { type: "hardware", id: "proj-3", title: "Homectrl", description: "Home automation controller for streamlining routine household tasks.", mcu: "ESP32-S3-1U", layers: 4, size: "Ø60mm", modelPath: "/projs/models/homectrl_controller-final-draco.glb" },
   { type: "firmware", id: "proj-4", title: "Avionics Libraries", description: "Reusable embedded drivers and peripheral libraries for avionics systems.", language: "C++", framework: "PlatformIO", protocol: "SPI, I2C", specs: avLib },
   { type: "firmware", id: "proj-5", title: "Motion Library", description: "Embedded IMU driver and motion utilities for the LSM6DSM measuring unit.", language: "C++", framework: "PlatformIO", protocol: "I2C", specs: lsmLib },
-  { type: "firmware", id: "proj-6", title: "Calmeca", description: "Academic productivity app built to streamline course scheduling and management.", language: "TypeScript", framework: "Next.js", apis: "Google, OAuth", specs: calmeca },
+{ type: "firmware", id: "proj-6", title: "Beaver", description: "Academic productivity tool built to automate syllabus extraction and course scheduling.", language: "TypeScript", framework: "Next.js", apis: "Google Calendar, OpenAI, OAuth", specs: beaver },
 ];
 
 export function preloadHardwareModels() {
@@ -52,8 +48,6 @@ export default function Work() {
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // pointer: fine excludes touch devices (iPad, tablets) so they get the
-    // native horizontal-swipe experience instead of the pinned scrollytelling
     const mediaQuery = window.matchMedia("(min-width: 768px) and (pointer: fine)");
     const update = () => setIsDesktop(mediaQuery.matches);
     update();
@@ -72,7 +66,6 @@ export default function Work() {
     const ctx = gsap.context(() => {
       const getDistance = () => Math.max(0, track.scrollWidth - host.clientWidth);
 
-      // sticky needs real scroll room (viewport + distance) to hold the pin through
       const syncHeight = () => {
         container.style.height = `calc(100vh + ${getDistance()}px)`;
       };
