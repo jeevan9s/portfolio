@@ -196,7 +196,7 @@ Temp: 24.63 C`,
     ],
   },
   "proj-6": {
-    type: "firmware" as const,
+    type: "software" as const,
     title: "Beaver",
     description:
       "I built Beaver to make course organization and scheduling less tedious, especially during syllabus week.\n\nIt turns course syllabi into structured academic data, extracting exams, assignments, recurring tasks, and other key dates before letting users review and sync them with Google Calendar. Unlike my embedded systems projects, Beaver is a full-stack web application built around server-side processing, AI-powered extraction, and external API integrations.",
@@ -243,7 +243,7 @@ export default async function ProjectPage({
   const project = projects[id as ProjectId];
   if (!project) notFound();
 
-  return project.type === "firmware" ? (
+  return project.type === "firmware" || project.type === "software" ? (
     <FirmwarePage project={project} />
   ) : (
     <HardwarePage project={project} />
