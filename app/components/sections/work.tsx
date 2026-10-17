@@ -19,7 +19,6 @@ export type specification = {
 
 const avLib: specification[] = [];
 const lsmLib: specification[] = [];
-const beaver: specification[] = [];
 type Project =
   | { type: "hardware"; id: string; title: string; description: string; mcu: string; layers: number; size: string; image?: string; modelPath?: string; }
   | { type: "firmware"; id: string; title: string; description: string; image?: string; language: string; framework: string; protocol?: string; apis?: string; specs: specification[] }
@@ -30,7 +29,6 @@ const projects: Project[] = [
   { type: "hardware", id: "proj-3", title: "Homectrl", description: "Home automation controller for streamlining routine household tasks.", mcu: "ESP32-S3-1U", layers: 4, size: "Ø60mm", modelPath: "/projs/models/homectrl_controller-final-draco.glb" },
   { type: "firmware", id: "proj-4", title: "Avionics Libraries", description: "Reusable embedded drivers and peripheral libraries for avionics systems.", language: "C++", framework: "PlatformIO", protocol: "SPI, I2C", specs: avLib },
   { type: "firmware", id: "proj-5", title: "Motion Library", description: "Embedded IMU driver and motion utilities for the LSM6DSM measuring unit.", language: "C++", framework: "PlatformIO", protocol: "I2C", specs: lsmLib },
-{ type: "firmware", id: "proj-6", title: "Beaver", description: "Academic productivity tool built to automate syllabus extraction and course scheduling.", language: "TypeScript", framework: "Next.js", apis: "Google Calendar, OpenAI, OAuth", specs: beaver },
 ];
 
 export function preloadHardwareModels() {

@@ -195,41 +195,6 @@ Temp: 24.63 C`,
       { label: "Version", value: "2026" },
     ],
   },
-  "proj-6": {
-    type: "software" as const,
-    title: "Beaver",
-    description:
-      "I built Beaver to make course organization and scheduling less tedious, especially during syllabus week.\n\nIt turns course syllabi into structured academic data, extracting exams, assignments, recurring tasks, and other key dates before letting users review and sync them with Google Calendar. Unlike my embedded systems projects, Beaver is a full-stack web application built around server-side processing, AI-powered extraction, and external API integrations.",
-    language: "TypeScript",
-    framework: "Next.js, React",
-    apis: "Google Calendar, OpenAI, OAuth",
-    build: "Next.js",
-    version: "2026",
-    code: `const file = await extractFile(req);
-const { text, pageCount } = await processPDF(file);
-const events = await extractEvents(text);
-
-return NextResponse.json({
-  success: true,
-  filename: file.name,
-  pageCount,
-  events,
-});`,
-    consoleOutput: `extracting file...
-PDF parsed: syllabus.pdf (3 pages)
-extracted 14 events via OpenAI
-syncing with Google Calendar...
-events synchronized successfully`,
-    specs: [
-      { label: "Category", value: "Software Automation" },
-      { label: "Platform", value: "Web" },
-      { label: "Frontend", value: "Next.js · React · TypeScript" },
-      { label: "Backend", value: "Next.js API Routes" },
-      { label: "AI", value: "OpenAI" },
-      { label: "Integrations", value: "Google Calendar · OAuth" },
-    ],
-    repository: "https://github.com/jeevan9s/beaver",
-  },
 };
 
 type ProjectId = keyof typeof projects;
@@ -243,7 +208,7 @@ export default async function ProjectPage({
   const project = projects[id as ProjectId];
   if (!project) notFound();
 
-  return project.type === "firmware" || project.type === "software" ? (
+  return project.type === "firmware" ? (
     <FirmwarePage project={project} />
   ) : (
     <HardwarePage project={project} />
