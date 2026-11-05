@@ -99,8 +99,8 @@ export default function EndCard() {
   ); 
 
   const resumeLinks = {
-    "hw-resume": "/projs/downloads/Sanchez_Jeevan_HW_Resume.pdf",
-    "sw-resume": "/projs/downloads/Sanchez_Jeevan_FW_Resume.pdf",
+    "hw-resume": "/projs/downloads/Sanchez_Jeevan_Resume_Hardware.pdf",
+    "sw-resume": "/projs/downloads/Sanchez_Jeevan_Resume_Firmware.pdf",
   };
 
   const time = useTorontoClock();
@@ -219,7 +219,7 @@ export default function EndCard() {
           >
             {(["hw-resume", "sw-resume"] as const).map((type, index) => (
               <div key={type} className="flex items-center gap-x-3">
-                {index > 0 && <span className="inter nav-theme-muted">/</span>}
+                {index > 0 && <span className="inter nav-theme-muted">●</span>}
                 <motion.a
                   whileHover={{ scale: 1.05 }}
                   href={resumeLinks[type]}

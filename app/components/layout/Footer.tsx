@@ -20,8 +20,8 @@ export default function Footer({ theme }: footerProps) {
   );
 
   const resumeLinks = {
-    "hw-resume": "/projs/downloads/Sanchez_Jeevan_HW_Resume.pdf",
-    "sw-resume": "/projs/downloads/Sanchez_Jeevan_FW_Resume.pdf",
+    "hw-resume": "/projs/downloads/Sanchez_Jeevan_Resume_Hardware.pdf",
+    "sw-resume": "/projs/downloads/Sanchez_Jeevan_Resume_Firmware.pdf",
   };
 
   const handleCopyEmail = () => {
@@ -41,7 +41,7 @@ export default function Footer({ theme }: footerProps) {
         <div className="hidden md:flex flex-row items-center gap-x-3 3xl:gap-x-4 flex-1">
           {(["hw-resume", "sw-resume"] as const).map((type, index) => (
             <div key={type} className="flex items-center gap-x-3">
-              {index > 0 && <span className="inter text-base 3xl:text-lg 4xl:text-xl nav-theme-muted">/</span>}
+              {index > 0 && <span className="inter text-base 3xl:text-lg 4xl:text-xl nav-theme-muted">●</span>}
               <motion.a
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
