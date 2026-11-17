@@ -104,6 +104,50 @@ const projects = {
       { path: "/projs/imgs/homectrl_pcb_real.jpg", label: "Board" },
     ],
   },
+  "proj-6": {
+    type: "hardware" as const,
+    title: "Sensing Modules",
+    description:
+      "Sensor boards for Wi-Fi-enabled smart home automation and distance sensing.",
+    details:
+      "I designed two sensor boards for smart home and robotics applications, working with Johann Samuel Nana on schematic capture for the Hall-FX module.\n\nHall-FX combines an ESP32-S3 and a TMAG5273 3-axis Hall-effect sensor for Wi-Fi-capable, door-based smart home automations. The board also includes USB-C, battery and power-management circuitry, status LEDs, pushbuttons, and ESD protection.\n\nThe ToF module breaks out the VL53L0CX time-of-flight sensor for Penguin's distance sensing. It provides I²C input and output connections for chaining modules, along with an XSHUT control signal.",
+    category: "Hardware",
+    mcu: "ESP32-S3",
+    layers: 2,
+    size: "varies",
+    specs: [
+      { label: "Hall-FX MCU", value: "ESP32-S3" },
+      { label: "Hall sensor", value: "TMAG5273" },
+      { label: "ToF sensor", value: "VL53L0CX" },
+      { label: "Layers", value: 2 },
+    ],
+    repository: "https://github.com/jeevan9s/sensing-boards",
+    models: [
+      {
+        path: "/projs/models/hallfx-module-draco.glb?v=3123fd76",
+        label: "Hall-FX Module",
+        cameraPosition: [0, 5, 0.01] as [number, number, number],
+        cameraTarget: [0, 0, 0] as [number, number, number],
+        cameraUp: [0, 0, -1] as [number, number, number],
+      },
+      {
+        path: "/projs/models/tof-module-draco.glb?v=1e0b4323",
+        label: "ToF Breakout Board",
+        cameraPosition: [0, 5, 0.01] as [number, number, number],
+        cameraTarget: [0, 0, 0] as [number, number, number],
+        cameraUp: [0, 0, -1] as [number, number, number],
+      },
+    ],
+    images: [
+      { path: "/projs/imgs/hallfx_pcb.png", label: "Hall-FX PCB" },
+      { path: "/projs/imgs/tof_pcb.png", label: "ToF PCB" },
+    ],
+    links: [
+      { label: "Repository", href: "https://github.com/jeevan9s/sensing-boards" },
+      { label: "Johann Samuel Nana · LinkedIn", href: "https://www.linkedin.com/in/johann-s-nana/" },
+      { label: "Johann Samuel Nana · GitHub", href: "https://github.com/sam93502" },
+    ],
+  },
   "proj-4": {
     type: "firmware" as const,
     title: "Avionics Libraries",
@@ -154,13 +198,13 @@ CH3: 1048576 raw | 0.154321 V`,
   },
   "proj-5": {
     type: "firmware" as const,
-    title: "Motion Library",
+    title: "Device Libraries",
     description:
-      "I built this library to give Penguin a simple, reusable interface for its IMU data without coupling the rest of the firmware to the LSM6DSM's register-level implementation.\n\nThe library provides a C++ driver for the LSM6DSM, handling I2C communication, device initialization, data-ready synchronization, raw-to-engineering-unit conversion, temperature readings, and optional gyroscope bias calibration. It provides accelerometer and gyroscope data for Penguin's motion and control systems.",
+      "A collection of reusable embedded C++ libraries I've written for interfacing with sensors and peripheral devices.\n\nThe collection includes drivers for the LSM6DSM IMU, ADS131M04 ADC, TMAG5273 magnetic sensor, CCS811 air quality sensor, HDC1080 temperature and humidity sensor, and INA219 power monitor. They use I2C and SPI to interface with devices across robotics, avionics, and other embedded projects.\n\nSeveral of the libraries were developed for GEKO, a rover I worked on for a school design project, and share an I2C bus hardware abstraction. The LSM6DSM library was written for Penguin.",
     language: "C++",
     framework: "Arduino",
-    protocol: "I2C",
-    repository: "https://github.com/jeevan9s/device-libs/tree/main/LSM6DSM",
+    protocol: "I2C, SPI",
+    repository: "https://github.com/jeevan9s/device-libs",
     build: "PlatformIO",
     version: "2026",
     code: `LSM6DSM imu;
@@ -178,21 +222,14 @@ if (imu.init(0x6A, Wire)) {
         float gz = imu.gyZ();
     }
 }`,
-    consoleOutput: `LSM6DSM online
-acc X: 0.02 | acc Y: -0.01 | acc Z: 0.98 G
-gyr X: 0.14 | gyr Y: -0.08 | gyr Z: 0.21 dps
-Temp: 24.63 C`,
-    media: [{ label: "LSM6DSM read loop", content: <LSM6DSMFlowchart /> }],
+    media: [{ label: "LSM6DSM read loop example", content: <LSM6DSMFlowchart /> }],
     specs: [
-      { label: "Sensor", value: "LSM6DSM · 6-axis IMU" },
-      { label: "Accelerometer", value: "3-axis · G" },
-      { label: "Gyroscope", value: "3-axis · dps" },
+      { label: "Motion", value: "LSM6DSM" },
+      { label: "ADC", value: "ADS131M04" },
+      { label: "Magnetic", value: "TMAG5273" },
+      { label: "Environment", value: "CCS811, HDC1080" },
+      { label: "Power", value: "INA219" },
       { label: "Platform", value: "ESP32" },
-      { label: "Language", value: "C++" },
-      { label: "Framework", value: "Arduino" },
-      { label: "Protocol", value: "I2C" },
-      { label: "Build", value: "PlatformIO" },
-      { label: "Version", value: "2026" },
     ],
   },
 };

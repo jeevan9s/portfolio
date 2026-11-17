@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 import Image from "next/image";
 
@@ -8,6 +8,7 @@ export default function Background() {
   const [isChakanaOpen, setIsChakanaOpen] = useState(false);
   const [isNameOpen, setIsNameOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
   const canHover = () => window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   return (
@@ -229,7 +230,7 @@ export default function Background() {
                     next
                   </h3>
                   <p className="inter text-base md:text-base 2xl:text-lg 3xl:text-2xl 4xl:text-[2rem] 2xl:leading-relaxed 3xl:leading-relaxed 4xl:leading-relaxed nav-theme-muted leading-relaxed">
-                    Currently co-leading the Avionics subteam at QRET, building an audio interface,
+                    Currently co-leading the Avionics subteam at QRET, building an audio interface in <motion.a href="https://github.com/jeevan9s/vireo-audio" className="inline-block underline" whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}>vireo</motion.a>,
                     and keeping learning and growth constant.
                   </p>
                 </motion.div>

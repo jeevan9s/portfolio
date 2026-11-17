@@ -18,23 +18,25 @@ export type specification = {
 }
 
 const avLib: specification[] = [];
-const lsmLib: specification[] = [];
+const deviceLib: specification[] = [];
 type Project =
-  | { type: "hardware"; id: string; title: string; description: string; mcu: string; layers: number; size: string; image?: string; modelPath?: string; }
+  | { type: "hardware"; id: string; title: string; description: string; mcu: string; layers: number; size: string; image?: string; modelPath?: string; secondModelPath?: string; }
   | { type: "firmware"; id: string; title: string; description: string; image?: string; language: string; framework: string; protocol?: string; apis?: string; specs: specification[] }
 
 const projects: Project[] = [
   { type: "hardware", id: "proj-1", title: "Penguin", description: "Hybrid wheel-legged rover for intelligent robotics, computer vision, and embodied AI.", mcu: "ESP32-S3", layers: 4, size: "62 × 90mm", modelPath: "/projs/models/penguin_controller-final-draco.glb" },
   { type: "hardware", id: "proj-2", title: "Avionics Sensor & Control Modules", description: "Custom avionics hardware for propulsion control, sensing, and communications.", mcu: "STM32F1", layers: 4, size: "70 x 62mm", modelPath: "/projs/models/modules-final-draco.glb" },
   { type: "hardware", id: "proj-3", title: "Homectrl", description: "Home automation controller for streamlining routine household tasks.", mcu: "ESP32-S3-1U", layers: 4, size: "Ø60mm", modelPath: "/projs/models/homectrl_controller-final-draco.glb" },
+  { type: "hardware", id: "proj-6", title: "Sensing Modules", description: "Sensor boards for Wi-Fi-enabled smart home automation and distance sensing.", mcu: "ESP32-S3", layers: 2, size: "varies", modelPath: "/projs/models/hallfx-module-draco.glb?v=3123fd76", secondModelPath: "/projs/models/tof-module-draco.glb?v=1e0b4323" },
+  { type: "firmware", id: "proj-5", title: "Device Libraries", description: "Reusable embedded libraries for sensors and peripheral devices.", language: "C++", framework: "PlatformIO", protocol: "I2C, SPI", specs: deviceLib },
   { type: "firmware", id: "proj-4", title: "Avionics Libraries", description: "Reusable embedded drivers and peripheral libraries for avionics systems.", language: "C++", framework: "PlatformIO", protocol: "SPI, I2C", specs: avLib },
-  { type: "firmware", id: "proj-5", title: "Motion Library", description: "Embedded IMU driver and motion utilities for the LSM6DSM measuring unit.", language: "C++", framework: "PlatformIO", protocol: "I2C", specs: lsmLib },
 ];
 
 export function preloadHardwareModels() {
   projects.forEach((project) => {
-    if (project.type === "hardware" && project.modelPath) {
-      useGLTF.preload(project.modelPath, true, true);
+    if (project.type === "hardware") {
+      if (project.modelPath) useGLTF.preload(project.modelPath, true, true);
+      if (project.secondModelPath) useGLTF.preload(project.secondModelPath, true, true);
     }
   });
 }

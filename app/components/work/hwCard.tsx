@@ -26,6 +26,7 @@ interface HardwareCardProps {
   size: string;
   image?: string;
   modelPath?: string;
+  secondModelPath?: string;
 }
 
 function useNearViewport(ref: React.RefObject<HTMLElement | null>, rootMargin: string) {
@@ -70,22 +71,23 @@ function useHasEnteredViewport(ref: React.RefObject<HTMLElement | null>, rootMar
   return hasEntered;
 }
 
-function useWarmModel(ref: React.RefObject<HTMLElement | null>, modelPath?: string) {
+function useWarmModel(ref: React.RefObject<HTMLElement | null>, modelPath?: string, secondModelPath?: string) {
   useEffect(() => {
     const element = ref.current;
-    if (!element || !modelPath) return;
+    if (!element || (!modelPath && !secondModelPath)) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
-        useGLTF.preload(modelPath, true, true);
+        if (modelPath) useGLTF.preload(modelPath, true, true);
+        if (secondModelPath) useGLTF.preload(secondModelPath, true, true);
         observer.disconnect();
       },
       { rootMargin: "800px" },
     );
     observer.observe(element);
     return () => observer.disconnect();
-  }, [modelPath, ref]);
+  }, [modelPath, secondModelPath, ref]);
 }
 
 function PlaceholderBoard() {
@@ -107,7 +109,7 @@ function RotatingPreview({ children }: { children: React.ReactNode }) {
   return <group ref={previewRef} rotation={[0.05, Math.PI, 0]}>{children}</group>;
 }
 
-function RealBoard({ modelPath }: { modelPath: string }) {
+function RealBoard({ modelPath, paired = false, offset = 0, backFacing = false }: { modelPath: string; paired?: boolean; offset?: number; backFacing?: boolean }) {
   const { scene } = useGLTF(modelPath, true, true);
   const boardRef = useRef<Group>(null);
   const animationStart = useRef<number | null>(null);
@@ -116,10 +118,10 @@ function RealBoard({ modelPath }: { modelPath: string }) {
   const scale = useMemo(() => {
     const box = new THREE.Box3().setFromObject(clonedScene);
     const sphere = box.getBoundingSphere(new THREE.Sphere());
-    const targetRadius = 0.85;
+    const targetRadius = paired ? 0.52 : 0.85;
     clonedScene.position.sub(sphere.center);
     return targetRadius / sphere.radius;
-  }, [clonedScene]);
+  }, [clonedScene, paired]);
 
   useFrame(({ clock }) => {
     animationStart.current ??= clock.elapsedTime;
@@ -133,8 +135,12 @@ function RealBoard({ modelPath }: { modelPath: string }) {
   });
 
   return (
-    <group ref={boardRef} scale={scale * 0.85} position={[0, -0.15, 0]}>
-      <primitive object={clonedScene} />
+    <group position={[offset, paired ? 0.12 : 0, 0]}>
+      <group ref={boardRef} scale={scale * 0.85} position={[0, -0.15, 0]}>
+        <group rotation={paired ? [(backFacing ? 1 : -1) * Math.PI / 2, 0, 0] : [0, 0, 0]}>
+          <primitive object={clonedScene} />
+        </group>
+      </group>
     </group>
   );
 }
@@ -147,11 +153,12 @@ export default function HardwareCard({
   layers,
   size,
   modelPath,
+  secondModelPath,
 }: HardwareCardProps) {
   const previewRef = useRef<HTMLDivElement>(null);
   const hasMounted = useHasEnteredViewport(previewRef, "400px");
   const isVisible = useNearViewport(previewRef, "0px");
-  useWarmModel(previewRef, modelPath);
+  useWarmModel(previewRef, modelPath, secondModelPath);
 
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -168,6 +175,7 @@ export default function HardwareCard({
       href={`/project/${id}`}
       onPointerEnter={() => {
         if (modelPath) useGLTF.preload(modelPath, true, true);
+        if (secondModelPath) useGLTF.preload(secondModelPath, true, true);
       }}
       className={`group shrink-0 ${CARD_WIDTH} flex flex-col cursor-pointer [contain:layout_paint] focus:outline-none`}
     >
@@ -191,7 +199,12 @@ export default function HardwareCard({
             <directionalLight position={[-4, -2, 2]} intensity={0.45} color="#d8e5ff" />
             <RotatingPreview>
               <Suspense fallback={<PlaceholderBoard />}>
-                {modelPath ? <RealBoard modelPath={modelPath} /> : <PlaceholderBoard />}
+                {modelPath ? (
+                  <>
+                    <RealBoard modelPath={modelPath} paired={!!secondModelPath} offset={secondModelPath ? -0.45 : 0} />
+                    {secondModelPath && <RealBoard modelPath={secondModelPath} paired backFacing offset={0.45} />}
+                  </>
+                ) : <PlaceholderBoard />}
               </Suspense>
             </RotatingPreview>
             <EffectComposer multisampling={0} enableNormalPass={false}>
