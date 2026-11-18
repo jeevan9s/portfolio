@@ -27,6 +27,7 @@ interface HardwareCardProps {
   image?: string;
   modelPath?: string;
   secondModelPath?: string;
+  frontFacing?: boolean;
 }
 
 function useNearViewport(ref: React.RefObject<HTMLElement | null>, rootMargin: string) {
@@ -109,7 +110,7 @@ function RotatingPreview({ children }: { children: React.ReactNode }) {
   return <group ref={previewRef} rotation={[0.05, Math.PI, 0]}>{children}</group>;
 }
 
-function RealBoard({ modelPath, paired = false, offset = 0, backFacing = false }: { modelPath: string; paired?: boolean; offset?: number; backFacing?: boolean }) {
+function RealBoard({ modelPath, paired = false, offset = 0, backFacing = false, frontFacing = false }: { modelPath: string; paired?: boolean; offset?: number; backFacing?: boolean; frontFacing?: boolean }) {
   const { scene } = useGLTF(modelPath, true, true);
   const boardRef = useRef<Group>(null);
   const animationStart = useRef<number | null>(null);
@@ -137,7 +138,7 @@ function RealBoard({ modelPath, paired = false, offset = 0, backFacing = false }
   return (
     <group position={[offset, paired ? 0.12 : 0, 0]}>
       <group ref={boardRef} scale={scale * 0.85} position={[0, -0.15, 0]}>
-        <group rotation={paired ? [(backFacing ? 1 : -1) * Math.PI / 2, 0, 0] : [0, 0, 0]}>
+        <group rotation={paired && !frontFacing ? [(backFacing ? 1 : -1) * Math.PI / 2, 0, 0] : [0, 0, 0]}>
           <primitive object={clonedScene} />
         </group>
       </group>
@@ -154,6 +155,7 @@ export default function HardwareCard({
   size,
   modelPath,
   secondModelPath,
+  frontFacing,
 }: HardwareCardProps) {
   const previewRef = useRef<HTMLDivElement>(null);
   const hasMounted = useHasEnteredViewport(previewRef, "400px");
@@ -201,8 +203,8 @@ export default function HardwareCard({
               <Suspense fallback={<PlaceholderBoard />}>
                 {modelPath ? (
                   <>
-                    <RealBoard modelPath={modelPath} paired={!!secondModelPath} offset={secondModelPath ? -0.45 : 0} />
-                    {secondModelPath && <RealBoard modelPath={secondModelPath} paired backFacing offset={0.45} />}
+                    <RealBoard modelPath={modelPath} paired={!!secondModelPath} frontFacing={frontFacing} offset={secondModelPath ? -0.45 : 0} />
+                    {secondModelPath && <RealBoard modelPath={secondModelPath} paired backFacing frontFacing={frontFacing} offset={0.45} />}
                   </>
                 ) : <PlaceholderBoard />}
               </Suspense>
